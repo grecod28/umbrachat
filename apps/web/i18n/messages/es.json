@@ -1,0 +1,180 @@
+{
+  "Header": {
+    "home": "Inicio",
+    "projects": "Proyectos",
+    "technologies": "Tecnologías",
+    "about": "Sobre mí",
+    "contact": "Contacto"
+  },
+  "Index": {
+    "title": "Desarrollador Web Full Stack",
+    "role": "Desarrollador FullStack",
+    "bio": "Construyo aplicaciones web robustas y escalables, desde la base de datos hasta la interfaz de usuario. Apasionado por el código limpio, la arquitectura moderna y crear experiencias digitales fluidas.",
+    "cta_projects": "Ver Proyectos",
+    "cta_contact": "Contacto",
+    "tech_stack": "Tecnologías"
+  },
+  "Projects": {
+    "title": "Proyectos",
+    "description": "Algunos proyectos que he creado para explorar, aprender y resolver problemas reales.",
+    "github": "Repositorio",
+    "live": "Demo en vivo",
+    "back": "Ir a Proyectos",
+    "challenges_title": "Principales Retos",
+    "items": {
+      "ecommerce": {
+        "title": "E-Commerce Platform",
+        "description": "Una tienda online completa con gestión de productos, carrito de compras, integración de pagos y panel de administración. Construida con un stack moderno para rendimiento y escalabilidad.",
+        "detail": "Una solución de e-commerce completa diseñada para gestionar catálogos de productos, autenticación de usuarios, lógica de carrito de compras, procesamiento seguro de pagos y un panel administrativo para inventario y pedidos. Construida pensando en rendimiento y SEO, aprovechando renderizado del lado del servidor y regeneración estática incremental.",
+        "challenges": [
+          "Implementar un sistema de gestión de stock en tiempo real que evite sobreventas durante períodos de alto tráfico.",
+          "Diseñar un sistema flexible de descuentos y cupones que soporte descuentos porcentuales, por importe fijo y promociones 2x1.",
+          "Optimizar consultas a la base de datos para manejar miles de búsquedas concurrentes de productos sin degradación del rendimiento.",
+          "Construir un panel de administración responsivo con análisis de ventas en tiempo real y seguimiento de pedidos."
+        ]
+      },
+      "taskflow": {
+        "title": "TaskFlow",
+        "description": "Una herramienta colaborativa de gestión de proyectos con tableros de tareas en tiempo real, espacios de trabajo, flujos drag-and-drop y seguimiento de actividad.",
+        "detail": "Una plataforma de gestión de proyectos inspirada en herramientas como Trello y Notion. Permite a los equipos crear espacios de trabajo, organizar tareas en tableros personalizables, asignar miembros, establecer fechas límite y realizar un seguimiento del progreso a través de registros de actividad. Las actualizaciones en tiempo real aseguran que todos estén sincronizados.",
+        "challenges": [
+          "Implementar reorganización drag-and-drop fluida entre múltiples tableros sin perder el estado de la interfaz.",
+          "Diseñar un sistema de colaboración en tiempo real que sincronice cambios entre miembros del equipo al instante.",
+          "Crear un modelo de permisos flexible con controles de acceso a nivel de espacio de trabajo y de tarea.",
+          "Construir un feed de actividad que agregue cambios en una línea de tiempo cronológica y legible."
+        ]
+      },
+      "chatify": {
+        "title": "Chatify",
+        "description": "Una aplicación de mensajería en tiempo real con conversaciones privadas y grupales, compartición de archivos, reacciones a mensajes e indicadores de presencia.",
+        "detail": "Una plataforma de mensajería completa que admite chats uno a uno y grupales, reacciones a mensajes, archivos adjuntos, indicadores de escritura y presencia en línea. Construida con WebSockets para comunicación bidireccional en tiempo real y optimizada para entrega de mensajes de baja latencia.",
+        "challenges": [
+          "Manejar la reconexión de WebSocket de forma elegante cuando ocurren interrupciones de red.",
+          "Diseñar un sistema de paginación de mensajes que cargue el historial de manera eficiente sin interrumpir el flujo en tiempo real.",
+          "Implementar carga de archivos con indicadores de progreso y soporte para imágenes, documentos y fragmentos de código.",
+          "Construir un indicador de escritura confiable que limite los eventos para no saturar el servidor."
+        ]
+      },
+      "devblog": {
+        "title": "DevBlog",
+        "description": "Una plataforma de blog para desarrolladores con soporte MDX, resaltado de sintaxis, optimización SEO, feed RSS y una experiencia de lectura limpia.",
+        "detail": "Una plataforma de blogging moderna diseñada para desarrolladores. Escribe posts en MDX con bloques de código incrustados, componentes interactivos y estilos personalizados. Cuenta con resaltado de sintaxis automático, generación de metadatos SEO, feed RSS, estimaciones de tiempo de lectura y una experiencia de lectura limpia y sin distracciones.",
+        "challenges": [
+          "Integrar MDX con componentes personalizados de React manteniendo la velocidad de carga.",
+          "Implementar un sistema de resaltado de sintaxis que soporte docenas de lenguajes de programación.",
+          "Construir un generador automático de tabla de contenidos a partir de la estructura de encabezados.",
+          "Optimizar la generación del feed RSS para incluir el contenido completo del post y metadatos."
+        ]
+      },
+      "apihub": {
+        "title": "API Hub",
+        "description": "Un gateway centralizado de APIs para gestionar microservicios, con limitación de tasa, autenticación, registro de peticiones y panel de desarrollador.",
+        "detail": "Un gateway de APIs ligero que se sitúa frente a los microservicios, gestionando enrutamiento de peticiones, autenticación, limitación de tasa, registro de peticiones y gestión de claves API. Incluye un panel de desarrollador para monitorizar tráfico, inspeccionar registros y gestionar credenciales de acceso.",
+        "challenges": [
+          "Diseñar un sistema de enrutamiento que resuelva dinámicamente los endpoints de servicios desde un registro.",
+          "Implementar autenticación basada en tokens que propague el contexto de usuario a los servicios descendentes.",
+          "Construir un limitador de tasa que funcione en múltiples instancias de servidor usando Redis.",
+          "Crear un sistema de agregación de registros que capture datos de petición/respuesta sin añadir latencia."
+        ]
+      },
+      "analytix": {
+        "title": "AnalytiX",
+        "description": "Un panel de análisis para visualizar métricas de negocio con gráficos interactivos, informes personalizables, filtrado de datos y actualizaciones en tiempo real.",
+        "detail": "Un panel de análisis que ingiere datos de eventos y los muestra a través de gráficos interactivos e informes personalizables. Soporta rangos de fechas, filtrado por métricas, agregación de datos y actualizaciones en tiempo real. Construido para manejar grandes conjuntos de datos de manera eficiente con caché y carga diferida.",
+        "challenges": [
+          "Renderizar gráficos interactivos que sigan siendo eficientes con miles de puntos de datos.",
+          "Construir un constructor de consultas que permita a los usuarios crear informes personalizados sin conocimientos de SQL.",
+          "Implementar estrategias de caché para reducir la carga de la base de datos en consultas repetidas.",
+          "Diseñar un pipeline de ingesta de eventos en tiempo real que procese datos con un retardo mínimo."
+        ]
+      }
+    }
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Página No Encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "cta": "Volver al Inicio"
+  },
+  "Technologies": {
+    "title": "Tecnologías",
+    "description": "Una visión general de las herramientas y tecnologías con las que trabajo.",
+    "button": "Ver más",
+    "proficiency": "Nivel",
+    "related_projects": "Proyectos Relacionados",
+    "no_related_projects": "Aún no hay proyectos que usen esta tecnología.",
+    "comfort_level": "Comodidad con la tecnología",
+    "level_1": "Familiarizándome",
+    "level_2": "Cómodo",
+    "level_3": "Con confianza",
+    "level_4": "Altamente productivo",
+    "items": {
+      "typescript": "Un superconjunto tipado de JavaScript que compila a JavaScript plano, permitiendo mejores herramientas y experiencia de desarrollo.",
+      "javascript": "Un lenguaje de programación dinámico de alto nivel que impulsa la web interactiva.",
+      "nextjs": "Un framework de React para aplicaciones de producción con renderizado del lado del servidor y generación estática.",
+      "nestjs": "Un framework progresivo de Node.js para construir aplicaciones del lado del servidor eficientes, confiables y escalables.",
+      "angular": "Una plataforma para construir aplicaciones web móviles y de escritorio usando TypeScript y otros lenguajes.",
+      "postgresql": "Un potente sistema de base de datos relacional de código abierto con una sólida reputación de confiabilidad.",
+      "mongodb": "Una base de datos documental NoSQL diseñada para facilitar el desarrollo y la escalabilidad.",
+      "redis": "Un almacén de estructura de datos en memoria utilizado como base de datos, caché y broker de mensajes.",
+      "tailwind-css": "Un framework de CSS utilitario para construir rápidamente interfaces de usuario personalizadas.",
+      "sass": "Un lenguaje de extensión CSS maduro que añade potencia y elegancia al lenguaje básico.",
+      "css3": "La evolución más reciente del lenguaje de Hojas de Estilo en Cascada, que permite un estilo visual rico.",
+      "html5": "El lenguaje de marcado estándar para crear páginas web y aplicaciones web.",
+      "php": "Un popular lenguaje de scripting de propósito general especialmente adecuado para el desarrollo web.",
+      "apache": "Un software de servidor web de código abierto ampliamente utilizado.",
+      "nginx": "Un servidor HTTP de alto rendimiento y proxy inverso.",
+      "n8n": "Plataforma de automatizacion de flujos de trabajo."
+    }
+  },
+  "About": {
+    "hero": {
+      "title": "Desarrollador FullStack",
+      "greeting": "Santiago Greco",
+      "subtitle": "Construyendo Experiencias Digitales Escalables",
+      "description": "Soy un Desarrollador FullStack apasionado por crear aplicaciones web modernas. Me especializo en construir soluciones robustas y escalables desde la base de datos hasta la interfaz de usuario — enfocándome siempre en código limpio, rendimiento y experiencias de usuario excepcionales."
+    },
+    "about": {
+      "title": "Sobre Mí",
+      "subtitle": "Creando Código con Propósito",
+      "p1": "Graduado en Desarrollo de Aplicaciones Web (CFGS DAW) con una profunda pasión por la tecnología. Durante mi formación me especialicé en desarrollo web FullStack, trabajando con tecnologías modernas en todo el stack — desde frontends interactivos con frameworks como Angular, Next.js y React, hasta backends robustos con Node.js, NestJS y APIs.",
+      "p2": "Mi enfoque combina sólidas habilidades técnicas con una orientación a resolver problemas reales. Disfruto creando aplicaciones escalables y eficientes, optimizando el rendimiento y diseñando interfaces intuitivas que marcan la diferencia en la experiencia del usuario.",
+      "p3": "Creo firmemente en el aprendizaje continuo. El mundo tecnológico avanza rápido y me encanta mantenerme al día con nuevas tendencias, herramientas y metodologías para ofrecer siempre las mejores soluciones."
+    },
+    "education": {
+      "title": "Formación",
+      "subtitle": "Mi Formación Académica",
+      "degree": "FP Superior en Desarrollo de Aplicaciones Web (DAW)",
+      "institution": "CIFP A Carballeira",
+      "location": "Ourense, Galicia, España",
+      "period": "2024 — 2026",
+      "description": "Formación especializada en desarrollo web FullStack cubriendo tecnologías de frontend y backend, bases de datos, diseño de sistemas y metodologías profesionales de desarrollo de software."
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "q1": "¿Qué tipo de desarrollo realizas?",
+      "a1": "Me especializo en desarrollo web FullStack, trabajando tanto en el frontend como en el backend. Desde interfaces de usuario interactivas con frameworks modernos hasta APIs robustas y diseño de bases de datos.",
+      "q2": "¿Cuáles son tus tecnologías favoritas?",
+      "a2": "Disfruto trabajando con TypeScript, Next.js y NestJS. También me apasiona Angular para el frontend y PostgreSQL para bases de datos — siempre explorando nuevas herramientas que mejoren mi flujo de trabajo.",
+      "q3": "¿Estás disponible para proyectos?",
+      "a3": "Sí, actualmente estoy abierto a nuevos proyectos y colaboraciones. Ya sea freelance, media jornada o jornada completa, estoy emocionado por asumir nuevos desafíos.",
+      "q4": "¿Qué tipo de proyectos te interesan?",
+      "a4": "Proyectos que involucren tecnologías web modernas — desde plataformas SaaS y e-commerce hasta aplicaciones personalizadas y APIs. Me encantan los retos que requieren resolución creativa de problemas.",
+      "q5": "¿Cuál es tu filosofía de desarrollo?",
+      "a5": "Código limpio, escalabilidad y experiencia de usuario. Creo en escribir código mantenible, seguir las mejores prácticas y poner siempre al usuario final en primer lugar.",
+      "q6": "¿Trabajas de forma remota o freelance?",
+      "a6": "Sí, completamente cómodo trabajando de forma remota con experiencia freelance. Organizado, comunicativo y acostumbrado a trabajar con equipos distribuidos.",
+      "q7": "¿Cómo te mantienes actualizado?",
+      "a7": "El aprendizaje continuo es parte de mi rutina. Sigo a líderes de la industria, leo blogs técnicos, experimento con nuevas tecnologías y creo que cada proyecto es una oportunidad para aprender."
+    }
+  },
+  "Contact": {
+    "title": "Trabajemos Juntos",
+    "description": "¿Tienes un proyecto en mente? Me encantaría conocerlo. Ya sea una aplicación web, una API o una solución digital completa — estoy aquí para ayudar.",
+    "email": "stgrecodev@gamil.com",
+    "github": "github.com/grecod28",
+    "linkedin": "linkedin.com/in/santiagogreco",
+    "location": "Ourense, Galicia, España",
+    "cta": "Ponte en Contacto"
+  }
+}
