@@ -5,13 +5,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { Select } from "@/components/ui/select";
+import { API_URL } from "@/libs/constants/api";
+import { ROOM_VISIBIITY } from "@repo/shared";
+import { useState } from "react";
+import { useRouter } from "@/i18n/navigation";
 
 export default function CreateChatPage() {
   const t = useTranslations("CreateChat");
+  const e = useTranslations("Errors");
+  const [error, setError] = useState<boolean>(false);
+  const router = useRouter();
 
   const options = [
-    { label: t("public"), value: "public" },
-    { label: t("private"), value: "private" },
+    { label: t("public"), value: ROOM_VISIBIITY.PUBLIC },
+    { label: t("private"), value: ROOM_VISIBIITY.PRIVATE },
   ];
 
   const createRoomSchema = z.object({
@@ -21,7 +28,7 @@ export default function CreateChatPage() {
       .max(2048, t("descriptionMaxError"))
       .optional()
       .or(z.literal("")),
-    visibility: z.enum(["public", "private"]),
+    visibility: z.enum(ROOM_VISIBIITY),
   });
 
   type CreateRoomForm = z.infer<typeof createRoomSchema>;
@@ -37,12 +44,38 @@ export default function CreateChatPage() {
     defaultValues: {
       name: "",
       description: "",
-      visibility: "public",
+      visibility: ROOM_VISIBIITY.PUBLIC,
     },
   });
 
-  const onSubmit = (data: CreateRoomForm) => {
+  const onSubmit = async (data: CreateRoomForm) => {
     console.log(data);
+    const res = await fetch(`${API_URL}/rooms`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const resData = await res.json();
+
+    if (!res.ok) {
+      setError(true);
+      return;
+    }
+
+    // Modificar historial de chats
+    const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
+
+    const updated = [
+      resData.id,
+      ...previous.filter((id: string) => id !== resData.id),
+    ];
+
+    localStorage.setItem("rooms", JSON.stringify(updated));
+
+    // Redirigir
+    router.push(`/chat/${resData.id}`);
   };
 
   return (
@@ -97,10 +130,10 @@ export default function CreateChatPage() {
             label={t("visibility")}
             options={options}
             value={watch("visibility")}
-            onChange={(val) =>
-              setValue("visibility", val as "public" | "private")
-            }
+            onChange={(val) => setValue("visibility", val as ROOM_VISIBIITY)}
           />
+
+          {error && <span className="error">{e("unexpected")}</span>}
 
           <button
             type="submit"

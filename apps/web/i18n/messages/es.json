@@ -3,7 +3,7 @@
     "home": "Inicio",
     "help": "Ayuda",
     "contact": "Contacto",
-    "chats": "Mis Chats"
+    "chats": "Chats"
   },
   "NotFound": {
     "title": "404",
@@ -40,5 +40,8 @@
     "description": "Pega el enlace de la sala a la que quieres unirte.",
     "linkPlaceholder": "https://umbrachat.com/room/...",
     "submit": "Unirse"
+  },
+  "Errors": {
+    "unexpected": "Error inesperado al enviar datos"
   }
 }

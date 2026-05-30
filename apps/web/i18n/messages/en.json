@@ -3,7 +3,7 @@
     "home": "Home",
     "help": "Help",
     "contact": "Contact",
-    "chats": "My Chats"
+    "chats": "Chats"
   },
   "NotFound": {
     "title": "404",
@@ -40,5 +40,8 @@
     "description": "Paste the link of the room you want to join.",
     "linkPlaceholder": "https://umbrachat.com/room/...",
     "submit": "Join"
+  },
+  "Errors": {
+    "unexpected": "Unexpected error sending data"
   }
 }
