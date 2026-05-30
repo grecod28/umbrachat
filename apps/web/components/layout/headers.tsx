@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { IoSearch, IoSettingsOutline } from "react-icons/io5";
 import { getTranslations } from "next-intl/server";
-import { Route } from "@/libs/navigation.type";
+import { Route } from "@/libs/types/navigation";
 import { Navbar } from "./navbar";
 
 export async function RootHeader() {
@@ -11,6 +11,7 @@ export async function RootHeader() {
     { label: t("home"), href: "/" },
     { label: t("help"), href: "/help" },
     { label: t("contact"), href: "/contact" },
+    { label: t("chats"), href: "/chat" },
   ];
 
   return (

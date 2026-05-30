@@ -1,6 +1,6 @@
 "use client";
 import { Link } from "@/i18n/navigation";
-import { NavbarProps } from "@/libs/navigation.type";
+import { NavbarProps } from "@/libs/types/navigation";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { IoClose, IoMenu } from "react-icons/io5";

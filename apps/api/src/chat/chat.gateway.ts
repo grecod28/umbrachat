@@ -12,7 +12,12 @@ import { MessagesService } from './messages/services/messages.service';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { FetchMessagesDto } from './messages/dto/fetch-messages.dto';
 
-@WebSocketGateway(3002)
+@WebSocketGateway(3002, {
+  cors: {
+    origin: 'http://localhost:3000',
+    credentials: true,
+  },
+})
 export class ChatGateway implements OnGatewayDisconnect {
   constructor(private readonly messagesService: MessagesService) {}
 

@@ -2,7 +2,8 @@
   "Header": {
     "home": "Inicio",
     "help": "Ayuda",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "chats": "Mis Chats"
   },
   "NotFound": {
     "title": "404",

@@ -4,13 +4,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
+import { Select } from "@/components/ui/select";
 
 export default function CreateChatPage() {
   const t = useTranslations("CreateChat");
 
+  const options = [
+    { label: t("public"), value: "public" },
+    { label: t("private"), value: "private" },
+  ];
+
   const createRoomSchema = z.object({
-    name: z.string().max(120, t("nameMaxError")).optional(),
-    description: z.string().max(2048, t("descriptionMaxError")).optional(),
+    name: z.string().max(120, t("nameMaxError")).optional().or(z.literal("")),
+    description: z
+      .string()
+      .max(2048, t("descriptionMaxError"))
+      .optional()
+      .or(z.literal("")),
     visibility: z.enum(["public", "private"]),
   });
 
@@ -19,10 +29,16 @@ export default function CreateChatPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<CreateRoomForm>({
     resolver: zodResolver(createRoomSchema),
-    defaultValues: { visibility: "public" },
+    defaultValues: {
+      name: "",
+      description: "",
+      visibility: "public",
+    },
   });
 
   const onSubmit = (data: CreateRoomForm) => {
@@ -77,23 +93,18 @@ export default function CreateChatPage() {
             )}
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="visibility" className="block text-sm font-medium">
-              {t("visibility")}
-            </label>
-            <select
-              id="visibility"
-              className="text-center w-full px-4 py-3 rounded-xl bg-surface border border-border focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors appearance-none cursor-pointer"
-              {...register("visibility")}
-            >
-              <option value="public">{t("public")}</option>
-              <option value="private">{t("private")}</option>
-            </select>
-          </div>
+          <Select
+            label={t("visibility")}
+            options={options}
+            value={watch("visibility")}
+            onChange={(val) =>
+              setValue("visibility", val as "public" | "private")
+            }
+          />
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-background-image-gradient-primary text-white font-semibold shadow-[var(--shadow-primary)] hover:shadow-[var(--shadow-primary)] transition-shadow"
+            className="w-full py-3 rounded-xl bg-background-image-gradient-primary text-white font-semibold shadow-primary transition-shadow hover:brightness-110"
           >
             {t("submit")}
           </button>

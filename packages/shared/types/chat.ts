@@ -1,0 +1,4 @@
+export enum ROOM_VISIBIITY {
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+}
