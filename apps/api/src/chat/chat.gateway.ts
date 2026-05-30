@@ -84,6 +84,9 @@ export class ChatGateway implements OnGatewayDisconnect {
     // Se emite a todos en la sala
     const msg = await this.messagesService.createMessage({ content, roomId });
 
+    client.emit('reply', {
+      success: true,
+    });
     this.server.to(roomId).emit('new-message', {
       ...msg,
     });

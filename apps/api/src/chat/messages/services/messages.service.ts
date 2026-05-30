@@ -14,6 +14,8 @@ export class MessagesService {
   }
 
   async findByRoom(data: FetchMessagesDto) {
+    if (!data.afterThan) return []; // Si se acaba de unir al chat
+
     return await this.prismaService.message.findMany({
       where: { roomId: data.roomId, createdAt: { gt: data.afterThan } },
       orderBy: {

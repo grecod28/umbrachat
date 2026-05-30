@@ -8,6 +8,8 @@ datasource db {
 
 model Room {
   id        String    @id @default(uuid())
+  name String @default("Untitled Chat") @db.VarChar(120)
+  description String @default("") @db.VarChar(2048)
   messages  Message[]
 }
 
