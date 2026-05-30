@@ -14,7 +14,7 @@ export async function RootHeader() {
   ];
 
   return (
-    <header className="absolute top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 py-6 bg-surface/25 backdrop-blur-md border-b border-primary/10 z-50">
+    <header className="fixed top-0 left-0 w-full flex items-center justify-between px-4 md:px-16 py-6 bg-surface/25 backdrop-blur-md border-b border-primary/10 z-50">
       <Navbar routes={routes} />
 
       <section className="flex gap-3 items-center">

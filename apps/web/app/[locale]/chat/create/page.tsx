@@ -30,7 +30,7 @@ export default function CreateChatPage() {
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="animate-fade-in w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-primary tracking-tight">
