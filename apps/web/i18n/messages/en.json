@@ -1,181 +1,38 @@
 {
-  "Header": {
-    "home": "Init",
-    "projects": "Projects",
-    "technologies": "Technologies",
-    "about": "About me",
-    "contact": "Contact"
-  },
-  "Index": {
-    "title": "Full Stack Web Developer",
-    "role": "FullStack Developer",
-    "bio": "I build robust, scalable web applications from database to UI. Passionate about clean code, modern architecture, and creating seamless digital experiences.",
-    "cta_projects": "View Projects",
-    "cta_contact": "Contact Me",
-    "tech_stack": "Tech Stack"
-  },
-  "Projects": {
-    "title": "Projects",
-    "description": "Some projects I've built to explore, learn, and solve real problems.",
-    "github": "Repository",
-    "live": "Live Demo",
-    "back": "Back to Projects",
-    "challenges_title": "Key Challenges",
-    "items": {
-      "ecommerce": {
-        "title": "E-Commerce Platform",
-        "description": "A full-featured online store with product management, shopping cart, payment integration, and an admin dashboard. Built with a modern stack for performance and scalability.",
-        "detail": "A complete e-commerce solution designed to handle product catalog management, user authentication, shopping cart logic, secure payment processing, and an administrative dashboard for inventory and order management. Built with performance and SEO in mind, leveraging server-side rendering and incremental static regeneration.",
-        "challenges": [
-          "Implementing a real-time stock management system that prevents overselling during high-traffic periods.",
-          "Designing a flexible discount and coupon system that supports percentage, fixed amount, and buy-one-get-one promotions.",
-          "Optimizing database queries to handle thousands of concurrent product searches without performance degradation.",
-          "Building a responsive admin dashboard with real-time sales analytics and order tracking."
-        ]
-      },
-      "taskflow": {
-        "title": "TaskFlow",
-        "description": "A collaborative project management tool with real-time task boards, team workspaces, drag-and-drop workflows, and activity tracking.",
-        "detail": "A project management platform inspired by tools like Trello and Notion. It enables teams to create workspaces, organize tasks in customizable boards, assign members, set deadlines, and track progress through activity logs. Real-time updates ensure everyone stays in sync.",
-        "challenges": [
-          "Implementing smooth drag-and-drop reordering across multiple boards without losing UI state.",
-          "Designing a real-time collaboration system that syncs changes across team members instantly.",
-          "Creating a flexible permission model with workspace-level and task-level access controls.",
-          "Building an activity feed that aggregates changes in a readable, chronological timeline."
-        ]
-      },
-      "chatify": {
-        "title": "Chatify",
-        "description": "A real-time messaging application with private and group conversations, file sharing, message reactions, and online presence indicators.",
-        "detail": "A full-featured messaging platform supporting one-on-one and group chats, message reactions, file attachments, typing indicators, and online presence. Built with WebSockets for real-time bidirectional communication and optimized for low-latency message delivery.",
-        "challenges": [
-          "Handling WebSocket reconnection gracefully when network interruptions occur.",
-          "Designing a message pagination system that loads history efficiently without disrupting the real-time flow.",
-          "Implementing file upload with progress indicators and support for images, documents, and code snippets.",
-          "Building a reliable typing indicator that debounces events to avoid flooding the server."
-        ]
-      },
-      "devblog": {
-        "title": "DevBlog",
-        "description": "A developer blog platform with MDX support, syntax highlighting, SEO optimization, RSS feed, and a clean reading experience.",
-        "detail": "A modern blogging platform designed for developers. Write posts in MDX with embedded code blocks, interactive components, and custom styling. Features automatic syntax highlighting, SEO metadata generation, RSS feed, reading time estimates, and a clean, distraction-free reading experience.",
-        "challenges": [
-          "Integrating MDX with custom React components while maintaining fast page loads.",
-          "Implementing a syntax highlighting system that supports dozens of programming languages.",
-          "Building an automatic table of contents generator from heading structure.",
-          "Optimizing RSS feed generation to include full post content and metadata."
-        ]
-      },
-      "apihub": {
-        "title": "API Hub",
-        "description": "A centralized API gateway for managing microservices, with rate limiting, authentication, request logging, and a developer dashboard.",
-        "detail": "A lightweight API gateway that sits in front of microservices, handling request routing, authentication, rate limiting, request logging, and API key management. Includes a developer dashboard for monitoring traffic, inspecting logs, and managing access credentials.",
-        "challenges": [
-          "Designing a routing system that dynamically resolves service endpoints from a registry.",
-          "Implementing token-based authentication that propagates user context to downstream services.",
-          "Building a rate limiter that works across multiple server instances using Redis.",
-          "Creating a log aggregation system that captures request/response data without adding latency."
-        ]
-      },
-      "analytix": {
-        "title": "AnalytiX",
-        "description": "An analytics dashboard for visualizing business metrics with interactive charts, customizable reports, data filtering, and real-time updates.",
-        "detail": "An analytics dashboard that ingests event data and displays it through interactive charts and customizable reports. Supports date ranges, metric filtering, data aggregation, and real-time updates. Built to handle large datasets efficiently with data caching and lazy loading.",
-        "challenges": [
-          "Rendering interactive charts that remain performant with thousands of data points.",
-          "Building a query builder that lets users create custom reports without SQL knowledge.",
-          "Implementing data caching strategies to reduce database load for repeated queries.",
-          "Designing a real-time event ingestion pipeline that processes data with minimal delay."
-        ]
-      }
-    }
-  },
   "NotFound": {
     "title": "404",
     "heading": "Page Not Found",
     "description": "The page you're looking for doesn't exist or has been moved.",
     "cta": "Go Back Home"
   },
-  "Technologies": {
-    "title": "Technologies",
-    "description": "A comprehensive overview of the tools and technologies I work with.",
-    "button": "Learn More",
-    "proficiency": "Proficiency",
-    "related_projects": "Related Projects",
-    "no_related_projects": "No projects using this technology yet.",
-    "comfort_level": "Comfort level",
-    "level_1": "Getting Familiar",
-    "level_2": "Comfortable",
-    "level_3": "Confident",
-    "level_4": "Highly Productive",
-    "items": {
-      "typescript": "A typed superset of JavaScript that compiles to plain JavaScript, enabling better tooling and developer experience.",
-      "javascript": "A high-level, dynamic programming language that powers the interactive web.",
-      "nextjs": "A React framework for production-grade applications with server-side rendering and static generation.",
-      "nestjs": "A progressive Node.js framework for building efficient, reliable, and scalable server-side applications.",
-      "angular": "A platform for building mobile and desktop web applications using TypeScript and other languages.",
-      "postgresql": "A powerful, open-source object-relational database system with a strong reputation for reliability.",
-      "mongodb": "A NoSQL document database designed for ease of development and scaling.",
-      "redis": "An in-memory data structure store used as a database, cache, and message broker.",
-      "tailwind-css": "A utility-first CSS framework for rapidly building custom user interfaces.",
-      "sass": "A mature CSS extension language that adds power and elegance to the basic language.",
-      "css3": "The latest evolution of the Cascading Style Sheets language, enabling rich visual styling.",
-      "html5": "The standard markup language for creating web pages and web applications.",
-      "php": "A popular general-purpose scripting language especially suited to web development.",
-      "apache": "A widely used open-source web server software.",
-      "nginx": "A high-performance HTTP server and reverse proxy server.",
-      "n8n": "Workflow automation platform."
-    }
+  "Home": {
+    "welcome": "Welcome to",
+    "description": "Chat in real time with friends or strangers. Create your own room or join an existing one to start conversing.",
+    "createRoom": "Create a room",
+    "joinRoom": "Join a room"
   },
-  "About": {
-    "hero": {
-      "title": "FullStack Developer",
-      "greeting": "Santiago Greco",
-      "subtitle": "Building Scalable Digital Experiences",
-      "description": "I'm a FullStack Developer passionate about creating modern web applications. I specialize in building robust, scalable solutions from database to UI — always focusing on clean code, performance, and exceptional user experiences."
-    },
-    "about": {
-      "title": "About Me",
-      "subtitle": "Crafting Code with Purpose",
-      "p1": "Graduate in Web Application Development (CFGS DAW) with a deep passion for technology. Throughout my training I specialized in FullStack web development, working with modern technologies across the entire stack — from interactive frontends with frameworks like Angular, Next.js and React, to robust backends with Node.js, NestJS and APIs.",
-      "p2": "My approach combines solid technical skills with a focus on solving real problems. I enjoy creating scalable, efficient applications, optimizing performance, and designing intuitive interfaces that make a difference in the user experience.",
-      "p3": "I firmly believe in continuous learning. The tech world moves fast, and I love keeping up with new trends, tools, and methodologies to always deliver the best solutions."
-    },
-
-    "education": {
-      "title": "Education",
-      "subtitle": "My Learning Journey",
-      "degree": "Higher Degree in Web Application Development (DAW)",
-      "institution": "CIFP A Carballeira",
-      "location": "Ourense, Galicia, Spain",
-      "period": "2024 — 2026",
-      "description": "Specialized training in FullStack web development covering frontend and backend technologies, databases, system design, and professional software development methodologies."
-    },
-    "faq": {
-      "title": "Frequently Asked Questions",
-      "q1": "What type of development do you do?",
-      "a1": "I specialize in FullStack web development, working on both the frontend and backend of web applications. From interactive user interfaces with modern frameworks to robust APIs and database design.",
-      "q2": "What are your favorite technologies?",
-      "a2": "I enjoy working with TypeScript, Next.js, and NestJS. I'm also passionate about Angular for frontend and PostgreSQL for databases — always exploring new tools that can improve my workflow.",
-      "q3": "Are you available for projects?",
-      "a3": "Yes, I'm currently open to new projects and collaborations. Whether freelance, part-time, or full-time opportunities, I'm excited to take on new challenges.",
-      "q4": "What type of projects interest you?",
-      "a4": "Projects involving modern web technologies — from SaaS platforms and e-commerce to custom applications and APIs. I love challenges that require creative problem-solving.",
-      "q5": "What is your development philosophy?",
-      "a5": "Clean code, scalability, and user experience. I believe in writing maintainable code, following best practices, and always putting the end user first.",
-      "q6": "Do you work remotely or freelance?",
-      "a6": "Yes, fully comfortable working remotely with freelance experience. Organized, communicative, and used to working with distributed teams.",
-      "q7": "How do you stay up to date?",
-      "a7": "Continuous learning is part of my routine. I follow industry leaders, read technical blogs, experiment with new technologies, and believe every project is an opportunity to learn."
-    }
+  "ChatLayout": {
+    "back": "Back",
+    "myChats": "My Chats"
   },
-  "Contact": {
-    "title": "Let's Work Together",
-    "description": "Have a project in mind? I'd love to hear about it. Whether you need a web application, an API, or a complete digital solution — I'm here to help.",
-    "email": "stgrecodev@gmail.com",
-    "github": "github.com/grecod28",
-    "linkedin": "linkedin.com/in/santiagogreco",
-    "location": "Ourense, Galicia, Spain",
-    "cta": "Get in Touch"
+  "CreateChat": {
+    "title": "Create a room",
+    "description": "Configure the details of your new chat room.",
+    "name": "Name",
+    "namePlaceholder": "My chat room",
+    "nameMaxError": "The name cannot exceed 120 characters",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "A room to talk about...",
+    "descriptionMaxError": "The description cannot exceed 2048 characters",
+    "visibility": "Visibility",
+    "public": "Public",
+    "private": "Private",
+    "submit": "Create room"
+  },
+  "JoinChat": {
+    "title": "Join a room",
+    "description": "Paste the link of the room you want to join.",
+    "linkPlaceholder": "https://umbrachat.com/room/...",
+    "submit": "Join"
   }
 }

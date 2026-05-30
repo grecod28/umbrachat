@@ -1,7 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const t = await getTranslations("Home");
+
   return (
     <main className="h-screen flex flex-col items-center justify-center gap-8 px-4">
       <article className="animate-fade-in flex flex-col items-center gap-6">
@@ -16,11 +19,10 @@ export default function Home() {
 
         <section className="text-center space-y-3">
           <h1 className="text-4xl font-bold tracking-tight">
-            Bienvenido a <span className="text-primary">UmbraChat</span>
+            {t("welcome")} <span className="text-primary">UmbraChat</span>
           </h1>
           <p className="text-text-muted max-w-md text-lg">
-            Chatea en tiempo real con amigos o desconocidos. Crea tu propia sala
-            o únete a una existente para comenzar a conversar.
+            {t("description")}
           </p>
         </section>
 
@@ -29,13 +31,13 @@ export default function Home() {
             href="/chat/create"
             className="px-6 py-3 rounded-xl bg-background-image-gradient-primary text-white font-semibold shadow-primary transition-shadow text-center"
           >
-            Crear una sala
+            {t("createRoom")}
           </Link>
           <Link
             href="/chat/join"
             className="px-6 py-3 rounded-xl border border-border-strong bg-surface font-semibold hover:bg-surface-light transition-colors text-center"
           >
-            Unirse a una sala
+            {t("joinRoom")}
           </Link>
         </section>
       </article>
