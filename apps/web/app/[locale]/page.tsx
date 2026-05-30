@@ -33,7 +33,7 @@ export default function Home() {
           </Link>
           <Link
             href="/chat/join"
-            className="px-6 py-3 rounded-xl border border-border-strong bg-surface font-semibold hover:bg-surface-light transition-colors"
+            className="px-6 py-3 rounded-xl border border-border-strong bg-surface font-semibold hover:bg-surface-light transition-colors text-center"
           >
             Unirse a una sala
           </Link>
