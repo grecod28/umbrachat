@@ -1,11 +1,11 @@
 // apps/api/src/prisma.service.ts
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@repo/database';
 import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@repo/database';
 import * as pg from 'pg';
 
 /**
- * Definimos una interfaz local para el constructor.
+ * Interfaz local para el constructor
  * Esto le da a TypeScript la forma exacta sin pasar por el objeto 'pg' que el linter odia.
  */
 type PoolConstructor = new (config?: pg.PoolConfig) => pg.Pool;
@@ -33,15 +33,17 @@ export class PrismaService
 
     // 3. Creamos el adaptador (usamos 'as any' solo aquí por compatibilidad de Prisma 7)
     const adapter = new PrismaPg(pool);
-
-    super({ adapter: adapter as any });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    super({ adapter });
   }
 
   async onModuleInit() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await this.$connect();
   }
 
   async onModuleDestroy() {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await this.$disconnect();
   }
 }

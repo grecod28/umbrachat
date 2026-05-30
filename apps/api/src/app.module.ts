@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { RoomsModule } from './rooms/rooms.module';
-import { MessagesModule } from './messages/messages.module';
 import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -11,9 +10,8 @@ import { PrismaModule } from './prisma/prisma.module';
       isGlobal: true,
       envFilePath: '../../.env',
     }),
-    RoomsModule,
-    MessagesModule,
     PrismaModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [PrismaService],
