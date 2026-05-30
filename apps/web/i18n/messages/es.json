@@ -1,4 +1,9 @@
 {
+  "Header": {
+    "home": "Inicio",
+    "help": "Ayuda",
+    "contact": "Contacto"
+  },
   "NotFound": {
     "title": "404",
     "heading": "Página No Encontrada",

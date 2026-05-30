@@ -21,9 +21,7 @@ export default async function Home() {
           <h1 className="text-4xl font-bold tracking-tight">
             {t("welcome")} <span className="text-primary">UmbraChat</span>
           </h1>
-          <p className="text-text-muted max-w-md text-lg">
-            {t("description")}
-          </p>
+          <p className="text-text-muted max-w-md text-lg">{t("description")}</p>
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2 w-full">

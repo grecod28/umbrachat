@@ -1,4 +1,9 @@
 {
+  "Header": {
+    "home": "Home",
+    "help": "Help",
+    "contact": "Contact"
+  },
   "NotFound": {
     "title": "404",
     "heading": "Page Not Found",
