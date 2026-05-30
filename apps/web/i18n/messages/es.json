@@ -41,6 +41,18 @@
     "linkPlaceholder": "https://umbrachat.com/room/...",
     "submit": "Unirse"
   },
+  "ChatRoom": {
+    "share": "Compartir",
+    "inputPlaceholder": "Escribe un mensaje...",
+    "send": "Enviar"
+  },
+  "ShareChat": {
+    "title": "Compartir esta sala",
+    "description": "Copia el enlace de abajo para invitar a alguien a este chat.",
+    "copy": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "backToChat": "Volver al chat"
+  },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
   }
