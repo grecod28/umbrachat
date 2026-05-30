@@ -42,6 +42,7 @@
     "submit": "Unirse"
   },
   "ChatRoom": {
+    "noTitle": "Chat sin nombre",
     "share": "Compartir",
     "inputPlaceholder": "Escribe un mensaje...",
     "send": "Enviar"

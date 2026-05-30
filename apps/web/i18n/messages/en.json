@@ -42,6 +42,7 @@
     "submit": "Join"
   },
   "ChatRoom": {
+    "noTitle": "Untitled chat",
     "share": "Share",
     "inputPlaceholder": "Type a message...",
     "send": "Send"

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseUUIDPipe,
   Post,
@@ -12,6 +13,11 @@ import { CreateRoomDto } from './dto/create-room.dto';
 @Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
+
+  @Get(':id')
+  getRoom(@Param('id', new ParseUUIDPipe()) roomId: string) {
+    return this.roomsService.getRoom(roomId);
+  }
 
   @Post()
   createRoom(@Body() createRoomDto: CreateRoomDto) {

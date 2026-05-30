@@ -6,6 +6,12 @@ import { CreateRoomDto } from './dto/create-room.dto';
 export class RoomsService {
   constructor(private prisma: PrismaService) {}
 
+  async getRoom(roomId: string) {
+    return await this.prisma.room.findUnique({
+      where: { id: roomId },
+    });
+  }
+
   async createRoom(createRoomDto: CreateRoomDto) {
     return await this.prisma.room.create({ data: createRoomDto });
   }
