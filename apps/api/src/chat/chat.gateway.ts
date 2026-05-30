@@ -10,10 +10,11 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from './messages/services/messages.service';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
+import { FetchMessagesDto } from './messages/dto/fetch-messages.dto';
 
 @WebSocketGateway(3002)
 export class ChatGateway implements OnGatewayDisconnect {
-  constructor(private readonly messagesServie: MessagesService) {}
+  constructor(private readonly messagesService: MessagesService) {}
 
   @WebSocketServer()
   server!: Server;
@@ -37,14 +38,16 @@ export class ChatGateway implements OnGatewayDisconnect {
   @SubscribeMessage('join-room')
   async handleJoin(
     @ConnectedSocket() client: Socket,
-    @MessageBody('roomId', new ParseUUIDPipe())
-    roomId: string,
+    @MessageBody() data: FetchMessagesDto,
   ) {
-    await client.join(roomId);
+    await client.join(data.roomId);
 
-    const count = this.server.sockets.adapter.rooms.get(roomId)?.size ?? 0;
+    const count = this.server.sockets.adapter.rooms.get(data.roomId)?.size ?? 0;
 
-    this.server.to(roomId).emit('room-update', {
+    const messages = await this.messagesService.findByRoom(data);
+    client.emit('message-history', messages);
+
+    this.server.to(data.roomId).emit('room-update', {
       event: 'join',
       usersInRoom: count,
     });
@@ -79,7 +82,7 @@ export class ChatGateway implements OnGatewayDisconnect {
     const { roomId, content } = data;
 
     // Se emite a todos en la sala
-    const msg = await this.messagesServie.createMessage({ content, roomId });
+    const msg = await this.messagesService.createMessage({ content, roomId });
 
     this.server.to(roomId).emit('new-message', {
       ...msg,
