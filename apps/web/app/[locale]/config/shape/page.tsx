@@ -49,13 +49,12 @@ export default function ConfigShapePage() {
     setConfig(readShape());
   }, []);
 
-  const handleChange =
-    (key: keyof ShapeConfig) => (value: string) => {
-      const next = { ...config, [key]: value };
-      setConfig(next);
-      writeShape(next);
-      applyShape(next);
-    };
+  const handleChange = (key: keyof ShapeConfig) => (value: string) => {
+    const next = { ...config, [key]: value };
+    setConfig(next);
+    writeShape(next);
+    applyShape(next);
+  };
 
   const fontOptions = FONT_OPTIONS.map((v) => ({
     value: v,
@@ -76,7 +75,7 @@ export default function ConfigShapePage() {
     <div className="flex flex-col items-center mt-16 px-4 w-full">
       <div className="animate-fade-in w-full max-w-xs space-y-8">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-text tracking-tight">
+          <h1 className="text-2xl font-bold tracking-tight text-primary">
             {t("title")}
           </h1>
           <p className="text-sm text-text-muted">{t("description")}</p>

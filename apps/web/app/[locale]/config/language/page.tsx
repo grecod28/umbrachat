@@ -36,7 +36,7 @@ export default function ConfigLanguagePage() {
     <div className="flex flex-col items-center mt-16 px-4 w-full">
       <div className="animate-fade-in w-full max-w-xs space-y-6">
         <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-text tracking-tight">
+          <h1 className="text-2xl font-bold text-primary tracking-tight">
             {t("title")}
           </h1>
           <p className="text-sm text-text-muted">{t("description")}</p>
