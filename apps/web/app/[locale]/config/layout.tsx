@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Route } from "@/libs/types/navigation";
 import { getTranslations } from "next-intl/server";
+import Link from "next/link";
 import React from "react";
 
 export default async function ConfigLayout({
@@ -26,10 +27,17 @@ export default async function ConfigLayout({
   ];
 
   return (
-    <section>
-      <Navbar routes={CONFIG_ROUTES} />
+    <section className="relative">
+      <section className="md:flex md:justify-center md:mt-16 md:text-2xl">
+        <Navbar routes={CONFIG_ROUTES} />
+      </section>
 
-      <main>{children}</main>
+      <main className="flex flex-col items-center">
+        {children}
+        <Link className="text-primary mt-4" href="/">
+          Volver al inicio
+        </Link>
+      </main>
     </section>
   );
 }

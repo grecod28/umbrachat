@@ -54,6 +54,15 @@
     "copied": "Copied!",
     "backToChat": "Back to chat"
   },
+  "Config": {
+    "language": "Language",
+    "form": "Form",
+    "controls": "Controls"
+  },
+  "ConfigLanguage": {
+    "title": "Language",
+    "description": "Select your preferred language."
+  },
   "Errors": {
     "unexpected": "Unexpected error sending data"
   }

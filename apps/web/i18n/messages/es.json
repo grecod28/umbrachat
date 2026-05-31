@@ -54,6 +54,15 @@
     "copied": "¡Copiado!",
     "backToChat": "Volver al chat"
   },
+  "Config": {
+    "language": "Idioma",
+    "form": "Formulario",
+    "controls": "Controles"
+  },
+  "ConfigLanguage": {
+    "title": "Idioma",
+    "description": "Selecciona tu idioma preferido."
+  },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
   }

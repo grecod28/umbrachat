@@ -5,13 +5,13 @@ import { IoChevronDown, IoCheckmark } from "react-icons/io5";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 type Option = {
-  label: string;
-  value: string;
+  readonly label: string;
+  readonly value: string;
 };
 
 type Props = {
   label: string;
-  options: Option[];
+  options: readonly Option[];
   value: string;
   onChange: (value: string) => void;
   register?: UseFormRegisterReturn;
