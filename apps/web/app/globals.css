@@ -131,6 +131,47 @@
   }
 }
 
+/* --- SHAPE CONFIG (data-* attributes on :root) --- */
+
+/* Font */
+:root[data-font="mono"] body {
+  font-family: var(--font-geist-mono);
+}
+
+/* Size */
+:root[data-size="sm"] body {
+  font-size: 14px;
+}
+
+:root[data-size="lg"] body {
+  font-size: 18px;
+}
+
+/* Color - Blue */
+:root[data-color="blue"] {
+  --color-primary: #3b82f6;
+  --color-primary-hover: #60a5fa;
+  --color-primary-active: #2563eb;
+  --color-accent: #93c5fd;
+  --color-accent-hover: #bfdbfe;
+  --color-border: rgba(59, 130, 246, 0.15);
+  --color-border-strong: rgba(59, 130, 246, 0.3);
+  --shadow-primary: 0 10px 40px rgba(59, 130, 246, 0.3);
+  --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%);
+}
+
+.light[data-color="blue"] {
+  --color-primary: #2563eb;
+  --color-primary-hover: #3b82f6;
+  --color-primary-active: #1d4ed8;
+  --color-accent: #3b82f6;
+  --color-accent-hover: #60a5fa;
+  --color-border: rgba(37, 99, 235, 0.1);
+  --color-border-strong: rgba(37, 99, 235, 0.2);
+  --shadow-primary: 0 10px 30px rgba(37, 99, 235, 0.2);
+  --gradient-primary: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+}
+
 a {
   transition: transform 0.3s ease;
 }
