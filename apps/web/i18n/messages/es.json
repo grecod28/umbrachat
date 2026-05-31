@@ -33,6 +33,10 @@
     "visibility": "Visibilidad",
     "public": "Pública",
     "private": "Privada",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Contraseña de la sala",
+    "passwordRequired": "La contraseña es obligatoria para salas privadas",
+    "passwordMaxError": "La contraseña no puede superar 255 caracteres",
     "submit": "Crear sala"
   },
   "JoinChat": {

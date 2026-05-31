@@ -33,6 +33,10 @@
     "visibility": "Visibility",
     "public": "Public",
     "private": "Private",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Room password",
+    "passwordRequired": "Password is required for private rooms",
+    "passwordMaxError": "The password cannot exceed 255 characters",
     "submit": "Create room"
   },
   "JoinChat": {

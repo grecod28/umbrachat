@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { Select } from "@/components/ui/select";
+import { InputPassword } from "@/components/ui/input-password";
 import { API_URL } from "@/libs/constants/api";
 import { ROOM_VISIBIITY } from "@repo/shared";
 import { useState } from "react";
@@ -21,15 +22,33 @@ export default function CreateChatPage() {
     { label: t("private"), value: ROOM_VISIBIITY.PRIVATE },
   ];
 
-  const createRoomSchema = z.object({
-    name: z.string().max(120, t("nameMaxError")).optional().or(z.literal("")),
-    description: z
-      .string()
-      .max(2048, t("descriptionMaxError"))
-      .optional()
-      .or(z.literal("")),
-    visibility: z.enum(ROOM_VISIBIITY),
-  });
+  const createRoomSchema = z
+    .object({
+      name: z.string().max(120, t("nameMaxError")).optional().or(z.literal("")),
+      description: z
+        .string()
+        .max(2048, t("descriptionMaxError"))
+        .optional()
+        .or(z.literal("")),
+      visibility: z.enum(ROOM_VISIBIITY),
+      password: z
+        .string()
+        .max(255, t("passwordMaxError"))
+        .optional()
+        .or(z.literal("")),
+    })
+    .superRefine((data, ctx) => {
+      if (
+        data.visibility === ROOM_VISIBIITY.PRIVATE &&
+        (!data.password || data.password === "")
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t("passwordRequired"),
+          path: ["password"],
+        });
+      }
+    });
 
   type CreateRoomForm = z.infer<typeof createRoomSchema>;
 
@@ -79,7 +98,7 @@ export default function CreateChatPage() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4">
+    <main className="min-h-screen flex flex-col items-center pt-20 pb-8 px-4">
       <div className="animate-fade-in w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-primary tracking-tight">
@@ -132,6 +151,15 @@ export default function CreateChatPage() {
             value={watch("visibility")}
             onChange={(val) => setValue("visibility", val as ROOM_VISIBIITY)}
           />
+
+          {watch("visibility") === ROOM_VISIBIITY.PRIVATE && (
+            <InputPassword
+              label={t("passwordLabel")}
+              placeholder={t("passwordPlaceholder")}
+              register={register("password")}
+              error={errors.password?.message}
+            />
+          )}
 
           {error && <span className="error">{e("unexpected")}</span>}
 
