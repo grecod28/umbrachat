@@ -17,8 +17,8 @@ export default async function ConfigLayout({
       href: "/config/language",
     },
     {
-      label: t("form"),
-      href: "/config/form",
+      label: t("shape"),
+      href: "/config/shape",
     },
     {
       label: t("controls"),

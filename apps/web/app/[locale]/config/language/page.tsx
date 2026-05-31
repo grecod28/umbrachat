@@ -1,19 +1,35 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
-import { useRouter, usePathname } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { Select } from "@/components/ui/select";
 import { LANGUAGES } from "@/libs/constants/languages";
+
+const LOCALE_COOKIE = "NEXT_LOCALE";
+const LOCALE_STORAGE_KEY = "umbra-locale";
+
+function setLocaleCookie(value: string) {
+  document.cookie = `${LOCALE_COOKIE}=${value}; path=/; max-age=31536000; SameSite=Lax`;
+}
 
 export default function ConfigLanguagePage() {
   const t = useTranslations("ConfigLanguage");
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
 
+  useEffect(() => {
+    const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+    if (saved && saved !== locale && LANGUAGES.some((l) => l.value === saved)) {
+      setLocaleCookie(saved);
+      window.location.href = `${window.location.origin}/${saved}${pathname}`;
+    }
+  }, []);
+
   const handleChange = (value: string) => {
-    localStorage.setItem("umbra-locale", value);
-    router.replace(pathname, { locale: value });
+    localStorage.setItem(LOCALE_STORAGE_KEY, value);
+    setLocaleCookie(value);
+    window.location.href = `${window.location.origin}/${value}${pathname}`;
   };
 
   return (

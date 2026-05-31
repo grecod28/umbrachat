@@ -56,7 +56,7 @@
   },
   "Config": {
     "language": "Idioma",
-    "form": "Formulario",
+    "shape": "Forma",
     "controls": "Controles"
   },
   "ConfigLanguage": {

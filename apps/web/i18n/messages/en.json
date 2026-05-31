@@ -56,7 +56,7 @@
   },
   "Config": {
     "language": "Language",
-    "form": "Form",
+    "shape": "Shape",
     "controls": "Controls"
   },
   "ConfigLanguage": {
