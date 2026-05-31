@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import SearchForm from "./_views/search-form";
+import { API_URL } from "@/libs/constants/api";
 
 export default async function SearchPage({
   searchParams,
@@ -8,6 +9,7 @@ export default async function SearchPage({
 }) {
   const t = await getTranslations("Search");
   const { name } = await searchParams;
+  //const res = await fetch(`${API_URL}/${name}`)
 
   return (
     <main className="min-h-screen flex flex-col items-center pt-20 px-4">
