@@ -131,43 +131,76 @@
   }
 }
 
-/* --- SHAPE CONFIG (data-* attributes on :root) --- */
+/* ===================================================================
+   SHAPE CONFIG — data-* attributes on :root
+   Font / Size / Primary Color
+   Applied by ShapeProvider from localStorage on mount.
+   =================================================================== */
 
-/* Font */
-:root[data-font="mono"] body {
+/* --- Font -------------------------------------------------------- */
+:root {
+  font-family: var(--font-geist-sans);
+}
+
+:root[data-font="mono"] {
   font-family: var(--font-geist-mono);
 }
 
-/* Size */
-:root[data-size="sm"] body {
+/* --- Size -------------------------------------------------------- */
+:root[data-size="sm"] {
   font-size: 14px;
 }
 
-:root[data-size="lg"] body {
+:root[data-size="md"] {
+  font-size: 16px;
+}
+
+:root[data-size="lg"] {
   font-size: 18px;
 }
 
-/* Color - Blue */
+/* --- Color: Purple (default — already defined in :root) ----------- */
+/* No extra rules needed; :root base tokens ARE the purple theme.   */
+
+/* --- Color: Blue ------------------------------------------------- */
+
+/* Dark mode */
 :root[data-color="blue"] {
+  /* Primary */
   --color-primary: #3b82f6;
   --color-primary-hover: #60a5fa;
   --color-primary-active: #2563eb;
+
+  /* Accent (matching blue family) */
   --color-accent: #93c5fd;
   --color-accent-hover: #bfdbfe;
+
+  /* Borders — blue-tinted */
   --color-border: rgba(59, 130, 246, 0.15);
   --color-border-strong: rgba(59, 130, 246, 0.3);
+
+  /* Surface — subtle blue tint instead of purple */
+  --color-surface-light: #0f172a;
+
+  /* Effects */
   --shadow-primary: 0 10px 40px rgba(59, 130, 246, 0.3);
   --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #93c5fd 100%);
 }
 
+/* Light mode */
 .light[data-color="blue"] {
   --color-primary: #2563eb;
   --color-primary-hover: #3b82f6;
   --color-primary-active: #1d4ed8;
+
   --color-accent: #3b82f6;
   --color-accent-hover: #60a5fa;
+
   --color-border: rgba(37, 99, 235, 0.1);
   --color-border-strong: rgba(37, 99, 235, 0.2);
+
+  --color-surface-light: #eff6ff;
+
   --shadow-primary: 0 10px 30px rgba(37, 99, 235, 0.2);
   --gradient-primary: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
 }
