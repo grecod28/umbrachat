@@ -9,10 +9,22 @@ import { SearchRoomsDto } from './dto/search-rooms.dto';
 import * as bcrypt from 'bcrypt';
 import { ROOM_VISIBILITY } from '@repo/shared';
 import { AccessRoomDto } from './dto/access-room.dto';
+import { GetRoomsDto } from './dto/get-rooms.dto';
 @Injectable()
 export class RoomsService {
   private readonly pageSize = 20;
   constructor(private prisma: PrismaService) {}
+
+  getRooms(getRoomsDto: GetRoomsDto) {
+    return this.prisma.room.findMany({
+      where: {
+        id: { in: getRoomsDto.ids },
+      },
+      orderBy: {
+        lastMessageAt: 'desc', // Ordenado por Último mensaje (por defecto al crear pone ahora)
+      },
+    });
+  }
 
   async searchRooms({ name, page = 1 }: SearchRoomsDto) {
     const skip = (page - 1) * this.pageSize;

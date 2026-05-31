@@ -8,8 +8,17 @@ export class MessagesService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createMessage(data: CreateMessageDto) {
-    return await this.prismaService.message.create({
-      data,
+    return this.prismaService.$transaction(async (tx) => {
+      const message = await tx.message.create({
+        data,
+      });
+
+      await tx.room.update({
+        where: { id: data.roomId },
+        data: { lastMessageAt: new Date() },
+      });
+
+      return message;
     });
   }
 
