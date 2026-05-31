@@ -63,6 +63,22 @@
     "title": "Language",
     "description": "Select your preferred language."
   },
+  "ConfigShape": {
+    "title": "Appearance",
+    "description": "Customize the look and feel of the app.",
+    "font": "Font",
+    "size": "Text size",
+    "color": "Primary color",
+    "sizeOptions": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large"
+    },
+    "colorOptions": {
+      "purple": "Purple",
+      "blue": "Blue"
+    }
+  },
   "Errors": {
     "unexpected": "Unexpected error sending data"
   }

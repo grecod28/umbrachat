@@ -63,6 +63,22 @@
     "title": "Idioma",
     "description": "Selecciona tu idioma preferido."
   },
+  "ConfigShape": {
+    "title": "Apariencia",
+    "description": "Personaliza el aspecto visual de la app.",
+    "font": "Fuente",
+    "size": "Tamaño de texto",
+    "color": "Color primario",
+    "sizeOptions": {
+      "sm": "Pequeño",
+      "md": "Mediano",
+      "lg": "Grande"
+    },
+    "colorOptions": {
+      "purple": "Púrpura",
+      "blue": "Azul"
+    }
+  },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
   }
