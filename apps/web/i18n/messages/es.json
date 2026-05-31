@@ -88,7 +88,9 @@
     "description": "Encuentra salas de chat públicas por nombre.",
     "placeholder": "Buscar salas...",
     "resultsFor": "Resultados para",
-    "need": "Debes escribir la temática que buscas"
+    "need": "Debes escribir la temática que buscas",
+    "noResults": "No se encontraron salas",
+    "noTitle": "Chat sin título"
   },
   "Contact": {
     "title": "Contacto",

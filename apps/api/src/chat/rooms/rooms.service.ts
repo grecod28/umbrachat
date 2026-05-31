@@ -19,6 +19,11 @@ export class RoomsService {
             mode: 'insensitive', // Búsqueda que ignora mayúsculas/minúsculas
           },
         },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+        },
         skip: skip,
         take: this.pageSize,
       }),
