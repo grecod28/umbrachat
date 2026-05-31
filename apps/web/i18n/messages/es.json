@@ -49,7 +49,14 @@
     "noTitle": "Chat sin nombre",
     "share": "Compartir",
     "inputPlaceholder": "Escribe un mensaje...",
-    "send": "Enviar"
+    "send": "Enviar",
+    "accessTitle": "Esta sala es privada",
+    "accessDescription": "Introduce el código de 6 caracteres para acceder.",
+    "codeLabel": "Código",
+    "codePlaceholder": "Introduce el código",
+    "codeError": "El código debe tener exactamente 6 caracteres",
+    "accessSubmit": "Acceder",
+    "wrongCode": "Código incorrecto"
   },
   "ShareChat": {
     "title": "Compartir esta sala",

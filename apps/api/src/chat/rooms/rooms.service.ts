@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { SearchRoomsDto } from './dto/search-rooms.dto';
 import * as bcrypt from 'bcrypt';
 import { ROOM_VISIBILITY } from '@repo/shared';
+import { AccessRoomDto } from './dto/access-room.dto';
 @Injectable()
 export class RoomsService {
   private readonly pageSize = 20;
@@ -48,9 +53,24 @@ export class RoomsService {
   }
 
   async getRoom(roomId: string) {
-    return await this.prisma.room.findUnique({
+    // Búsqueda incluyendo selación (omito passwordhash)
+    const room = await this.prisma.room.findUnique({
       where: { id: roomId },
+      include: {
+        access: {
+          select: {
+            roomId: true,
+          },
+        },
+      },
     });
+
+    if (!room) return null;
+
+    return {
+      ...room,
+      isPrivate: !!room.access,
+    };
   }
 
   async createRoom({ name, description, visibility, password }: CreateRoomDto) {
@@ -79,6 +99,20 @@ export class RoomsService {
       return room;
     });
   }
+
+  async accessRoom(id: string, { password }: AccessRoomDto) {
+    const room = await this.prisma.roomAccess.findUnique({
+      where: { roomId: id },
+    });
+
+    if (!room) throw new NotFoundException('Room not found');
+
+    if (!(await bcrypt.compare(password, room.passwordHash)))
+      throw new UnauthorizedException('Invalid `password');
+
+    return { success: true };
+  }
+
   async deleteRoom(id: string) {
     return await this.prisma.room.delete({ where: { id: id } });
   }

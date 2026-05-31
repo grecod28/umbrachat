@@ -11,6 +11,7 @@ import {
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { SearchRoomsDto } from './dto/search-rooms.dto';
+import { AccessRoomDto } from './dto/access-room.dto';
 
 @Controller('rooms')
 export class RoomsController {
@@ -29,6 +30,14 @@ export class RoomsController {
   @Post()
   createRoom(@Body() createRoomDto: CreateRoomDto) {
     return this.roomsService.createRoom(createRoomDto);
+  }
+
+  @Post(':id/access')
+  accessRoom(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() accessRoomDto: AccessRoomDto,
+  ) {
+    return this.roomsService.accessRoom(id, accessRoomDto);
   }
 
   @Delete(':id')

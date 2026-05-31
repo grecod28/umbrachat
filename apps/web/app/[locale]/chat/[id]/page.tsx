@@ -1,6 +1,7 @@
 import { Link } from "@/i18n/navigation";
 import { IoArrowBack, IoShareSocial } from "react-icons/io5";
 import Chat from "./_views/chat";
+import AccessRoom from "./_views/access-room";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
 
@@ -57,6 +58,10 @@ export default async function ChatPage({
   const t = await getTranslations("ChatRoom");
   const res = await fetch(`${API_URL}/rooms/${id}`);
   const data = await res.json();
+
+  if (data.isPrivate) {
+    return <AccessRoom roomId={id} />;
+  }
 
   return (
     <main className="flex flex-col min-h-screen">

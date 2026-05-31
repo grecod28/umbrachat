@@ -6,10 +6,8 @@ import { IoSend } from "react-icons/io5";
 
 interface Message {
   id: string;
-  sender: string;
-  text: string;
-  timestamp: string;
-  isOwn: boolean;
+  content: string;
+  createdAt: string;
 }
 
 const MAX_CHARS = 2048;

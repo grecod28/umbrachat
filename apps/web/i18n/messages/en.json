@@ -49,7 +49,14 @@
     "noTitle": "Untitled chat",
     "share": "Share",
     "inputPlaceholder": "Type a message...",
-    "send": "Send"
+    "send": "Send",
+    "accessTitle": "This room is private",
+    "accessDescription": "Enter the 6-character code to access this room.",
+    "codeLabel": "Code",
+    "codePlaceholder": "Enter code",
+    "codeError": "The code must be exactly 6 characters",
+    "accessSubmit": "Access",
+    "wrongCode": "Incorrect code"
   },
   "ShareChat": {
     "title": "Share this room",
