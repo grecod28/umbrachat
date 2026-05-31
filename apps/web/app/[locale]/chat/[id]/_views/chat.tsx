@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
+import { formatDate } from "@/libs/functions/format-date";
 
 interface Message {
   id: string;
@@ -29,29 +30,23 @@ export default function Chat({ initMessages }: { initMessages: Message[] }) {
 
   return (
     <>
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`flex flex-col ${msg.isOwn ? "items-end" : "items-start"}`}
-          >
-            {!msg.isOwn && (
-              <span className="text-xs text-text-muted mb-1 px-1">
-                {msg.sender}
-              </span>
-            )}
-            <div
-              className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                msg.isOwn
-                  ? "bg-primary text-white rounded-br-md"
-                  : "bg-surface border border-border text-text rounded-bl-md"
-              }`}
-            >
-              {msg.text}
+          <div key={msg.id} className="flex items-start gap-3">
+            <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-gradient-to-br from-primary/30 to-accent/20 flex items-center justify-center">
+              <span className="text-[10px] font-bold text-primary/70">?</span>
             </div>
-            <span className="text-[10px] text-text-muted mt-1 px-1">
-              {msg.timestamp}
-            </span>
+
+            <div className="flex-1 min-w-0">
+              <div className="rounded-xl bg-surface border border-border px-3 py-2">
+                <p className="text-sm text-text leading-relaxed break-words">
+                  {msg.content}
+                </p>
+              </div>
+              <p className="text-[10px] text-text-muted mt-1 ml-1">
+                {formatDate(msg.createdAt, "time")}
+              </p>
+            </div>
           </div>
         ))}
         <div ref={messagesEndRef} />
