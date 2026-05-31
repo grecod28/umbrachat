@@ -1,5 +1,13 @@
-import { ROOM_VISIBIITY } from '@repo/shared';
-import { IsEnum, IsOptional, IsString, MaxLength } from 'class-validator';
+import { ROOM_VISIBILITY, type RoomVisibility } from '@repo/shared';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  Length,
+  MaxLength,
+  ValidateIf,
+} from 'class-validator';
 export class CreateRoomDto {
   @IsOptional()
   @IsString()
@@ -11,6 +19,12 @@ export class CreateRoomDto {
   @MaxLength(2048)
   description?: string;
 
-  @IsEnum(ROOM_VISIBIITY)
-  visibility!: ROOM_VISIBIITY;
+  @IsEnum(ROOM_VISIBILITY)
+  visibility!: RoomVisibility;
+
+  @ValidateIf((o: CreateRoomDto) => o.visibility === ROOM_VISIBILITY.PRIVATE) // Condición
+  @IsNotEmpty()
+  @IsString()
+  @Length(6, 6)
+  password?: string;
 }

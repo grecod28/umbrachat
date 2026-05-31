@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import { Select } from "@/components/ui/select";
 import { InputPassword } from "@/components/ui/input-password";
 import { API_URL } from "@/libs/constants/api";
-import { ROOM_VISIBIITY } from "@repo/shared";
+import { ROOM_VISIBILITY, RoomVisibility } from "@repo/shared";
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
 
@@ -18,8 +18,8 @@ export default function CreateChatPage() {
   const router = useRouter();
 
   const options = [
-    { label: t("public"), value: ROOM_VISIBIITY.PUBLIC },
-    { label: t("private"), value: ROOM_VISIBIITY.PRIVATE },
+    { label: t("public"), value: ROOM_VISIBILITY.PUBLIC },
+    { label: t("private"), value: ROOM_VISIBILITY.PRIVATE },
   ];
 
   const createRoomSchema = z
@@ -30,16 +30,16 @@ export default function CreateChatPage() {
         .max(2048, t("descriptionMaxError"))
         .optional()
         .or(z.literal("")),
-      visibility: z.enum(ROOM_VISIBIITY),
+      visibility: z.enum(ROOM_VISIBILITY),
       password: z
         .string()
-        .max(255, t("passwordMaxError"))
+        .length(6, t("passwordLengthError"))
         .optional()
         .or(z.literal("")),
     })
     .superRefine((data, ctx) => {
       if (
-        data.visibility === ROOM_VISIBIITY.PRIVATE &&
+        data.visibility === ROOM_VISIBILITY.PRIVATE &&
         (!data.password || data.password === "")
       ) {
         ctx.addIssue({
@@ -63,7 +63,7 @@ export default function CreateChatPage() {
     defaultValues: {
       name: "",
       description: "",
-      visibility: ROOM_VISIBIITY.PUBLIC,
+      visibility: ROOM_VISIBILITY.PUBLIC,
     },
   });
 
@@ -149,10 +149,10 @@ export default function CreateChatPage() {
             label={t("visibility")}
             options={options}
             value={watch("visibility")}
-            onChange={(val) => setValue("visibility", val as ROOM_VISIBIITY)}
+            onChange={(val) => setValue("visibility", val as RoomVisibility)}
           />
 
-          {watch("visibility") === ROOM_VISIBIITY.PRIVATE && (
+          {watch("visibility") === ROOM_VISIBILITY.PRIVATE && (
             <InputPassword
               label={t("passwordLabel")}
               placeholder={t("passwordPlaceholder")}

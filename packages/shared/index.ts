@@ -1,1 +1,1 @@
-export * from "./dist/index.js";
+export * from "./types/chat.ts";
