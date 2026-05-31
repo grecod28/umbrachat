@@ -79,6 +79,10 @@
       "blue": "Blue"
     }
   },
+  "Contact": {
+    "title": "Contact",
+    "description": "Get in touch with the creator."
+  },
   "Errors": {
     "unexpected": "Unexpected error sending data"
   }

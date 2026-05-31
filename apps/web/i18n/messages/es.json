@@ -79,6 +79,10 @@
       "blue": "Azul"
     }
   },
+  "Contact": {
+    "title": "Contacto",
+    "description": "Ponte en contacto con el creador."
+  },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
   }
