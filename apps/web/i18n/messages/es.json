@@ -83,6 +83,13 @@
       "blue": "Azul"
     }
   },
+  "Search": {
+    "title": "Buscar",
+    "description": "Encuentra salas de chat públicas por nombre.",
+    "placeholder": "Buscar salas...",
+    "resultsFor": "Resultados para",
+    "need": "Debes escribir la temática que buscas"
+  },
   "Contact": {
     "title": "Contacto",
     "description": "Ponte en contacto con el creador."

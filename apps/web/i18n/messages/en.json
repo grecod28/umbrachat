@@ -83,6 +83,13 @@
       "blue": "Blue"
     }
   },
+  "Search": {
+    "title": "Search",
+    "description": "Find public chat rooms by name.",
+    "placeholder": "Search rooms...",
+    "resultsFor": "Results for",
+    "need": "You must write the topic you are looking for"
+  },
   "Contact": {
     "title": "Contact",
     "description": "Get in touch with the creator."
