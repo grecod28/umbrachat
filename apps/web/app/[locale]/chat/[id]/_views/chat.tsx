@@ -12,6 +12,8 @@ interface Message {
   isOwn: boolean;
 }
 
+const MAX_CHARS = 2048;
+
 export default function Chat({ initMessages }: { initMessages: Message[] }) {
   const t = useTranslations("ChatRoom");
   const [messages] = useState<Message[]>(initMessages);
@@ -23,7 +25,7 @@ export default function Chat({ initMessages }: { initMessages: Message[] }) {
   }, [messages]);
 
   const handleSend = () => {
-    if (!input.trim()) return;
+    if (!input.trim() || input.length > MAX_CHARS) return;
     setInput("");
   };
 
@@ -58,27 +60,42 @@ export default function Chat({ initMessages }: { initMessages: Message[] }) {
       </div>
 
       <div className="shrink-0 border-t border-border bg-background p-3">
-        <div className="flex items-end gap-2">
-          <textarea
-            rows={1}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-            placeholder={t("inputPlaceholder")}
-            className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
-          />
-          <button
-            title="Send message"
-            onClick={handleSend}
-            className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0"
+        <div className="flex flex-col gap-1">
+          <div className="flex items-end gap-2">
+            <textarea
+              rows={1}
+              value={input}
+              maxLength={MAX_CHARS}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
+              placeholder={t("inputPlaceholder")}
+              className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
+            />
+            <button
+              title="Send message"
+              onClick={handleSend}
+              disabled={!input.trim() || input.length > MAX_CHARS}
+              className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <IoSend size={18} />
+            </button>
+          </div>
+          <span
+            className={`text-xs text-right px-1 ${
+              input.length > MAX_CHARS
+                ? "text-danger"
+                : input.length > MAX_CHARS * 0.9
+                  ? "text-warning"
+                  : "text-text-muted"
+            }`}
           >
-            <IoSend size={18} />
-          </button>
+            {input.length}/{MAX_CHARS}
+          </span>
         </div>
       </div>
     </>
