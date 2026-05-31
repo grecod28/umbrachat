@@ -3,6 +3,7 @@ import { Link } from "@/i18n/navigation";
 import SearchForm from "./_views/search-form";
 import { Pagination } from "@/components/ui/pagination";
 import { API_URL } from "@/libs/constants/api";
+import { formatDate } from "@/libs/functions/format-date";
 
 export default async function SearchPage({
   searchParams,
@@ -13,7 +14,12 @@ export default async function SearchPage({
   const { name, page } = await searchParams;
 
   let result: {
-    data: { id: string; name: string; description: string }[];
+    data: {
+      id: string;
+      name: string;
+      description: string;
+      createdAt: string;
+    }[];
     meta: { total: number; lastPage: number };
   } | null = null;
 
@@ -40,9 +46,7 @@ export default async function SearchPage({
 
         <SearchForm />
 
-        {!name && (
-          <p className="text-center text-text-muted">{t("need")}</p>
-        )}
+        {!name && <p className="text-center text-text-muted">{t("need")}</p>}
 
         {name && result && (
           <p className="text-center text-text-muted">
@@ -68,6 +72,9 @@ export default async function SearchPage({
                       {item.description}
                     </p>
                   )}
+                  <p className="text-xs text-text-muted mt-2">
+                    {formatDate(item.createdAt)}
+                  </p>
                 </Link>
               </li>
             ))}

@@ -21,10 +21,8 @@ export class RoomsService {
           },
           access: null,
         },
-        select: {
-          id: true,
-          name: true,
-          description: true,
+        orderBy: {
+          createdAt: 'desc',
         },
         skip: skip,
         take: this.pageSize,
