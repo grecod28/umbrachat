@@ -1,9 +1,15 @@
 "use client";
 
-import { useState, use } from "react";
+import { useState, use, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { IoArrowBack, IoCopy, IoCheckmark } from "react-icons/io5";
+import {
+  IoArrowBack,
+  IoCopy,
+  IoCheckmark,
+  IoLockClosed,
+} from "react-icons/io5";
+import { API_URL } from "@/libs/constants/api";
 
 export default function ShareChatPage({
   params,
@@ -13,11 +19,17 @@ export default function ShareChatPage({
   const { id } = use(params);
   const t = useTranslations("ShareChat");
   const [copied, setCopied] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(false);
+
+  useEffect(() => {
+    fetch(`${API_URL}/rooms/${id}`)
+      .then((res) => res.json())
+      .then((data) => setIsPrivate(data.isPrivate))
+      .catch(() => {});
+  }, [id]);
 
   const shareLink =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/chat/${id}`
-      : "";
+    typeof window !== "undefined" ? `${window.location.origin}/chat/${id}` : "";
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(shareLink);
@@ -35,8 +47,16 @@ export default function ShareChatPage({
           <p className="text-text-muted">{t("description")}</p>
         </div>
 
+        {isPrivate && (
+          <div className="flex items-start gap-3 p-3 rounded-xl bg-surface border border-border">
+            <IoLockClosed className="shrink-0 mt-0.5 text-primary" size={18} />
+            <p className="text-sm text-text-muted">{t("privateNotice")}</p>
+          </div>
+        )}
+
         <div className="flex items-center gap-2">
           <input
+            title="link-input"
             type="text"
             readOnly
             value={shareLink}

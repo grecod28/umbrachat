@@ -82,8 +82,8 @@ export default function Chat({
   }, [input, socket]);
 
   return (
-    <section>
-      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-25 space-y-3">
+    <section className="flex flex-col h-full">
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-3">
             <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function Chat({
         <div ref={messagesEndRef} />
       </div>
 
-      <footer className="fixed bottom-0 w-full shrink-0 border-t border-border bg-background p-3">
+      <footer className="shrink-0 border-t border-border bg-background p-3">
         <div className="flex flex-col gap-1">
           <div className="flex items-end gap-2">
             <textarea
@@ -123,6 +123,7 @@ export default function Chat({
               className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
             />
             <button
+              title="send message button"
               type="button"
               onClick={handleSend}
               disabled={!input.trim() || input.length > MAX_CHARS}
@@ -132,6 +133,7 @@ export default function Chat({
             </button>
 
             <button
+              title="scroll bottom button"
               type="button"
               onClick={scrollToBottom}
               className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"

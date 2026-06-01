@@ -113,8 +113,8 @@ export default function AccessRoom({ roomId, data }: Props) {
 
   if (status.granted) {
     return (
-      <main className="flex flex-col min-h-screen">
-        <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-background shrink-0">
+      <main className="h-screen flex flex-col">
+        <header className="fixed top-0 left-0 w-full z-10 flex items-center justify-between px-4 py-3 border-b border-border bg-background">
           <Link
             href="/chat"
             className="text-text-muted hover:text-text transition-colors"
@@ -127,7 +127,7 @@ export default function AccessRoom({ roomId, data }: Props) {
           </h1>
 
           <Link
-            href="/chat/1/share"
+            href={`/chat/${roomId}/share`}
             className="flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors"
           >
             <span className="text-xs font-medium">{t("share")}</span>
@@ -135,11 +135,15 @@ export default function AccessRoom({ roomId, data }: Props) {
           </Link>
         </header>
 
-        <Chat
-          token={status.token}
-          initMessages={status.messages}
-          roomId={roomId}
-        />
+        <div className="shrink-0 h-[49px]" />
+
+        <div className="flex-1 min-h-0">
+          <Chat
+            token={status.token}
+            initMessages={status.messages}
+            roomId={roomId}
+          />
+        </div>
       </main>
     );
   }

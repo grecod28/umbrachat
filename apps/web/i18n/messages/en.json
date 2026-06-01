@@ -63,7 +63,8 @@
     "description": "Copy the link below to invite someone to this chat.",
     "copy": "Copy link",
     "copied": "Copied!",
-    "backToChat": "Back to chat"
+    "backToChat": "Back to chat",
+    "privateNotice": "This room is private. Guests must enter the access code to join."
   },
   "Config": {
     "language": "Language",

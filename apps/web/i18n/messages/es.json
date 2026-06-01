@@ -63,7 +63,8 @@
     "description": "Copia el enlace de abajo para invitar a alguien a este chat.",
     "copy": "Copiar enlace",
     "copied": "¡Copiado!",
-    "backToChat": "Volver al chat"
+    "backToChat": "Volver al chat",
+    "privateNotice": "Esta sala es privada. Los invitados deben introducir el código de acceso."
   },
   "Config": {
     "language": "Idioma",
