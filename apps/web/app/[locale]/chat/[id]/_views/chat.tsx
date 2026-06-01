@@ -20,19 +20,18 @@ export default function Chat({
   initMessages: Message[];
   roomId: string;
 }) {
-  // Modificar historial de chats
-  const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
-  const updated = [roomId, ...previous.filter((id: string) => id !== roomId)];
-  localStorage.setItem("rooms", JSON.stringify(updated));
-
   const t = useTranslations("ChatRoom");
   const [messages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
+    const updated = [roomId, ...previous.filter((id: string) => id !== roomId)];
+    localStorage.setItem("rooms", JSON.stringify(updated));
+
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [roomId, messages]);
 
   const handleSend = () => {
     if (!input.trim() || input.length > MAX_CHARS) return;

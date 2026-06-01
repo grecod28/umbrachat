@@ -5,38 +5,6 @@ import AccessRoom from "./_views/access-room";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
 
-const MOCK_MESSAGES = [
-  {
-    id: "1",
-    content: "Hola a todos! Como van?",
-    createdAt: "2026-05-31T10:30:00.000Z",
-  },
-  {
-    id: "2",
-    content: "Hey! Todo bien por aqui, trabajando en el proyecto nuevo.",
-    createdAt: "2026-05-31T10:31:00.000Z",
-  },
-  {
-    id: "3",
-    content: "Yo tambien ando metido en eso, esta quedando genial",
-    createdAt: "2026-05-31T10:33:00.000Z",
-  },
-  {
-    id: "4",
-    content: "Si! La parte del chat en tiempo real quedo muy fluida",
-    createdAt: "2026-05-31T10:34:00.000Z",
-  },
-  {
-    id: "5",
-    content: "Me encanta el diseño, se ve super moderno",
-    createdAt: "2026-05-31T10:36:00.000Z",
-  },
-  {
-    id: "6",
-    content: "Cuando lo subimos a produccion?",
-    createdAt: "2026-05-31T10:37:00.000Z",
-  },
-];
 export default async function ChatPage({
   params,
 }: {
@@ -50,6 +18,9 @@ export default async function ChatPage({
   if (data.isPrivate) {
     return <AccessRoom roomId={id} />;
   }
+
+  const messagesRes = await fetch(`${API_URL}/rooms/${id}/messages`);
+  const messagesData = await messagesRes.json();
 
   return (
     <main className="flex flex-col min-h-screen">
@@ -74,7 +45,7 @@ export default async function ChatPage({
         </Link>
       </header>
 
-      <Chat initMessages={MOCK_MESSAGES} roomId={id} />
+      <Chat initMessages={messagesData} roomId={id} />
     </main>
   );
 }

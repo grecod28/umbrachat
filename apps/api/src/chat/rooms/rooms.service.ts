@@ -133,6 +133,11 @@ export class RoomsService {
 
     return this.prisma.message.findMany({
       where: { roomId },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+      },
       orderBy: { createdAt: 'asc' },
     });
   }
