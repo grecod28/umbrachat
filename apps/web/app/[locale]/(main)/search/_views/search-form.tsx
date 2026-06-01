@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { FiSearch } from "react-icons/fi";
+import { useTypingSound } from "@/libs/hooks/use-typing-sound";
 
 export default function SearchForm() {
   const t = useTranslations("Search");
@@ -14,6 +15,7 @@ export default function SearchForm() {
 
   const [value, setValue] = useState(searchParams.get("name") || "");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { withSound } = useTypingSound();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
@@ -48,7 +50,7 @@ export default function SearchForm() {
       <input
         type="text"
         value={value}
-        onChange={handleChange}
+        onChange={withSound(handleChange)}
         placeholder={t("placeholder")}
         className="w-full pl-12 pr-4 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
       />

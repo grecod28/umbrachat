@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
+import { playSubmitSound } from "@/libs/functions/sounds";
 import { IoArrowBack, IoLockClosed, IoShareSocial } from "react-icons/io5";
 import Chat from "./chat";
 import Link from "next/link";
@@ -76,6 +77,7 @@ export default function AccessRoom({ roomId, data }: Props) {
 
   const onSubmit = useCallback(
     async (data: AccessForm) => {
+      playSubmitSound();
       setStatus((prev) => ({ ...prev, error: "" }));
 
       const res = await fetch(`${API_URL}/rooms/${roomId}/access`, {

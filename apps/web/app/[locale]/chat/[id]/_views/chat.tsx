@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { IoArrowDownOutline, IoSend } from "react-icons/io5";
 import { formatDate } from "@/libs/functions/format-date";
+import { playSubmitSound } from "@/libs/functions/sounds";
+import { useTypingSound } from "@/libs/hooks/use-typing-sound";
 import { useSocket } from "@/providers/socket-provider";
 
 interface Message {
@@ -28,6 +30,7 @@ export default function Chat({
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
+  const { withSound } = useTypingSound();
 
   const roomIdRef = useRef(roomId);
   roomIdRef.current = roomId;
@@ -78,6 +81,7 @@ export default function Chat({
       roomId: roomIdRef.current,
       content: input.trim(),
     });
+    playSubmitSound();
     setInput("");
   }, [input, socket]);
 
@@ -112,7 +116,7 @@ export default function Chat({
               rows={1}
               value={input}
               maxLength={MAX_CHARS}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={withSound((e) => setInput(e.target.value))}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();

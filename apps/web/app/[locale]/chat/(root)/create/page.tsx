@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { Select } from "@/components/ui/select";
 import { InputPassword } from "@/components/ui/input-password";
 import { API_URL } from "@/libs/constants/api";
+import { playSubmitSound } from "@/libs/functions/sounds";
 import { ROOM_VISIBILITY, RoomVisibility } from "@repo/shared";
 import { useState } from "react";
 import { useRouter } from "@/i18n/navigation";
@@ -68,6 +69,7 @@ export default function CreateChatPage() {
   });
 
   const onSubmit = async (data: CreateRoomForm) => {
+    playSubmitSound();
     const res = await fetch(`${API_URL}/rooms`, {
       method: "POST",
       headers: {
