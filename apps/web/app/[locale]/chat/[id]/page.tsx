@@ -74,7 +74,7 @@ export default async function ChatPage({
         </Link>
       </header>
 
-      <Chat initMessages={MOCK_MESSAGES} />
+      <Chat initMessages={MOCK_MESSAGES} roomId={id} />
     </main>
   );
 }

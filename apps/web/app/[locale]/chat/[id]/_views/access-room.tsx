@@ -52,7 +52,7 @@ export default function AccessRoom({ roomId }: Props) {
   };
 
   if (granted) {
-    return <Chat initMessages={[]} />;
+    return <Chat initMessages={[]} roomId={roomId} />;
   }
 
   return (

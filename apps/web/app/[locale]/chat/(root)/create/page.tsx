@@ -83,16 +83,6 @@ export default function CreateChatPage() {
       return;
     }
 
-    // Modificar historial de chats
-    const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
-
-    const updated = [
-      resData.id,
-      ...previous.filter((id: string) => id !== resData.id),
-    ];
-
-    localStorage.setItem("rooms", JSON.stringify(updated));
-
     // Redirigir
     router.push(`/chat/${resData.id}`);
   };

@@ -13,7 +13,19 @@ interface Message {
 
 const MAX_CHARS = 2048;
 
-export default function Chat({ initMessages }: { initMessages: Message[] }) {
+export default function Chat({
+  initMessages,
+  roomId,
+}: {
+  initMessages: Message[];
+  roomId: string;
+}) {
+  // Modificar historial de chats
+  const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
+  const updated = [roomId, ...previous.filter((id: string) => id !== roomId)];
+  console.log(updated);
+  localStorage.setItem("rooms", JSON.stringify(updated));
+
   const t = useTranslations("ChatRoom");
   const [messages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
