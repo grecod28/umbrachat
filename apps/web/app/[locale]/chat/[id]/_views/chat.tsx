@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IoSend } from "react-icons/io5";
+import { IoArrowDownOutline, IoSend } from "react-icons/io5";
 import { formatDate } from "@/libs/functions/format-date";
 import { useSocket } from "@/providers/socket-provider";
 
@@ -58,7 +58,6 @@ export default function Chat({
 
     const onNewMessage = (msg: Message) => {
       setMessages((prev) => [...prev, msg]);
-      setTimeout(scrollToBottom, 50);
     };
 
     socket.on("new-message", onNewMessage);
@@ -130,6 +129,14 @@ export default function Chat({
               className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               <IoSend size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={scrollToBottom}
+              className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <IoArrowDownOutline size={18} />
             </button>
           </div>
           <span

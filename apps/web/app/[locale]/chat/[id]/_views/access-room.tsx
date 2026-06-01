@@ -6,11 +6,15 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
-import { IoLockClosed } from "react-icons/io5";
+import { IoArrowBack, IoLockClosed, IoShareSocial } from "react-icons/io5";
 import Chat from "./chat";
+import Link from "next/link";
 
 type Props = {
   roomId: string;
+  data: {
+    name: string;
+  };
 };
 
 type Status = {
@@ -20,7 +24,7 @@ type Status = {
   token: string | null;
 };
 
-export default function AccessRoom({ roomId }: Props) {
+export default function AccessRoom({ roomId, data }: Props) {
   const t = useTranslations("ChatRoom");
   const [status, setStatus] = useState<Status>({
     granted: false,
@@ -33,7 +37,9 @@ export default function AccessRoom({ roomId }: Props) {
     const storedToken = sessionStorage.getItem(`room-token-${roomId}`);
     if (!storedToken) return;
 
-    fetch(`${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(storedToken)}`)
+    fetch(
+      `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(storedToken)}`,
+    )
       .then((res) => {
         if (!res.ok) {
           sessionStorage.removeItem(`room-token-${roomId}`);
@@ -107,12 +113,39 @@ export default function AccessRoom({ roomId }: Props) {
 
   if (status.granted) {
     return (
-      <Chat token={status.token} initMessages={status.messages} roomId={roomId} />
+      <main className="flex flex-col min-h-screen">
+        <header className="flex items-center justify-between px-4 py-3 border-b border-border bg-background shrink-0">
+          <Link
+            href="/chat"
+            className="text-text-muted hover:text-text transition-colors"
+          >
+            <IoArrowBack size={22} />
+          </Link>
+
+          <h1 className="text-sm font-semibold text-text truncate max-w-50">
+            {data.name || t("noTitle")}
+          </h1>
+
+          <Link
+            href="/chat/1/share"
+            className="flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors"
+          >
+            <span className="text-xs font-medium">{t("share")}</span>
+            <IoShareSocial size={18} />
+          </Link>
+        </header>
+
+        <Chat
+          token={status.token}
+          initMessages={status.messages}
+          roomId={roomId}
+        />
+      </main>
     );
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4">
+    <section className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="animate-fade-in w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <IoLockClosed className="mx-auto text-primary" size={40} />
@@ -143,7 +176,9 @@ export default function AccessRoom({ roomId }: Props) {
             )}
           </div>
 
-          {status.error && <p className="text-sm text-danger">{status.error}</p>}
+          {status.error && (
+            <p className="text-sm text-danger">{status.error}</p>
+          )}
 
           <button
             type="submit"
@@ -153,6 +188,6 @@ export default function AccessRoom({ roomId }: Props) {
           </button>
         </form>
       </div>
-    </main>
+    </section>
   );
 }

@@ -16,7 +16,7 @@ export default async function ChatPage({
   const data = await res.json();
 
   if (data.isPrivate) {
-    return <AccessRoom roomId={id} />;
+    return <AccessRoom data={data} roomId={id} />;
   }
 
   const messagesRes = await fetch(`${API_URL}/rooms/${id}/messages`);
