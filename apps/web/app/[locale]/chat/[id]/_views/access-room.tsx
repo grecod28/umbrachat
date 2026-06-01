@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
 import { IoLockClosed } from "react-icons/io5";
 import Chat from "./chat";
@@ -85,7 +85,6 @@ export default function AccessRoom({ roomId }: Props) {
         resData.token,
       )}`,
     );
-    console.log(messagesRes);
 
     if (messagesRes.ok) {
       const messagesData = await messagesRes.json();

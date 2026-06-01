@@ -191,4 +191,21 @@ export class RoomsService {
   async deleteRoom(id: string) {
     return await this.prisma.room.delete({ where: { id: id } });
   }
+
+  async isPrivate(roomId: string): Promise<boolean> {
+    const room = await this.prisma.room.findUnique({
+      where: { id: roomId },
+      include: {
+        access: {
+          select: {
+            roomId: true,
+          },
+        },
+      },
+    });
+
+    if (!room) throw new NotFoundException('Room doesn`t exists');
+
+    return !!room.access;
+  }
 }

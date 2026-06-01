@@ -1,4 +1,4 @@
-import { ParseUUIDPipe } from '@nestjs/common';
+import { ParseUUIDPipe, UnauthorizedException } from '@nestjs/common';
 import {
   ConnectedSocket,
   MessageBody,
@@ -10,7 +10,10 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from './messages/services/messages.service';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
-import { FetchMessagesDto } from './messages/dto/fetch-messages.dto';
+import { JoinRoomDto } from './dto/join-room.dto';
+import { RoomsService } from './rooms/rooms.service';
+import { JwtService } from '@nestjs/jwt';
+import { ChatPayload } from 'src/auth/types/payload';
 
 @WebSocketGateway(3002, {
   cors: {
@@ -19,7 +22,11 @@ import { FetchMessagesDto } from './messages/dto/fetch-messages.dto';
   },
 })
 export class ChatGateway implements OnGatewayDisconnect {
-  constructor(private readonly messagesService: MessagesService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    private readonly messagesService: MessagesService,
+    private readonly roomsService: RoomsService,
+  ) {}
 
   @WebSocketServer()
   server!: Server;
@@ -43,8 +50,26 @@ export class ChatGateway implements OnGatewayDisconnect {
   @SubscribeMessage('join-room')
   async handleJoin(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: FetchMessagesDto,
+    @MessageBody() data: JoinRoomDto,
   ) {
+    if (await this.roomsService.isPrivate(data.roomId)) {
+      if (!data.token)
+        throw new UnauthorizedException('Token required for this room');
+
+      try {
+        const payload: ChatPayload = await this.jwtService.verifyAsync(
+          data.token,
+        );
+
+        if (payload.roomId !== data.roomId) throw new UnauthorizedException();
+      } catch {
+        throw new UnauthorizedException(
+          'Código de acceso incorrecto o expirado',
+        );
+      }
+    }
+    console.log('Uniendose');
+
     await client.join(data.roomId);
 
     const count = this.server.sockets.adapter.rooms.get(data.roomId)?.size ?? 0;

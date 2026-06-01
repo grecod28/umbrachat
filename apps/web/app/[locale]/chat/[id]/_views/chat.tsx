@@ -4,6 +4,8 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { formatDate } from "@/libs/functions/format-date";
+import { Socket } from "socket.io-client";
+import { useSocket } from "@/providers/socket-provider";
 
 interface Message {
   id: string;
@@ -16,14 +18,27 @@ const MAX_CHARS = 2048;
 export default function Chat({
   initMessages,
   roomId,
+  token,
 }: {
   initMessages: Message[];
   roomId: string;
+  token?: string;
 }) {
   const t = useTranslations("ChatRoom");
   const [messages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const socket = useSocket();
+
+  useEffect(() => {
+    if (!socket || !roomId) return;
+
+    socket.emit("join-room", { roomId, token: token ?? null });
+
+    return () => {
+      socket.emit("leave-room", { roomId });
+    };
+  }, [roomId, socket]);
 
   useEffect(() => {
     const previous = JSON.parse(localStorage.getItem("rooms") || "[]");

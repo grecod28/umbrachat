@@ -8,5 +8,6 @@ import { AuthModule } from 'src/auth/auth.module';
   imports: [PrismaModule, AuthModule],
   providers: [RoomsService],
   controllers: [RoomsController],
+  exports: [RoomsService],
 })
 export class RoomsModule {}
