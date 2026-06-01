@@ -86,6 +86,13 @@ export class ChatGateway implements OnGatewayDisconnect {
   ) {
     const { roomId, content } = data;
 
+    if (!client.rooms.has(roomId)) {
+      return client.emit('reply', {
+        success: false,
+        error: 'Not joined to room',
+      });
+    }
+
     // Se emite a todos en la sala
     const msg = await this.messagesService.createMessage({ content, roomId });
 

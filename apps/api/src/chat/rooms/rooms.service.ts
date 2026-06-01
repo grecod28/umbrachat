@@ -102,16 +102,38 @@ export class RoomsService {
     };
   }
 
-  async findMessagesByRoom(roomId: string) {
-    return await this.prisma.room.findUnique({
-      where: { id: roomId, access: null },
-      include: {
-        messages: {
-          orderBy: {
-            createdAt: 'asc',
-          },
-        },
-      },
+  async findMessagesByRoom(roomId: string, accessToken?: string) {
+    const room = await this.prisma.room.findUnique({
+      where: { id: roomId },
+      include: { access: true },
+    });
+    if (!room) throw new NotFoundException('Sala no encontrada');
+
+    if (room.access) {
+      if (!accessToken) {
+        throw new UnauthorizedException(
+          'Esta sala es privada y requiere una llave de acceso',
+        );
+      }
+
+      try {
+        const payload =
+          await this.jwtService.verifyAsync<ChatPayload>(accessToken);
+
+        // Verifica si el roomId del payload es el mismo de esta sala
+        if (payload.roomId !== roomId) {
+          throw new UnauthorizedException('El token no pertenece a esta sala');
+        }
+      } catch {
+        throw new UnauthorizedException(
+          'Código de acceso incorrecto o expirado',
+        );
+      }
+    }
+
+    return this.prisma.message.findMany({
+      where: { roomId },
+      orderBy: { createdAt: 'asc' },
     });
   }
 

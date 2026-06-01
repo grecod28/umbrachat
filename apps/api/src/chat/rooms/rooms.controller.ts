@@ -34,8 +34,11 @@ export class RoomsController {
   }
 
   @Get(':id/messages')
-  getMessages(@Param('id', new ParseUUIDPipe()) roomId: string) {
-    return this.roomsService.findMessagesByRoom(roomId);
+  getMessages(
+    @Param('id', new ParseUUIDPipe()) roomId: string,
+    @Query('token') accessToken?: string,
+  ) {
+    return this.roomsService.findMessagesByRoom(roomId, accessToken);
   }
 
   @Post()

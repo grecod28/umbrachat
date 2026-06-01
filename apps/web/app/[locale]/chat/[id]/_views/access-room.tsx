@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
 import { IoLockClosed } from "react-icons/io5";
 import Chat from "./chat";
@@ -17,6 +17,36 @@ export default function AccessRoom({ roomId }: Props) {
   const t = useTranslations("ChatRoom");
   const [granted, setGranted] = useState(false);
   const [error, setError] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      const token = sessionStorage.getItem(`room-token-${roomId}`);
+
+      if (!token) return;
+
+      try {
+        const res = await fetch(
+          `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(token)}`,
+        );
+
+        if (!res.ok) {
+          sessionStorage.removeItem(`room-token-${roomId}`);
+          return;
+        }
+
+        const data = await res.json();
+        console.log(data);
+
+        setMessages(data);
+        setGranted(true);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    checkAccess();
+  }, [roomId]);
 
   const accessSchema = z.object({
     password: z.string().length(6, t("codeError")),
@@ -48,11 +78,25 @@ export default function AccessRoom({ roomId }: Props) {
       return;
     }
 
+    sessionStorage.setItem(`room-token-${roomId}`, resData.token);
+
+    const messagesRes = await fetch(
+      `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(
+        resData.token,
+      )}`,
+    );
+    console.log(messagesRes);
+
+    if (messagesRes.ok) {
+      const messagesData = await messagesRes.json();
+      setMessages(messagesData);
+    }
+
     setGranted(true);
   };
 
   if (granted) {
-    return <Chat initMessages={[]} roomId={roomId} />;
+    return <Chat initMessages={messages} roomId={roomId} />;
   }
 
   return (
