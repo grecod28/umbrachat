@@ -103,6 +103,12 @@
     "title": "Contacto",
     "description": "Ponte en contacto con el creador."
   },
+  "ChatList": {
+    "title": "Mis Chats",
+    "empty": "No tienes chats activos",
+    "recent": "Tus conversaciones recientes",
+    "loading": "Cargando salas..."
+  },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
   }

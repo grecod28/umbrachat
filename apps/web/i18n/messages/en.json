@@ -103,6 +103,12 @@
     "title": "Contact",
     "description": "Get in touch with the creator."
   },
+  "ChatList": {
+    "title": "My Chats",
+    "empty": "No active chats",
+    "recent": "Your recent conversations",
+    "loading": "Loading rooms..."
+  },
   "Errors": {
     "unexpected": "Unexpected error sending data"
   }

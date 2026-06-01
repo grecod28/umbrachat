@@ -6,15 +6,13 @@ import { useTranslations } from "next-intl";
 import { ChatCard } from "@/components/chat/chat-card";
 
 export default function ChatListPage() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const cr = useTranslations("ChatRoom");
+  const t = useTranslations("ChatList");
 
   useEffect(() => {
     const fetchRooms = async () => {
-      // 1. Obtener los IDs del localStorage
       const storedChats = JSON.parse(localStorage.getItem("rooms") || "[]");
-      console.log(storedChats);
 
       if (storedChats.length === 0) {
         setRooms([]);
@@ -22,7 +20,6 @@ export default function ChatListPage() {
         return;
       }
 
-      // 2. Construir los Query Params (?ids=1&ids=2...)
       const params = new URLSearchParams();
       storedChats.forEach((id: string) => params.append("ids", id));
 
@@ -45,33 +42,27 @@ export default function ChatListPage() {
   return (
     <main className="py-20 px-4">
       <section>
-        <header className="my-6  text-center">
-          <h1 className="text-primary text-2xl font-bold">Mis Chats</h1>
+        <header className="my-6 text-center">
+          <h1 className="text-primary text-2xl font-bold">{t("title")}</h1>
           <p className="text-text-muted">
-            {rooms.length === 0
-              ? "No tienes chats activos"
-              : "Tus conversaciones recientes"}
+            {rooms.length === 0 ? t("empty") : t("recent")}
           </p>
         </header>
 
         {isLoading ? (
-          <p>Cargando salas...</p>
+          <p className="text-center text-text-muted">{t("loading")}</p>
         ) : (
           <div className="grid gap-4">
-            {rooms.map((room: Room) => {
-              console.log(room);
-
-              return (
-                <ChatCard
-                  key={room.id}
-                  id={room.id}
-                  name={room.name}
-                  description={room.description}
-                  createdAt={new Date(room.createdAt).toLocaleString()}
-                  lastMessageAt={new Date(room.lastMessageAt).toLocaleString()}
-                />
-              );
-            })}
+            {rooms.map((room: Room) => (
+              <ChatCard
+                key={room.id}
+                id={room.id}
+                name={room.name}
+                description={room.description}
+                createdAt={room.createdAt}
+                lastMessageAt={room.lastMessageAt}
+              />
+            ))}
           </div>
         )}
       </section>

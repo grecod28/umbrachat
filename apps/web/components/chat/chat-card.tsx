@@ -5,8 +5,8 @@ type ChatCardProps = {
   id: string;
   name: string;
   description?: string;
-  createdAt: string;
-  lastMessageAt?: string;
+  createdAt: string | Date;
+  lastMessageAt?: string | Date;
   noTitleLabel?: string;
 };
 

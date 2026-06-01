@@ -37,7 +37,10 @@ export default async function LocaleLayout({
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-text overflow-x-hidden">
+      <body
+        className="min-h-full flex flex-col bg-background text-text overflow-x-hidden"
+        suppressHydrationWarning
+      >
         <ShapeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
             {children}
