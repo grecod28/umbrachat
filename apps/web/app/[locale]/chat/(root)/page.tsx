@@ -1,16 +1,69 @@
 "use client";
+import { API_URL } from "@/libs/constants/api";
+import { useEffect, useState } from "react";
+import { Room } from "@repo/database";
+import { useTranslations } from "next-intl";
 
 export default function ChatListPage() {
-  const storedChats = JSON.parse(localStorage.getItem("rooms") || "[]");
-  console.log(storedChats);
+  const [rooms, setRooms] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const cr = useTranslations("ChatRoom");
+
+  useEffect(() => {
+    const fetchRooms = async () => {
+      // 1. Obtener los IDs del localStorage
+      const storedChats = JSON.parse(localStorage.getItem("rooms") || "[]");
+
+      if (storedChats.length === 0) {
+        setRooms([]);
+        setIsLoading(false);
+        return;
+      }
+
+      // 2. Construir los Query Params (?ids=1&ids=2...)
+      const params = new URLSearchParams();
+      storedChats.forEach((id: string) => params.append("ids", id));
+
+      try {
+        const response = await fetch(`${API_URL}/rooms?${params.toString()}`);
+        if (!response.ok) throw new Error("Error al cargar las salas");
+
+        const data = await response.json();
+        setRooms(data);
+      } catch (error) {
+        console.error("Error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, []);
 
   return (
-    <main>
+    <main className="p-4">
       <section>
-        <header>
-          <h1 className="text-primary"></h1>
-          <p className="text-text-muted"></p>
+        <header className="mb-6">
+          <h1 className="text-primary text-2xl font-bold">Mis Chats</h1>
+          <p className="text-text-muted">
+            {rooms.length === 0
+              ? "No tienes chats activos"
+              : "Tus conversaciones recientes"}
+          </p>
         </header>
+
+        {isLoading ? (
+          <p>Cargando salas...</p>
+        ) : (
+          <div className="grid gap-4">
+            {rooms.map((room: Room) => (
+              <div key={room.id} className="p-4 border rounded-lg shadow-sm">
+                <h3 className="font-semibold">{room.name || cr("noTitle")}</h3>
+                <p className="text-sm text-text-muted">{room.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
