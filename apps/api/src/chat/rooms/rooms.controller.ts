@@ -33,6 +33,11 @@ export class RoomsController {
     return this.roomsService.getRoom(roomId);
   }
 
+  @Get(':id/messages')
+  getMessages(@Param('id', new ParseUUIDPipe()) roomId: string) {
+    return this.roomsService.findMessagesByRoom(roomId);
+  }
+
   @Post()
   createRoom(@Body() createRoomDto: CreateRoomDto) {
     return this.roomsService.createRoom(createRoomDto);

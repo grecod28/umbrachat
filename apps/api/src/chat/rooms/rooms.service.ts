@@ -10,10 +10,15 @@ import * as bcrypt from 'bcrypt';
 import { ROOM_VISIBILITY } from '@repo/shared';
 import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
+import { JwtService } from '@nestjs/jwt';
+import { ChatPayload } from 'src/auth/types/payload';
 @Injectable()
 export class RoomsService {
   private readonly pageSize = 20;
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+  ) {}
 
   async getRooms(getRoomsDto: GetRoomsDto) {
     const rooms = await this.prisma.room.findMany({
@@ -97,6 +102,19 @@ export class RoomsService {
     };
   }
 
+  async findMessagesByRoom(roomId: string) {
+    return await this.prisma.room.findUnique({
+      where: { id: roomId, access: null },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
+      },
+    });
+  }
+
   async createRoom({ name, description, visibility, password }: CreateRoomDto) {
     // $transaction para que ambas operaciones sean atómicas
     return this.prisma.$transaction(async (tx) => {
@@ -124,9 +142,9 @@ export class RoomsService {
     });
   }
 
-  async accessRoom(id: string, { password }: AccessRoomDto) {
+  async accessRoom(roomId: string, { password }: AccessRoomDto) {
     const room = await this.prisma.roomAccess.findUnique({
-      where: { roomId: id },
+      where: { roomId },
     });
 
     if (!room) throw new NotFoundException('Room not found');
@@ -134,7 +152,13 @@ export class RoomsService {
     if (!(await bcrypt.compare(password, room.passwordHash)))
       throw new UnauthorizedException('Invalid `password');
 
-    return { success: true };
+    const payload: ChatPayload = {
+      roomId,
+    };
+
+    return {
+      token: this.jwtService.sign(payload),
+    };
   }
 
   async deleteRoom(id: string) {
