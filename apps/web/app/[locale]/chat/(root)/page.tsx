@@ -3,6 +3,7 @@ import { API_URL } from "@/libs/constants/api";
 import { useEffect, useState } from "react";
 import { Room } from "@repo/database";
 import { useTranslations } from "next-intl";
+import { ChatCard } from "@/components/chat/chat-card";
 
 export default function ChatListPage() {
   const [rooms, setRooms] = useState([]);
@@ -42,9 +43,9 @@ export default function ChatListPage() {
   }, []);
 
   return (
-    <main className="p-4">
+    <main className="py-20 px-4">
       <section>
-        <header className="mb-6">
+        <header className="my-6  text-center">
           <h1 className="text-primary text-2xl font-bold">Mis Chats</h1>
           <p className="text-text-muted">
             {rooms.length === 0
@@ -57,12 +58,20 @@ export default function ChatListPage() {
           <p>Cargando salas...</p>
         ) : (
           <div className="grid gap-4">
-            {rooms.map((room: Room) => (
-              <div key={room.id} className="p-4 border rounded-lg shadow-sm">
-                <h3 className="font-semibold">{room.name || cr("noTitle")}</h3>
-                <p className="text-sm text-text-muted">{room.description}</p>
-              </div>
-            ))}
+            {rooms.map((room: Room) => {
+              console.log(room);
+
+              return (
+                <ChatCard
+                  key={room.id}
+                  id={room.id}
+                  name={room.name}
+                  description={room.description}
+                  createdAt={new Date(room.createdAt).toLocaleString()}
+                  lastMessageAt={new Date(room.lastMessageAt).toLocaleString()}
+                />
+              );
+            })}
           </div>
         )}
       </section>

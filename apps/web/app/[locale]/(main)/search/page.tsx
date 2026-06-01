@@ -1,9 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { Link } from "@/i18n/navigation";
 import SearchForm from "./_views/search-form";
 import { Pagination } from "@/components/ui/pagination";
+import { ChatCard } from "@/components/chat/chat-card";
 import { API_URL } from "@/libs/constants/api";
-import { formatDate } from "@/libs/functions/format-date";
 
 export default async function SearchPage({
   searchParams,
@@ -17,8 +16,9 @@ export default async function SearchPage({
     data: {
       id: string;
       name: string;
-      description: string;
+      description?: string;
       createdAt: string;
+      lastMessageAt?: string;
     }[];
     meta: { total: number; lastPage: number };
   } | null = null;
@@ -60,22 +60,14 @@ export default async function SearchPage({
           <ul className="space-y-3">
             {result.data.map((item) => (
               <li key={item.id}>
-                <Link
-                  href={`/chat/${item.id}`}
-                  className="block p-4 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors"
-                >
-                  <p className="font-medium text-text">
-                    {item.name || t("noTitle")}
-                  </p>
-                  {item.description && (
-                    <p className="text-sm text-text-muted mt-1 line-clamp-2">
-                      {item.description}
-                    </p>
-                  )}
-                  <p className="text-xs text-text-muted mt-2">
-                    {formatDate(item.createdAt)}
-                  </p>
-                </Link>
+                <ChatCard
+                  id={item.id}
+                  name={item.name}
+                  description={item.description}
+                  createdAt={item.createdAt}
+                  lastMessageAt={item.lastMessageAt}
+                  noTitleLabel={t("noTitle")}
+                />
               </li>
             ))}
           </ul>
