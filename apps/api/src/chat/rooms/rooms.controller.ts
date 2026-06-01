@@ -20,7 +20,6 @@ export class RoomsController {
 
   @Get()
   getRooms(@Query() getRoomsDto: GetRoomsDto) {
-    console.log(getRoomsDto);
     return this.roomsService.getRooms(getRoomsDto);
   }
 

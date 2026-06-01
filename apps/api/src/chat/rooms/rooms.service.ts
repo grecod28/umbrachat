@@ -15,15 +15,27 @@ export class RoomsService {
   private readonly pageSize = 20;
   constructor(private prisma: PrismaService) {}
 
-  getRooms(getRoomsDto: GetRoomsDto) {
-    return this.prisma.room.findMany({
+  async getRooms(getRoomsDto: GetRoomsDto) {
+    const rooms = await this.prisma.room.findMany({
       where: {
         id: { in: getRoomsDto.ids },
+      },
+      include: {
+        access: {
+          select: {
+            roomId: true,
+          },
+        },
       },
       orderBy: {
         lastMessageAt: 'desc', // Ordenado por Último mensaje (por defecto al crear pone ahora)
       },
     });
+
+    return rooms.map((room) => ({
+      ...room,
+      isPrivate: !!room.access?.roomId,
+    }));
   }
 
   async searchRooms({ name, page = 1 }: SearchRoomsDto) {

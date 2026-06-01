@@ -1,12 +1,12 @@
 "use client";
 import { API_URL } from "@/libs/constants/api";
 import { useEffect, useState } from "react";
-import { Room } from "@repo/database";
+import { Room, RoomWithPrivate } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ChatCard } from "@/components/chat/chat-card";
 
 export default function ChatListPage() {
-  const [rooms, setRooms] = useState<Room[]>([]);
+  const [rooms, setRooms] = useState<RoomWithPrivate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const t = useTranslations("ChatList");
 
@@ -53,8 +53,9 @@ export default function ChatListPage() {
           <p className="text-center text-text-muted">{t("loading")}</p>
         ) : (
           <div className="grid gap-4">
-            {rooms.map((room: Room) => (
+            {rooms.map((room: RoomWithPrivate) => (
               <ChatCard
+                isPrivate={room.isPrivate}
                 key={room.id}
                 id={room.id}
                 name={room.name}
