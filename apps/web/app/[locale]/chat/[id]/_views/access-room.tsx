@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
 import { IoLockClosed } from "react-icons/io5";
 import Chat from "./chat";
@@ -13,40 +13,45 @@ type Props = {
   roomId: string;
 };
 
+type Status = {
+  granted: boolean;
+  error: string;
+  messages: { id: string; content: string; createdAt: string }[];
+  token: string | null;
+};
+
 export default function AccessRoom({ roomId }: Props) {
   const t = useTranslations("ChatRoom");
-  const [granted, setGranted] = useState(false);
-  const [error, setError] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [token, setToken] = useState<string | null>(null);
+  const [status, setStatus] = useState<Status>({
+    granted: false,
+    error: "",
+    messages: [],
+    token: null,
+  });
 
   useEffect(() => {
-    const checkAccess = async () => {
-      setToken(sessionStorage.getItem(`room-token-${roomId}`));
+    const storedToken = sessionStorage.getItem(`room-token-${roomId}`);
+    if (!storedToken) return;
 
-      if (!token) return;
-
-      try {
-        const res = await fetch(
-          `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(token)}`,
-        );
-
+    fetch(`${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(storedToken)}`)
+      .then((res) => {
         if (!res.ok) {
           sessionStorage.removeItem(`room-token-${roomId}`);
-          return;
+          return null;
         }
-
-        const data = await res.json();
-        console.log(data);
-
-        setMessages(data);
-        setGranted(true);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    checkAccess();
+        return res.json();
+      })
+      .then((data) => {
+        if (data) {
+          setStatus({
+            granted: true,
+            error: "",
+            messages: data,
+            token: storedToken,
+          });
+        }
+      })
+      .catch(() => {});
   }, [roomId]);
 
   const accessSchema = z.object({
@@ -63,40 +68,47 @@ export default function AccessRoom({ roomId }: Props) {
     resolver: zodResolver(accessSchema),
   });
 
-  const onSubmit = async (data: AccessForm) => {
-    setError("");
+  const onSubmit = useCallback(
+    async (data: AccessForm) => {
+      setStatus((prev) => ({ ...prev, error: "" }));
 
-    const res = await fetch(`${API_URL}/rooms/${roomId}/access`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    const resData = await res.json();
-    console.log(resData);
+      const res = await fetch(`${API_URL}/rooms/${roomId}/access`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const resData = await res.json();
 
-    if (!res.ok) {
-      setError(t("wrongCode"));
-      return;
-    }
+      if (!res.ok) {
+        setStatus((prev) => ({ ...prev, error: t("wrongCode") }));
+        return;
+      }
 
-    sessionStorage.setItem(`room-token-${roomId}`, resData.token);
+      sessionStorage.setItem(`room-token-${roomId}`, resData.token);
 
-    const messagesRes = await fetch(
-      `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(
-        resData.token,
-      )}`,
+      const messagesRes = await fetch(
+        `${API_URL}/rooms/${roomId}/messages?token=${encodeURIComponent(resData.token)}`,
+      );
+
+      if (messagesRes.ok) {
+        const messagesData = await messagesRes.json();
+        setStatus({
+          granted: true,
+          error: "",
+          messages: messagesData,
+          token: resData.token,
+        });
+      } else {
+        setStatus((prev) => ({ ...prev, error: t("wrongCode") }));
+      }
+    },
+    [roomId, t],
+  );
+
+  if (status.granted) {
+    return (
+      <Chat token={status.token} initMessages={status.messages} roomId={roomId} />
     );
-
-    if (messagesRes.ok) {
-      const messagesData = await messagesRes.json();
-      setMessages(messagesData);
-    }
-
-    setGranted(true);
-  };
-
-  if (granted) {
-    return <Chat token={token} initMessages={messages} roomId={roomId} />;
   }
 
   return (
@@ -131,7 +143,7 @@ export default function AccessRoom({ roomId }: Props) {
             )}
           </div>
 
-          {error && <p className="text-sm text-danger">{error}</p>}
+          {status.error && <p className="text-sm text-danger">{status.error}</p>}
 
           <button
             type="submit"

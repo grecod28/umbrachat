@@ -1,10 +1,9 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { formatDate } from "@/libs/functions/format-date";
-import { Socket } from "socket.io-client";
 import { useSocket } from "@/providers/socket-provider";
 
 interface Message {
@@ -30,45 +29,58 @@ export default function Chat({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
 
-  useEffect(() => {
-    if (!socket || !roomId) return;
+  const roomIdRef = useRef(roomId);
+  roomIdRef.current = roomId;
 
-    console.log(token);
-    socket.emit("join-room", { roomId, token: token ?? null });
+  const tokenRef = useRef(token);
+  tokenRef.current = token;
 
-    const handleReply = (data: any) => {
-      console.log("Respuesta del servidor (reply):", data);
-    };
-
-    const handleNewMessage = (newMessage: Message) => {
-      console.log("Nuevo mensaje");
-      setMessages((prev) => [...prev, newMessage]);
-    };
-
-    // Suscribirse a los eventos
-    socket.on("reply", handleReply);
-    socket.on("new-message", handleNewMessage);
-
-    // 4. Limpieza para evitar duplicados o fugas de memoria
-    return () => {
-      socket.emit("leave-room", { roomId });
-      socket.off("reply", handleReply);
-      socket.off("new-message", handleNewMessage);
-    };
-  }, [roomId, socket, token]);
+  const scrollToBottom = useCallback(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
 
   useEffect(() => {
     const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
-    const updated = [roomId, ...previous.filter((id: string) => id !== roomId)];
+    const updated = [
+      roomIdRef.current,
+      ...previous.filter((id: string) => id !== roomIdRef.current),
+    ];
     localStorage.setItem("rooms", JSON.stringify(updated));
+  }, []);
 
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [roomId, messages]);
+  useEffect(() => {
+    if (!socket) return;
 
-  const handleSend = () => {
-    if (!input.trim() || input.length > MAX_CHARS) return;
+    socket.emit("join-room", {
+      roomId: roomIdRef.current,
+      token: tokenRef.current ?? null,
+    });
+
+    const onNewMessage = (msg: Message) => {
+      setMessages((prev) => [...prev, msg]);
+      setTimeout(scrollToBottom, 50);
+    };
+
+    socket.on("new-message", onNewMessage);
+
+    return () => {
+      socket.emit("leave-room", { roomId: roomIdRef.current });
+      socket.off("new-message", onNewMessage);
+    };
+  }, [socket, scrollToBottom]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [scrollToBottom]);
+
+  const handleSend = useCallback(() => {
+    if (!input.trim() || input.length > MAX_CHARS || !socket) return;
+    socket.emit("send-message", {
+      roomId: roomIdRef.current,
+      content: input.trim(),
+    });
     setInput("");
-  };
+  }, [input, socket]);
 
   return (
     <section>
@@ -112,7 +124,7 @@ export default function Chat({
               className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
             />
             <button
-              title="Send message"
+              type="button"
               onClick={handleSend}
               disabled={!input.trim() || input.length > MAX_CHARS}
               className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
