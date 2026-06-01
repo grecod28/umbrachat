@@ -22,10 +22,10 @@ export default function Chat({
 }: {
   initMessages: Message[];
   roomId: string;
-  token?: string;
+  token?: string | null;
 }) {
   const t = useTranslations("ChatRoom");
-  const [messages] = useState<Message[]>(initMessages);
+  const [messages, setMessages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
@@ -33,12 +33,29 @@ export default function Chat({
   useEffect(() => {
     if (!socket || !roomId) return;
 
+    console.log(token);
     socket.emit("join-room", { roomId, token: token ?? null });
 
+    const handleReply = (data: any) => {
+      console.log("Respuesta del servidor (reply):", data);
+    };
+
+    const handleNewMessage = (newMessage: Message) => {
+      console.log("Nuevo mensaje");
+      setMessages((prev) => [...prev, newMessage]);
+    };
+
+    // Suscribirse a los eventos
+    socket.on("reply", handleReply);
+    socket.on("new-message", handleNewMessage);
+
+    // 4. Limpieza para evitar duplicados o fugas de memoria
     return () => {
       socket.emit("leave-room", { roomId });
+      socket.off("reply", handleReply);
+      socket.off("new-message", handleNewMessage);
     };
-  }, [roomId, socket]);
+  }, [roomId, socket, token]);
 
   useEffect(() => {
     const previous = JSON.parse(localStorage.getItem("rooms") || "[]");
@@ -55,7 +72,7 @@ export default function Chat({
 
   return (
     <section>
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-25 space-y-3">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-3">
             <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">

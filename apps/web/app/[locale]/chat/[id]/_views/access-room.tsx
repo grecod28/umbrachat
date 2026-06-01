@@ -18,10 +18,11 @@ export default function AccessRoom({ roomId }: Props) {
   const [granted, setGranted] = useState(false);
   const [error, setError] = useState("");
   const [messages, setMessages] = useState([]);
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
     const checkAccess = async () => {
-      const token = sessionStorage.getItem(`room-token-${roomId}`);
+      setToken(sessionStorage.getItem(`room-token-${roomId}`));
 
       if (!token) return;
 
@@ -95,7 +96,7 @@ export default function AccessRoom({ roomId }: Props) {
   };
 
   if (granted) {
-    return <Chat initMessages={messages} roomId={roomId} />;
+    return <Chat token={token} initMessages={messages} roomId={roomId} />;
   }
 
   return (
