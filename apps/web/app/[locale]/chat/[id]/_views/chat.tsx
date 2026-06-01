@@ -41,7 +41,7 @@ export default function Chat({
   };
 
   return (
-    <>
+    <section>
       <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-3">
@@ -64,7 +64,7 @@ export default function Chat({
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="shrink-0 border-t border-border bg-background p-3">
+      <footer className="fixed bottom-0 w-full shrink-0 border-t border-border bg-background p-3">
         <div className="flex flex-col gap-1">
           <div className="flex items-end gap-2">
             <textarea
@@ -102,7 +102,7 @@ export default function Chat({
             {input.length}/{MAX_CHARS}
           </span>
         </div>
-      </div>
-    </>
+      </footer>
+    </section>
   );
 }
