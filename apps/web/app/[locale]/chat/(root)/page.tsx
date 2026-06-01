@@ -13,6 +13,7 @@ export default function ChatListPage() {
     const fetchRooms = async () => {
       // 1. Obtener los IDs del localStorage
       const storedChats = JSON.parse(localStorage.getItem("rooms") || "[]");
+      console.log(storedChats);
 
       if (storedChats.length === 0) {
         setRooms([]);
