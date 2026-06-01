@@ -1,0 +1,116 @@
+{
+  "Header": {
+    "home": "Home",
+    "help": "Help",
+    "contact": "Contact",
+    "chats": "Chats"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "cta": "Go Back Home"
+  },
+  "Home": {
+    "welcome": "Welcome to",
+    "description": "Chat in real time with friends or strangers. Create your own room or join an existing one to start conversing.",
+    "createRoom": "Create a room",
+    "joinRoom": "Join a room"
+  },
+  "ChatLayout": {
+    "back": "Back",
+    "myChats": "My Chats"
+  },
+  "CreateChat": {
+    "title": "Create a room",
+    "description": "Configure the details of your new chat room.",
+    "name": "Name",
+    "namePlaceholder": "My chat room",
+    "nameMaxError": "The name cannot exceed 120 characters",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "A room to talk about...",
+    "descriptionMaxError": "The description cannot exceed 2048 characters",
+    "visibility": "Visibility",
+    "public": "Public",
+    "private": "Private",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Room password",
+    "passwordRequired": "Password is required for private rooms",
+    "passwordLengthError": "The password must contain 6 characters",
+    "submit": "Create room"
+  },
+  "JoinChat": {
+    "title": "Join a room",
+    "description": "Paste the link of the room you want to join.",
+    "linkPlaceholder": "https://umbrachat.com/room/...",
+    "submit": "Join"
+  },
+  "ChatRoom": {
+    "noTitle": "Untitled chat",
+    "share": "Share",
+    "inputPlaceholder": "Type a message...",
+    "send": "Send",
+    "accessTitle": "This room is private",
+    "accessDescription": "Enter the 6-character code to access this room.",
+    "codeLabel": "Code",
+    "codePlaceholder": "Enter code",
+    "codeError": "The code must be exactly 6 characters",
+    "accessSubmit": "Access",
+    "wrongCode": "Incorrect code"
+  },
+  "ShareChat": {
+    "title": "Share this room",
+    "description": "Copy the link below to invite someone to this chat.",
+    "copy": "Copy link",
+    "copied": "Copied!",
+    "backToChat": "Back to chat",
+    "privateNotice": "This room is private. Guests must enter the access code to join."
+  },
+  "Config": {
+    "language": "Language",
+    "shape": "Shape",
+    "controls": "Controls"
+  },
+  "ConfigLanguage": {
+    "title": "Language",
+    "description": "Select your preferred language."
+  },
+  "ConfigShape": {
+    "title": "Appearance",
+    "description": "Customize the look and feel of the app.",
+    "font": "Font",
+    "size": "Text size",
+    "color": "Primary color",
+    "sizeOptions": {
+      "sm": "Small",
+      "md": "Medium",
+      "lg": "Large"
+    },
+    "colorOptions": {
+      "purple": "Purple",
+      "blue": "Blue"
+    }
+  },
+  "Search": {
+    "title": "Search",
+    "description": "Find public chat rooms by name.",
+    "placeholder": "Search rooms...",
+    "resultsFor": "Results for",
+    "need": "You must write the topic you are looking for",
+    "noResults": "No rooms found",
+    "noTitle": "Untitled Chat"
+  },
+  "Contact": {
+    "title": "Contact",
+    "description": "Get in touch with the creator."
+  },
+  "ChatList": {
+    "title": "My Chats",
+    "empty": "No active chats",
+    "recent": "Your recent conversations",
+    "loading": "Loading rooms..."
+  },
+  "Errors": {
+    "unexpected": "Unexpected error sending data"
+  }
+}

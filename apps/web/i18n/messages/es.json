@@ -1,0 +1,116 @@
+{
+  "Header": {
+    "home": "Inicio",
+    "help": "Ayuda",
+    "contact": "Contacto",
+    "chats": "Chats"
+  },
+  "NotFound": {
+    "title": "404",
+    "heading": "Página No Encontrada",
+    "description": "La página que buscas no existe o ha sido movida.",
+    "cta": "Volver al Inicio"
+  },
+  "Home": {
+    "welcome": "Bienvenido a",
+    "description": "Chatea en tiempo real con amigos o desconocidos. Crea tu propia sala o únete a una existente para comenzar a conversar.",
+    "createRoom": "Crear una sala",
+    "joinRoom": "Unirse a una sala"
+  },
+  "ChatLayout": {
+    "back": "Volver",
+    "myChats": "Mis Chats"
+  },
+  "CreateChat": {
+    "title": "Crear una sala",
+    "description": "Configura los detalles de tu nueva sala de chat.",
+    "name": "Nombre",
+    "namePlaceholder": "Mi sala de chat",
+    "nameMaxError": "El nombre no puede superar 120 caracteres",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Una sala para conversar sobre...",
+    "descriptionMaxError": "La descripción no puede superar 2048 caracteres",
+    "visibility": "Visibilidad",
+    "public": "Pública",
+    "private": "Privada",
+    "passwordLabel": "Contraseña",
+    "passwordPlaceholder": "Contraseña de la sala",
+    "passwordRequired": "La contraseña es obligatoria para salas privadas",
+    "passwordLengthError": "La contraseña debe contener 6 caracteres",
+    "submit": "Crear sala"
+  },
+  "JoinChat": {
+    "title": "Unirse a una sala",
+    "description": "Pega el enlace de la sala a la que quieres unirte.",
+    "linkPlaceholder": "https://umbrachat.com/room/...",
+    "submit": "Unirse"
+  },
+  "ChatRoom": {
+    "noTitle": "Chat sin nombre",
+    "share": "Compartir",
+    "inputPlaceholder": "Escribe un mensaje...",
+    "send": "Enviar",
+    "accessTitle": "Esta sala es privada",
+    "accessDescription": "Introduce el código de 6 caracteres para acceder.",
+    "codeLabel": "Código",
+    "codePlaceholder": "Introduce el código",
+    "codeError": "El código debe tener exactamente 6 caracteres",
+    "accessSubmit": "Acceder",
+    "wrongCode": "Código incorrecto"
+  },
+  "ShareChat": {
+    "title": "Compartir esta sala",
+    "description": "Copia el enlace de abajo para invitar a alguien a este chat.",
+    "copy": "Copiar enlace",
+    "copied": "¡Copiado!",
+    "backToChat": "Volver al chat",
+    "privateNotice": "Esta sala es privada. Los invitados deben introducir el código de acceso."
+  },
+  "Config": {
+    "language": "Idioma",
+    "shape": "Forma",
+    "controls": "Controles"
+  },
+  "ConfigLanguage": {
+    "title": "Idioma",
+    "description": "Selecciona tu idioma preferido."
+  },
+  "ConfigShape": {
+    "title": "Apariencia",
+    "description": "Personaliza el aspecto visual de la app.",
+    "font": "Fuente",
+    "size": "Tamaño de texto",
+    "color": "Color primario",
+    "sizeOptions": {
+      "sm": "Pequeño",
+      "md": "Mediano",
+      "lg": "Grande"
+    },
+    "colorOptions": {
+      "purple": "Púrpura",
+      "blue": "Azul"
+    }
+  },
+  "Search": {
+    "title": "Buscar",
+    "description": "Encuentra salas de chat públicas por nombre.",
+    "placeholder": "Buscar salas...",
+    "resultsFor": "Resultados para",
+    "need": "Debes escribir la temática que buscas",
+    "noResults": "No se encontraron salas",
+    "noTitle": "Chat sin título"
+  },
+  "Contact": {
+    "title": "Contacto",
+    "description": "Ponte en contacto con el creador."
+  },
+  "ChatList": {
+    "title": "Mis Chats",
+    "empty": "No tienes chats activos",
+    "recent": "Tus conversaciones recientes",
+    "loading": "Cargando salas..."
+  },
+  "Errors": {
+    "unexpected": "Error inesperado al enviar datos"
+  }
+}
