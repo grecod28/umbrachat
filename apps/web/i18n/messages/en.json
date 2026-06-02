@@ -69,8 +69,7 @@
   },
   "Config": {
     "language": "Language",
-    "shape": "Shape",
-    "controls": "Controls"
+    "shape": "Shape"
   },
   "ConfigLanguage": {
     "title": "Language",
