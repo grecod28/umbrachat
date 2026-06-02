@@ -64,7 +64,8 @@
     "copy": "Copy link",
     "copied": "Copied!",
     "backToChat": "Back to chat",
-    "privateNotice": "This room is private. Guests must enter the access code to join."
+    "privateNotice": "This room is private. Guests must enter the access code to join.",
+    "share": "Share via..."
   },
   "Config": {
     "language": "Language",

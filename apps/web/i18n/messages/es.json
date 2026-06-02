@@ -64,7 +64,8 @@
     "copy": "Copiar enlace",
     "copied": "¡Copiado!",
     "backToChat": "Volver al chat",
-    "privateNotice": "Esta sala es privada. Los invitados deben introducir el código de acceso."
+    "privateNotice": "Esta sala es privada. Los invitados deben introducir el código de acceso.",
+    "share": "Compartir vía..."
   },
   "Config": {
     "language": "Idioma",

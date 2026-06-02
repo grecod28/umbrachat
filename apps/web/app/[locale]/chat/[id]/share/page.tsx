@@ -8,6 +8,7 @@ import {
   IoCopy,
   IoCheckmark,
   IoLockClosed,
+  IoShareSocial,
 } from "react-icons/io5";
 import { API_URL } from "@/libs/constants/api";
 
@@ -35,6 +36,15 @@ export default function ShareChatPage({
     await navigator.clipboard.writeText(shareLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleNativeShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: "UmbraChat",
+        url: shareLink,
+      });
+    }
   };
 
   return (
@@ -79,6 +89,15 @@ export default function ShareChatPage({
             )}
           </button>
         </div>
+
+        <button
+          type="button"
+          onClick={handleNativeShare}
+          className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-border-strong bg-surface font-semibold text-text hover:bg-surface-light transition-colors"
+        >
+          <IoShareSocial size={18} />
+          <span className="text-sm">{t("share")}</span>
+        </button>
 
         <Link
           href={`/chat/${id}`}
