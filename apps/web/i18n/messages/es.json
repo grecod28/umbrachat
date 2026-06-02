@@ -93,7 +93,7 @@
     }
   },
   "Info": {
-    "title": "Ayuda",
+    "title": "Información",
     "description": "Aprende a usar UmbraChat y todas sus funcionalidades.",
     "createRoom": "Crear una sala",
     "createRoomDesc": "Crea una sala de chat pública o privada. Ponle nombre y descripción, y elige quién puede unirse.",
