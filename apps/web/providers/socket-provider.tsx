@@ -12,7 +12,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     // 2. Conectar solo si no está conectado
     if (!socket.connected) socket.connect();
 
-    // 3. Manejo de eventos de depuración opcional
+    // 3. Manejo de eventos de depuración
     const onConnect = () => console.log("Connected:", socket.id);
     socket.on("connect", onConnect);
 

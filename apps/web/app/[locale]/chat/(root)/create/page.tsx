@@ -69,7 +69,6 @@ export default function CreateChatPage() {
   });
 
   const onSubmit = async (data: CreateRoomForm) => {
-    console.log(API_URL);
     playSubmitSound();
     const res = await fetch(`${API_URL}/rooms`, {
       method: "POST",
@@ -79,7 +78,6 @@ export default function CreateChatPage() {
       body: JSON.stringify(data),
     });
     const resData = await res.json();
-    console.log(resData);
 
     if (!res.ok) {
       setError(true);

@@ -31,7 +31,6 @@ export default async function SearchPage({
 
     const res = await fetch(`${API_URL}/rooms/search?${query}`);
     result = await res.json();
-    console.log(result);
   }
 
   return (
