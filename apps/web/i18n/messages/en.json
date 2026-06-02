@@ -1,7 +1,7 @@
 {
   "Header": {
     "home": "Home",
-    "help": "Help",
+    "info": "Info",
     "contact": "Contact",
     "chats": "Chats"
   },
@@ -91,6 +91,26 @@
       "purple": "Purple",
       "blue": "Blue"
     }
+  },
+  "Info": {
+    "title": "Information",
+    "description": "Learn how to use UmbraChat and all its features.",
+    "createRoom": "Create a room",
+    "createRoomDesc": "Create a public or private chat room. Give it a name and description, and choose who can join.",
+    "joinRoom": "Join a room",
+    "joinRoomDesc": "Join any public room by searching its name, or go directly to a room if you have the link.",
+    "realTimeChat": "Real-time chat",
+    "realTimeChatDesc": "Send messages and see them instantly. Messages are broadcast to everyone in the room in real time.",
+    "privateRooms": "Private rooms",
+    "privateRoomsDesc": "Protect your room with a 6-character password. Guests must enter the code to access the chat. The password is hashed and never stored in plain text.",
+    "searchRooms": "Search rooms",
+    "searchRoomsDesc": "Find public rooms by name. Results update as you type, with pagination for easy browsing.",
+    "customization": "Appearance",
+    "customizationDesc": "Customize the interface: choose between sans-serif or monospace font, adjust text size (small, medium, large), and switch between purple and blue accent colors.",
+    "language": "Language",
+    "languageDesc": "Switch between English and Spanish from the settings page. The interface language updates instantly.",
+    "chatHistory": "Chat history",
+    "chatHistoryDesc": "Rooms you create or join are saved in your browser. Access them anytime from the My Chats page."
   },
   "Search": {
     "title": "Search",

@@ -27,7 +27,7 @@ export default async function ConfigLayout({
   ];
 
   return (
-    <section className="relative">
+    <section className="p-2 relative">
       <section className="md:flex md:justify-center md:mt-16 md:text-2xl">
         <Navbar routes={CONFIG_ROUTES} />
       </section>
