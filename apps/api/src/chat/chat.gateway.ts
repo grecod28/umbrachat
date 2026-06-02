@@ -17,7 +17,11 @@ import { ChatPayload } from 'src/auth/types/payload';
 
 @WebSocketGateway(3002, {
   cors: {
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'https://umbrachat.org',
+      'https://www.umbrachat.org',
+    ],
     credentials: true,
   },
 })
