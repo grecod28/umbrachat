@@ -69,6 +69,7 @@ export default function CreateChatPage() {
   });
 
   const onSubmit = async (data: CreateRoomForm) => {
+    console.log(API_URL);
     playSubmitSound();
     const res = await fetch(`${API_URL}/rooms`, {
       method: "POST",
