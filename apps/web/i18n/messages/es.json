@@ -1,7 +1,7 @@
 {
   "Header": {
     "home": "Inicio",
-    "help": "Ayuda",
+    "info": "Info",
     "contact": "Contacto",
     "chats": "Chats"
   },
@@ -91,6 +91,26 @@
       "purple": "Púrpura",
       "blue": "Azul"
     }
+  },
+  "Info": {
+    "title": "Ayuda",
+    "description": "Aprende a usar UmbraChat y todas sus funcionalidades.",
+    "createRoom": "Crear una sala",
+    "createRoomDesc": "Crea una sala de chat pública o privada. Ponle nombre y descripción, y elige quién puede unirse.",
+    "joinRoom": "Unirse a una sala",
+    "joinRoomDesc": "Únete a cualquier sala pública buscándola por nombre, o ve directamente si tienes el enlace.",
+    "realTimeChat": "Chat en tiempo real",
+    "realTimeChatDesc": "Envía mensajes y recíbelos al instante. Los mensajes se transmiten a todos los presentes en la sala en tiempo real.",
+    "privateRooms": "Salas privadas",
+    "privateRoomsDesc": "Protege tu sala con una contraseña de 6 caracteres. Los invitados deben introducir el código para acceder al chat. La contraseña se almacena hasheada, nunca en texto plano.",
+    "searchRooms": "Buscar salas",
+    "searchRoomsDesc": "Encuentra salas públicas por nombre. Los resultados se actualizan mientras escribes, con paginación para navegar cómodamente.",
+    "customization": "Apariencia",
+    "customizationDesc": "Personaliza la interfaz: elige entre fuente sans-serif o monospace, ajusta el tamaño del texto (pequeño, mediano, grande) y cambia entre colores primarios púrpura y azul.",
+    "language": "Idioma",
+    "languageDesc": "Cambia entre español e inglés desde la página de configuración. El idioma de la interfaz se actualiza al instante.",
+    "chatHistory": "Historial de chats",
+    "chatHistoryDesc": "Las salas que creas o a las que te unes se guardan en tu navegador. Accede a ellas en cualquier momento desde la página Mis Chats."
   },
   "Search": {
     "title": "Buscar",
