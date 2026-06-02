@@ -20,10 +20,6 @@ export default async function ConfigLayout({
       label: t("shape"),
       href: "/config/shape",
     },
-    {
-      label: t("controls"),
-      href: "/config/controls",
-    },
   ];
 
   return (
