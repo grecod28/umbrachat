@@ -1,9 +1,24 @@
 import { Link } from "@/i18n/navigation";
+import { Metadata } from "next";
 import { IoArrowBack, IoShareSocial } from "react-icons/io5";
 import Chat from "./_views/chat";
 import AccessRoom from "./_views/access-room";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("chatRoom.title"),
+    description: t("chatRoom.description"),
+  };
+}
 
 export default async function ChatPage({
   params,
