@@ -1,8 +1,23 @@
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import SearchForm from "./_views/search-form";
 import { Pagination } from "@/components/ui/pagination";
 import { ChatCard } from "@/components/chat/chat-card";
 import { API_URL } from "@/libs/constants/api";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("search.title"),
+    description: t("search.description"),
+  };
+}
 
 export default async function SearchPage({
   searchParams,

@@ -132,5 +132,55 @@
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"
+  },
+  "Metadata": {
+    "default": {
+      "title": "UmbraChat",
+      "description": "Chat in real time. Create or join chat rooms."
+    },
+    "home": {
+      "title": "UmbraChat",
+      "description": "Chat in real time with friends. Create or join chat rooms."
+    },
+    "contact": {
+      "title": "Contact | UmbraChat",
+      "description": "Get in touch with the creator."
+    },
+    "info": {
+      "title": "Info | UmbraChat",
+      "description": "Learn about all the features UmbraChat has to offer."
+    },
+    "search": {
+      "title": "Search | UmbraChat",
+      "description": "Find public chat rooms by name."
+    },
+    "config": {
+      "title": "Config | UmbraChat",
+      "description": "Customize your UmbraChat experience."
+    },
+    "chat": {
+      "title": "My Chats | UmbraChat",
+      "description": "View your recent chat rooms."
+    },
+    "createChat": {
+      "title": "Create Chat | UmbraChat",
+      "description": "Create a new chat room."
+    },
+    "joinChat": {
+      "title": "Join Chat | UmbraChat",
+      "description": "Join an existing chat room by link."
+    },
+    "chatRoom": {
+      "title": "Chat | UmbraChat",
+      "description": "Chat in real time."
+    },
+    "shareChat": {
+      "title": "Share Chat | UmbraChat",
+      "description": "Share this chat room with others."
+    },
+    "notFound": {
+      "title": "404 | UmbraChat",
+      "description": "Page not found."
+    }
   }
 }

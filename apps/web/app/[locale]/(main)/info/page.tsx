@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import {
   IoAddCircle,
@@ -20,6 +21,20 @@ const features = [
   { key: "language", icon: IoLanguage },
   { key: "chatHistory", icon: IoTime },
 ] as const;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("info.title"),
+    description: t("info.description"),
+  };
+}
 
 export default async function HelpPage() {
   const t = await getTranslations("Info");

@@ -132,5 +132,55 @@
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
+  },
+  "Metadata": {
+    "default": {
+      "title": "UmbraChat",
+      "description": "Chatea en tiempo real. Crea o únete a salas de chat."
+    },
+    "home": {
+      "title": "UmbraChat",
+      "description": "Chatea en tiempo real con amigos. Crea o únete a salas de chat."
+    },
+    "contact": {
+      "title": "Contacto | UmbraChat",
+      "description": "Ponte en contacto con el creador."
+    },
+    "info": {
+      "title": "Info | UmbraChat",
+      "description": "Conoce todas las funcionalidades de UmbraChat."
+    },
+    "search": {
+      "title": "Buscar | UmbraChat",
+      "description": "Encuentra salas de chat públicas por nombre."
+    },
+    "config": {
+      "title": "Config | UmbraChat",
+      "description": "Personaliza tu experiencia en UmbraChat."
+    },
+    "chat": {
+      "title": "Mis Chats | UmbraChat",
+      "description": "Revisa tus salas de chat recientes."
+    },
+    "createChat": {
+      "title": "Crear Chat | UmbraChat",
+      "description": "Crea una nueva sala de chat."
+    },
+    "joinChat": {
+      "title": "Unirse | UmbraChat",
+      "description": "Únete a una sala de chat existente mediante un enlace."
+    },
+    "chatRoom": {
+      "title": "Chat | UmbraChat",
+      "description": "Chatea en tiempo real."
+    },
+    "shareChat": {
+      "title": "Compartir | UmbraChat",
+      "description": "Comparte esta sala de chat con otros."
+    },
+    "notFound": {
+      "title": "404 | UmbraChat",
+      "description": "Página no encontrada."
+    }
   }
 }

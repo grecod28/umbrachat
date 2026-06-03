@@ -1,6 +1,21 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { FiCompass } from "react-icons/fi";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("notFound.title"),
+    description: t("notFound.description"),
+  };
+}
 
 export default async function NotFound() {
   const t = await getTranslations("NotFound");

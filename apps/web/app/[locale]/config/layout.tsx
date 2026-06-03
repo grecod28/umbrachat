@@ -1,8 +1,23 @@
 import { Navbar } from "@/components/layout/navbar";
 import { Route } from "@/libs/types/navigation";
+import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 import React from "react";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+
+  return {
+    title: t("config.title"),
+    description: t("config.description"),
+  };
+}
 
 export default async function ConfigLayout({
   children,
