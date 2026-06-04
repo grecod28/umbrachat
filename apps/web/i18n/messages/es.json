@@ -56,7 +56,8 @@
     "codePlaceholder": "Introduce el código",
     "codeError": "El código debe tener exactamente 6 caracteres",
     "accessSubmit": "Acceder",
-    "wrongCode": "Código incorrecto"
+    "wrongCode": "Código incorrecto",
+    "expireNotice": "Los mensajes se eliminan cada 24 horas"
   },
   "ShareChat": {
     "title": "Compartir esta sala",

@@ -111,6 +111,9 @@ export default function Chat({
 
       <footer className="shrink-0 border-t border-border bg-background p-3">
         <div className="flex flex-col gap-1">
+          <p className="text-primary/80 text-4 text-center pb-1">
+            {t("expireNotice")}
+          </p>
           <div className="flex items-end gap-2">
             <textarea
               rows={1}

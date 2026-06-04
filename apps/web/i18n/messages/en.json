@@ -56,7 +56,8 @@
     "codePlaceholder": "Enter code",
     "codeError": "The code must be exactly 6 characters",
     "accessSubmit": "Access",
-    "wrongCode": "Incorrect code"
+    "wrongCode": "Incorrect code",
+    "expireNotice": "Messages are deleted every 24 hours"
   },
   "ShareChat": {
     "title": "Share this room",
