@@ -1,7 +1,26 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { FiMail } from "react-icons/fi";
-import { IoLogoLinkedin } from "react-icons/io5";
+import { IoLogoInstagram } from "react-icons/io5";
+import { SiTiktok } from "react-icons/si";
+import { FaXTwitter } from "react-icons/fa6";
+
+const SOCIALS = [
+  {
+    name: "Instagram",
+    href: "https://instagram.com/umbrachat",
+    icon: IoLogoInstagram,
+  },
+  {
+    name: "TikTok",
+    href: "https://tiktok.com/@umbrachat",
+    icon: SiTiktok,
+  },
+  {
+    name: "X",
+    href: "https://x.com/umbrachat",
+    icon: FaXTwitter,
+  },
+] as const;
 
 export async function generateMetadata({
   params,
@@ -31,33 +50,21 @@ export default async function ContactPage() {
         </div>
 
         <div className="space-y-4">
-          <a
-            href="https://linkedin.com/in/santiago-greco-dominguez-681588348"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors group"
-          >
-            <IoLogoLinkedin className="w-6 h-6 text-primary shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-text">LinkedIn</p>
-              <p className="text-sm text-text-muted truncate">
-                Santiago Greco Domínguez
-              </p>
-            </div>
-          </a>
-
-          <a
-            href="mailto:umbrachat@gmail.com"
-            className="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors group"
-          >
-            <FiMail className="w-6 h-6 text-primary shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-text">Email</p>
-              <p className="text-sm text-text-muted truncate">
-                umbrachat@gmail.com
-              </p>
-            </div>
-          </a>
+          {SOCIALS.map(({ name, href, icon: Icon }) => (
+            <a
+              key={name}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 p-4 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors group"
+            >
+              <Icon className="w-6 h-6 text-primary shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-text">{name}</p>
+                <p className="text-sm text-text-muted truncate">@umbrachat</p>
+              </div>
+            </a>
+          ))}
         </div>
       </article>
     </main>
