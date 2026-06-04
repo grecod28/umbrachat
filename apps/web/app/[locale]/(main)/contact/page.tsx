@@ -1,8 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { IoLogoInstagram } from "react-icons/io5";
+import { IoLogoInstagram, IoMail } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
-import { FaXTwitter } from "react-icons/fa6";
 
 const SOCIALS = [
   {
@@ -16,9 +15,9 @@ const SOCIALS = [
     icon: SiTiktok,
   },
   {
-    name: "X",
-    href: "https://x.com/umbrachat",
-    icon: FaXTwitter,
+    name: "Gmail",
+    href: "mailto:umbra.chat.web@gmail.com",
+    icon: IoMail,
   },
 ] as const;
 
