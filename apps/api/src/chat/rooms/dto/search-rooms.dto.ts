@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
@@ -9,14 +10,25 @@ import {
 } from 'class-validator';
 
 export class SearchRoomsDto {
+  @ApiProperty({
+    description: 'Room name to search for',
+    maxLength: 120,
+    example: 'chat',
+  })
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)
   name!: string;
 
-  @IsOptional() // Opcional por si quieres un valor por defecto en el servicio
-  @Type(() => Number) // Transforma el string de la URL a número
+  @ApiPropertyOptional({
+    description: 'Page number for pagination',
+    minimum: 1,
+    default: 1,
+    example: 1,
+  })
+  @IsOptional()
+  @Type(() => Number)
   @IsNumber()
-  @Min(1) // Evita páginas cero o negativas
+  @Min(1)
   page?: number;
 }
