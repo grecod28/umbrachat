@@ -15,7 +15,7 @@
     "welcome": "Bienvenido a",
     "description": "Chatea en tiempo real con amigos o desconocidos. Crea tu propia sala o únete a una existente para comenzar a conversar.",
     "createRoom": "Crear una sala",
-    "joinRoom": "Unirse a una sala"
+    "searchRoom": "Buscar salas"
   },
   "ChatLayout": {
     "back": "Volver",
@@ -129,7 +129,8 @@
     "title": "Mis Chats",
     "empty": "No tienes chats activos",
     "recent": "Tus conversaciones recientes",
-    "loading": "Cargando salas..."
+    "loading": "Cargando salas...",
+    "create": "Crear sala"
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
