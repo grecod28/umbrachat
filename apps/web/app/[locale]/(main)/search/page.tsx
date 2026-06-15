@@ -60,7 +60,11 @@ export default async function SearchPage({
 
         <SearchForm />
 
-        {!name && <p className="text-center text-text-muted">{t("need")}</p>}
+        {!name && (
+          <p className="text-center text-lg text-text mt-4 py-4 px-6 rounded-xl bg-surface border border-border">
+            {t("need")}
+          </p>
+        )}
 
         {name && result && (
           <p className="text-center text-text-muted">
