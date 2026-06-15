@@ -47,10 +47,10 @@ export default async function Home() {
             {t("createRoom")}
           </Link>
           <Link
-            href="/chat/join"
+            href="/search"
             className="px-6 py-3 rounded-xl border border-border-strong bg-surface font-semibold hover:bg-surface-light transition-colors text-center"
           >
-            {t("joinRoom")}
+            {t("searchRoom")}
           </Link>
         </section>
       </article>

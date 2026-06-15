@@ -44,7 +44,7 @@ export default function CreateChatPage() {
         (!data.password || data.password === "")
       ) {
         ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+          code: "custom",
           message: t("passwordRequired"),
           path: ["password"],
         });
@@ -147,7 +147,9 @@ export default function CreateChatPage() {
             <InputPassword
               label={t("passwordLabel")}
               placeholder={t("passwordPlaceholder")}
-              register={register("password")}
+              register={register("password", {
+                setValueAs: (v: string) => v?.toUpperCase() ?? "",
+              })}
               error={errors.password?.message}
             />
           )}

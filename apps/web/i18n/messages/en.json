@@ -15,7 +15,7 @@
     "welcome": "Welcome to",
     "description": "Chat in real time with friends or strangers. Create your own room or join an existing one to start conversing.",
     "createRoom": "Create a room",
-    "joinRoom": "Join a room"
+    "searchRoom": "Search rooms"
   },
   "ChatLayout": {
     "back": "Back",
@@ -129,7 +129,8 @@
     "title": "My Chats",
     "empty": "No active chats",
     "recent": "Your recent conversations",
-    "loading": "Loading rooms..."
+    "loading": "Loading rooms...",
+    "create": "Create room"
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"

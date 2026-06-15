@@ -10,6 +10,7 @@ type Props = {
   register: UseFormRegisterReturn;
   error?: string;
   disabled?: boolean;
+  maxLength?: number;
 };
 
 export function InputPassword({
@@ -18,6 +19,7 @@ export function InputPassword({
   register,
   error,
   disabled,
+  maxLength,
 }: Props) {
   const [show, setShow] = useState(false);
 
@@ -30,7 +32,8 @@ export function InputPassword({
           type={show ? "text" : "password"}
           placeholder={placeholder}
           disabled={disabled}
-          className="text-center w-full px-12 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-50"
+          maxLength={maxLength}
+          className="text-center w-full px-12 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-50 uppercase font-mono tracking-[0.3em]"
           {...register}
         />
 

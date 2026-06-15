@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Room, RoomWithPrivate } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ChatCard } from "@/components/chat/chat-card";
+import { Link } from "@/i18n/navigation";
 
 export default function ChatListPage() {
   const [rooms, setRooms] = useState<RoomWithPrivate[]>([]);
@@ -40,7 +41,7 @@ export default function ChatListPage() {
   }, []);
 
   return (
-    <main className="py-20 px-4">
+    <main className="pt-20 pb-24 px-4 max-w-4xl mx-auto w-full">
       <section>
         <header className="my-6 text-center">
           <h1 className="text-primary text-2xl font-bold">{t("title")}</h1>
@@ -67,6 +68,15 @@ export default function ChatListPage() {
           </div>
         )}
       </section>
+
+      <footer className=" max-w-4xl mx-auto fixed bottom-0 left-1/2 -translate-x-1/2 w-full p-4 bg-background border-t border-border">
+        <Link
+          href="/chat/create"
+          className="block py-3 rounded-xl bg-primary text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:brightness-110 text-center"
+        >
+          {t("create")}
+        </Link>
+      </footer>
     </main>
   );
 }

@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { IoArrowBack, IoLockClosed, IoShareSocial } from "react-icons/io5";
+import { InputPassword } from "@/components/ui/input-password";
 import Chat from "./chat";
 import Link from "next/link";
 
@@ -165,22 +166,15 @@ export default function AccessRoom({ roomId, data }: Props) {
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6 text-center"
         >
-          <div className="space-y-2">
-            <label htmlFor="code" className="block text-sm font-medium">
-              {t("codeLabel")}
-            </label>
-            <input
-              id="code"
-              type="text"
-              maxLength={6}
-              placeholder={t("codePlaceholder")}
-              className="text-center w-full px-4 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors tracking-[0.3em] font-mono uppercase"
-              {...register("password")}
-            />
-            {errors.password && (
-              <p className="text-sm text-danger">{errors.password.message}</p>
-            )}
-          </div>
+          <InputPassword
+            label={t("codeLabel")}
+            placeholder={t("codePlaceholder")}
+            maxLength={6}
+            register={register("password", {
+              setValueAs: (v: string) => v?.toUpperCase() ?? "",
+            })}
+            error={errors.password?.message}
+          />
 
           {status.error && (
             <p className="text-sm text-danger">{status.error}</p>
