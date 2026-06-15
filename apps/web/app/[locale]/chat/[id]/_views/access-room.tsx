@@ -175,7 +175,9 @@ export default function AccessRoom({ roomId, data }: Props) {
               maxLength={6}
               placeholder={t("codePlaceholder")}
               className="text-center w-full px-4 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors tracking-[0.3em] font-mono uppercase"
-              {...register("password")}
+              {...register("password", {
+                setValueAs: (v: string) => v?.toUpperCase() ?? "",
+              })}
             />
             {errors.password && (
               <p className="text-sm text-danger">{errors.password.message}</p>

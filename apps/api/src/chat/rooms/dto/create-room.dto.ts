@@ -9,6 +9,7 @@ import {
   MaxLength,
   ValidateIf,
 } from 'class-validator';
+import { Transform } from 'class-transformer';
 export class CreateRoomDto {
   @ApiPropertyOptional({
     description: 'Name of the chat room',
@@ -42,8 +43,9 @@ export class CreateRoomDto {
     description: '6-character password (required for private rooms)',
     minLength: 6,
     maxLength: 6,
-    example: 'a1b2c3',
+    example: 'A1B2C3',
   })
+  @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase() : value))
   @ValidateIf((o: CreateRoomDto) => o.visibility === ROOM_VISIBILITY.PRIVATE)
   @IsNotEmpty()
   @IsString()
