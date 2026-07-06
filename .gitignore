@@ -5,6 +5,9 @@ node_modules
 .pnp
 .pnp.js
 
+# Base de datos
+postgres
+
 # Local env files
 .env
 .env.local
