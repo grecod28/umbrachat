@@ -63,11 +63,19 @@ export default function Chat({
       setMessages((prev) => [...prev, msg]);
     };
 
+    const onUserTyping = (data: { userId: string; isTyping: boolean }) => {
+      console.log(
+        `User ${data.userId} is ${data.isTyping ? "typing..." : "not typing"}`,
+      );
+    };
+
     socket.on("new-message", onNewMessage);
+    socket.on("user-typing", onUserTyping);
 
     return () => {
       socket.emit("leave-room", { roomId: roomIdRef.current });
       socket.off("new-message", onNewMessage);
+      socket.off("user-typing", onUserTyping);
     };
   }, [socket, scrollToBottom]);
 
