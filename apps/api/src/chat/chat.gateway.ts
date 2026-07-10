@@ -51,6 +51,25 @@ export class ChatGateway implements OnGatewayDisconnect {
     });
   }
 
+  @SubscribeMessage('user-typing')
+  handleUserTyping(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { roomId: string; isTyping: boolean },
+  ) {
+    console.log(data);
+    const { roomId, isTyping } = data;
+
+    if (!client.rooms.has(roomId)) {
+      console.log('No está en la sala');
+      return;
+    }
+
+    this.server.to(roomId).emit('user-typing', { userId: client.id, isTyping });
+    client.emit('reply', {
+      success: true,
+    });
+  }
+
   @SubscribeMessage('join-room')
   async handleJoin(
     @ConnectedSocket() client: Socket,
@@ -72,7 +91,6 @@ export class ChatGateway implements OnGatewayDisconnect {
         );
       }
     }
-    console.log('Uniendose');
 
     await client.join(data.roomId);
 

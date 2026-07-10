@@ -1,7 +1,7 @@
 "use client";
 import { API_URL } from "@/libs/constants/api";
 import { useEffect, useState } from "react";
-import { Room, RoomWithPrivate } from "@repo/database";
+import { RoomWithPrivate } from "@repo/database";
 import { useTranslations } from "next-intl";
 import { ChatCard } from "@/components/chat/chat-card";
 import { Link } from "@/i18n/navigation";

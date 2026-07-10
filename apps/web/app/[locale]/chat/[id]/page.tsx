@@ -55,12 +55,14 @@ export default async function ChatPage({
           href={`/chat/${id}/share`}
           className="flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors"
         >
-          <span className="text-xs font-medium">{t("share")}</span>
+          <span className="hidden md:inline text-xs font-medium">
+            {t("share")}
+          </span>
           <IoShareSocial size={18} />
         </Link>
       </header>
 
-      <div className="shrink-0 h-[49px]" />
+      <div className="shrink-0 h-12.25" />
 
       <div className="flex-1 min-h-0">
         <Chat initMessages={messagesData} roomId={id} />
