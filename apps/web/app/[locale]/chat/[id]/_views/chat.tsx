@@ -28,6 +28,7 @@ export default function Chat({
   const t = useTranslations("ChatRoom");
   const [messages, setMessages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
+  const [isSomeoneTyping, setIsSomeoneTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
   const { withSound } = useTypingSound();
@@ -37,6 +38,11 @@ export default function Chat({
 
   const tokenRef = useRef(token);
   tokenRef.current = token;
+
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const otherTypingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,9 +70,17 @@ export default function Chat({
     };
 
     const onUserTyping = (data: { userId: string; isTyping: boolean }) => {
-      console.log(
-        `User ${data.userId} is ${data.isTyping ? "typing..." : "not typing"}`,
-      );
+      setIsSomeoneTyping(data.isTyping);
+
+      if (otherTypingTimeoutRef.current) {
+        clearTimeout(otherTypingTimeoutRef.current);
+      }
+
+      if (data.isTyping) {
+        otherTypingTimeoutRef.current = setTimeout(() => {
+          setIsSomeoneTyping(false);
+        }, 3000);
+      }
     };
 
     socket.on("new-message", onNewMessage);
@@ -83,6 +97,37 @@ export default function Chat({
     scrollToBottom();
   }, [scrollToBottom]);
 
+  const emitTyping = useCallback(
+    (isTyping: boolean) => {
+      if (!socket) return;
+      socket.emit("user-typing", {
+        roomId: roomIdRef.current,
+        isTyping,
+      });
+    },
+    [socket],
+  );
+
+  const handleInputChange = useCallback(
+    (value: string) => {
+      setInput(value);
+
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+
+      if (value.trim()) {
+        emitTyping(true);
+        typingTimeoutRef.current = setTimeout(() => {
+          emitTyping(false);
+        }, 1500);
+      } else {
+        emitTyping(false);
+      }
+    },
+    [emitTyping],
+  );
+
   const handleSend = useCallback(() => {
     if (!input.trim() || input.length > MAX_CHARS || !socket) return;
     socket.emit("send-message", {
@@ -90,8 +135,12 @@ export default function Chat({
       content: input.trim(),
     });
     playSubmitSound();
+    emitTyping(false);
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
     setInput("");
-  }, [input, socket]);
+  }, [input, socket, emitTyping]);
 
   return (
     <section className="flex flex-col h-full">
@@ -114,6 +163,24 @@ export default function Chat({
             </div>
           </div>
         ))}
+
+        {isSomeoneTyping && (
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">
+              <span className="text-[10px] font-bold text-primary/70">?</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="rounded-xl bg-surface border border-border px-3 py-2">
+                <div className="flex items-center gap-1 py-0.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:300ms]" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
@@ -127,7 +194,7 @@ export default function Chat({
               rows={1}
               value={input}
               maxLength={MAX_CHARS}
-              onChange={withSound((e) => setInput(e.target.value))}
+              onChange={withSound((e) => handleInputChange(e.target.value))}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault();
