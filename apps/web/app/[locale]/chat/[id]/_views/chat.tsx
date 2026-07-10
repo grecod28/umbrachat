@@ -184,57 +184,56 @@ export default function Chat({
         <div ref={messagesEndRef} />
       </div>
 
-      <footer className="shrink-0 border-t border-border bg-background p-3">
-        <div className="flex flex-col gap-1">
-          <p className="text-primary/80 text-4 text-center pb-1">
-            {t("expireNotice")}
-          </p>
-          <div className="flex items-end gap-2">
-            <textarea
-              rows={1}
-              value={input}
-              maxLength={MAX_CHARS}
-              onChange={withSound((e) => handleInputChange(e.target.value))}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend();
-                }
-              }}
-              placeholder={t("inputPlaceholder")}
-              className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
-            />
-            <button
-              title="send message button"
-              type="button"
-              onClick={handleSend}
-              disabled={!input.trim() || input.length > MAX_CHARS}
-              className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <IoSend size={18} />
-            </button>
+      <p className="shrink-0 text-xs text-text-muted text-center py-1.5 bg-background">
+        {t("expireNotice")}
+      </p>
 
-            <button
-              title="scroll bottom button"
-              type="button"
-              onClick={scrollToBottom}
-              className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-            >
-              <IoArrowDownOutline size={18} />
-            </button>
-          </div>
-          <span
-            className={`text-xs text-right px-1 ${
-              input.length > MAX_CHARS
-                ? "text-danger"
-                : input.length > MAX_CHARS * 0.9
-                  ? "text-warning"
-                  : "text-text-muted"
-            }`}
+      <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
+        <div className="flex items-end gap-2">
+          <textarea
+            rows={1}
+            value={input}
+            maxLength={MAX_CHARS}
+            onChange={withSound((e) => handleInputChange(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+              }
+            }}
+            placeholder={t("inputPlaceholder")}
+            className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
+          />
+          <button
+            title="send message button"
+            type="button"
+            onClick={handleSend}
+            disabled={!input.trim() || input.length > MAX_CHARS}
+            className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            {input.length}/{MAX_CHARS}
-          </span>
+            <IoSend size={18} />
+          </button>
+
+          <button
+            title="scroll bottom button"
+            type="button"
+            onClick={scrollToBottom}
+            className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <IoArrowDownOutline size={18} />
+          </button>
         </div>
+        <span
+          className={`text-xs text-right px-1 ${
+            input.length > MAX_CHARS
+              ? "text-danger"
+              : input.length > MAX_CHARS * 0.9
+                ? "text-warning"
+                : "text-text-muted"
+          }`}
+        >
+          {input.length}/{MAX_CHARS}
+        </span>
       </footer>
     </section>
   );
