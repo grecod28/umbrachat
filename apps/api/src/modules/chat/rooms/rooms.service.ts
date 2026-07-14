@@ -3,7 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { SearchRoomsDto } from './dto/search-rooms.dto';
 import * as bcrypt from 'bcrypt';
@@ -11,7 +11,7 @@ import { ROOM_VISIBILITY } from '@repo/shared';
 import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
 import { JwtService } from '@nestjs/jwt';
-import { ChatPayload } from 'src/auth/types/payload';
+import { ChatPayload } from 'src/modules/auth/types/payload';
 @Injectable()
 export class RoomsService {
   private readonly pageSize = 20;

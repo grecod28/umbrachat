@@ -13,7 +13,7 @@ import { CreateMessageDto } from './messages/dto/create-message.dto';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { RoomsService } from './rooms/rooms.service';
 import { JwtService } from '@nestjs/jwt';
-import { ChatPayload } from 'src/auth/types/payload';
+import { ChatPayload } from 'src/modules/auth/types/payload';
 
 @WebSocketGateway(3002, {
   cors: {
