@@ -28,6 +28,10 @@ export class S3Service {
         ),
       },
     });
+
+    this.logger.log(
+      `S3Client inicializado — bucket: ${this.bucketName}, región: ${this.configService.get('AWS_REGION')}`,
+    );
   }
 
   /**
