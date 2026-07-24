@@ -68,9 +68,7 @@ export default function Chat({
     const el = messagesContainerRef.current;
     if (!el) return;
     const threshold = 50;
-    setIsAtBottom(
-      el.scrollHeight - el.scrollTop - el.clientHeight < threshold,
-    );
+    setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold);
   }, []);
 
   useEffect(() => {
@@ -186,15 +184,15 @@ export default function Chat({
     }
 
     if (files.length > 0) {
-      const data = {
-        files: files.map((file) => {
-          return {
-            name: file.name,
-            size: file.size,
-            contentType: file.type,
-          };
-        }),
+      const presignedPayload = {
+        files: files.map((file) => ({
+          name: file.name,
+          size: file.size,
+          contentType: file.type,
+        })),
       };
+
+      console.log(presignedPayload);
 
       const url = new URL(`${API_URL}/rooms/${roomIdRef.current}/upload-urls`);
       if (tokenRef.current) url.searchParams.set("token", tokenRef.current);
@@ -205,13 +203,43 @@ export default function Chat({
           Authorization: `Bearer ${tokenRef.current}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(presignedPayload),
       })
         .then((res) => res.json())
-        .then((data) => {
-          console.log("Upload URLs:", data);
-          // Handle the upload URLs as needed
-        })
+        .then(
+          (data: {
+            files: {
+              key: string;
+              url: string;
+              fields: Record<string, string>;
+            }[];
+          }) => {
+            data.files.forEach((presigned, idx) => {
+              const file = files[idx];
+              if (!file) return;
+
+              const formData = new FormData();
+              if (presigned.fields) {
+                Object.entries(presigned.fields).forEach(([key, value]) => {
+                  formData.append(key, value);
+                });
+              }
+
+              formData.append("file", file);
+
+              fetch(presigned.url, {
+                method: "POST",
+                body: formData,
+              })
+                .then(() =>
+                  setFiles((prev) => prev.filter((_, i) => i !== idx)),
+                )
+                .catch((err) =>
+                  console.error(`Error uploading ${file.name}:`, err),
+                );
+            });
+          },
+        )
         .catch((err) => {
           console.error("Error fetching upload URLs:", err);
         });
@@ -226,10 +254,10 @@ export default function Chat({
   return (
     <section className="flex flex-col h-full">
       <div
-          ref={messagesContainerRef}
-          onScroll={handleScroll}
-          className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
-        >
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+      >
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-3">
             <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">

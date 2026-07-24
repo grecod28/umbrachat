@@ -11,20 +11,22 @@ export class FilesService {
   async generateUploadUrls(
     roomId: string,
     files: FileEntryDto[],
-  ): Promise<{ files: { key: string; url: string }[] }> {
+  ): Promise<{
+    files: { key: string; url: string; fields: Record<string, string> }[];
+  }> {
     const result = await Promise.all(
       files.map(async (file) => {
         const fileId = crypto.randomUUID();
 
         const key = `rooms/${roomId}/${fileId}`;
-        const url = await this.s3Service.getUploadSignedUrl(
+        const { url, fields } = await this.s3Service.getUploadSignedUrl(
           key,
           file.contentType,
         );
 
         this.logger.debug(`Signed URL para: ${key}`);
 
-        return { key, url };
+        return { key, url, fields };
       }),
     );
 

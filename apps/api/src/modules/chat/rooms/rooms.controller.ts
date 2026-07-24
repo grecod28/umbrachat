@@ -124,9 +124,9 @@ export class RoomsController {
 
   @Post(':id/upload-urls')
   @ApiOperation({
-    summary: 'Get signed S3 upload URLs for multiple files',
+    summary: 'Get signed S3 POST upload URLs for multiple files',
     description:
-      'Returns a pre-signed URL for each file to upload directly to S3. Max 10 files per request, 5 MB each. For private rooms, a valid JWT access token must be provided.',
+      'Returns a pre-signed POST URL and form fields for each file to upload directly to S3 (0-5 MB limit per file). Max 10 files per request. For private rooms, a valid JWT access token must be provided.',
   })
   @ApiParam({ name: 'id', description: 'Room UUID', format: 'uuid' })
   @ApiQuery({
@@ -136,7 +136,7 @@ export class RoomsController {
   })
   @ApiResponse({
     status: 201,
-    description: 'Signed URLs generated — returns { files: [{ key, url }] }',
+    description: 'Signed POST URLs generated — returns { files: [{ key, url, fields }] }',
   })
   @ApiResponse({
     status: 401,

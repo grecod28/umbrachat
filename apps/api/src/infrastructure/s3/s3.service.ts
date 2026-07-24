@@ -3,11 +3,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   S3Client,
-  PutObjectCommand,
   GetObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
+import type { PresignedPost } from '@aws-sdk/s3-presigned-post';
 
 @Injectable()
 export class S3Service {
@@ -35,7 +36,7 @@ export class S3Service {
   }
 
   /**
-   * Genera una URL firmada para SUBIR un archivo (PUT).
+   * Genera una URL firmada para SUBIR un archivo (POST) con límite de 0-5 MB.
    * @param key Ruta/nombre del objeto en el bucket (ej: `avatars/${userId}/${uuid}.jpg`)
    * @param contentType Content-Type que quedará bloqueado en la firma
    * @param expiresIn Expiración en segundos (por defecto 5 minutos)
@@ -44,19 +45,24 @@ export class S3Service {
     key: string,
     contentType: string,
     expiresIn = 300,
-  ): Promise<string> {
-    const command = new PutObjectCommand({
+  ): Promise<PresignedPost> {
+    const FIVE_MB = 5 * 1024 * 1024;
+
+    const { url, fields } = await createPresignedPost(this.s3Client, {
       Bucket: this.bucketName,
       Key: key,
-      ContentType: contentType,
+      Conditions: [['content-length-range', 0, FIVE_MB]],
+      Fields: {
+        'Content-Type': contentType,
+      },
+      Expires: expiresIn,
     });
 
-    const url = await getSignedUrl(this.s3Client, command, { expiresIn });
     this.logger.debug(
-      `Signed upload URL generada para key: ${key} (expira en ${expiresIn}s)`,
+      `Signed upload POST URL generada para key: ${key} (expira en ${expiresIn}s)`,
     );
 
-    return url;
+    return { url, fields };
   }
 
   /**
