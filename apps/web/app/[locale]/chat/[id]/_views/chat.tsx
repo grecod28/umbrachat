@@ -252,9 +252,18 @@ export default function Chat({
         <div ref={messagesEndRef} />
       </div>
 
-      <p className="shrink-0 text-xs text-text-muted text-center py-1.5 bg-background">
-        {t("expireNotice")}
-      </p>
+      <section className="relative shrink-0 text-xs text-text-muted text-center py-4 bg-background">
+        <p>{t("expireNotice")}</p>
+
+        <button
+          title="scroll bottom button"
+          type="button"
+          onClick={scrollToBottom}
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
+        >
+          <IoArrowDownOutline size={24} />
+        </button>
+      </section>
 
       <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
         <div className="flex items-end gap-2">
@@ -297,15 +306,6 @@ export default function Chat({
             className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <IoSend size={18} />
-          </button>
-
-          <button
-            title="scroll bottom button"
-            type="button"
-            onClick={scrollToBottom}
-            className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <IoArrowDownOutline size={18} />
           </button>
         </div>
 
