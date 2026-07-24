@@ -2,11 +2,17 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { IoArrowDownOutline, IoSend } from "react-icons/io5";
+import {
+  IoArrowDownOutline,
+  IoAttachOutline,
+  IoClose,
+  IoSend,
+} from "react-icons/io5";
 import { formatDate } from "@/libs/functions/format-date";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { useTypingSound } from "@/libs/hooks/use-typing-sound";
 import { useSocket } from "@/providers/socket-provider";
+import { API_URL } from "@/libs/constants/api";
 
 interface Message {
   id: string;
@@ -15,6 +21,12 @@ interface Message {
 }
 
 const MAX_CHARS = 2048;
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 export default function Chat({
   initMessages,
@@ -29,6 +41,8 @@ export default function Chat({
   const [messages, setMessages] = useState<Message[]>(initMessages);
   const [input, setInput] = useState("");
   const [isSomeoneTyping, setIsSomeoneTyping] = useState(false);
+  const [files, setFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
   const { withSound } = useTypingSound();
@@ -128,19 +142,73 @@ export default function Chat({
     [emitTyping],
   );
 
+  const handleFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const selected = Array.from(e.target.files ?? []);
+      setFiles((prev) => [...prev, ...selected]);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    },
+    [],
+  );
+
+  const removeFile = useCallback((index: number) => {
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  }, []);
+
   const handleSend = useCallback(() => {
-    if (!input.trim() || input.length > MAX_CHARS || !socket) return;
-    socket.emit("send-message", {
-      roomId: roomIdRef.current,
-      content: input.trim(),
-    });
-    playSubmitSound();
-    emitTyping(false);
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
+    if ((!input.trim() || input.length > MAX_CHARS) && files.length === 0)
+      return;
+    if (!socket) return;
+
+    if (input.trim() && input.length <= MAX_CHARS) {
+      socket.emit("send-message", {
+        roomId: roomIdRef.current,
+        content: input.trim(),
+      });
+      setInput("");
+      emitTyping(false);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     }
-    setInput("");
-  }, [input, socket, emitTyping]);
+
+    if (files.length > 0) {
+      const data = {
+        files: files.map((file) => {
+          return {
+            name: file.name,
+            size: file.size,
+            contentType: file.type,
+          };
+        }),
+      };
+
+      const url = new URL(`${API_URL}/rooms/${roomIdRef.current}/upload-urls`);
+      if (tokenRef.current) url.searchParams.set("token", tokenRef.current);
+
+      fetch(url.toString(), {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${tokenRef.current}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("Upload URLs:", data);
+          // Handle the upload URLs as needed
+        })
+        .catch((err) => {
+          console.error("Error fetching upload URLs:", err);
+        });
+    }
+
+    playSubmitSound();
+  }, [input, files, socket, emitTyping]);
+
+  const hasContent = input.trim().length > 0 && input.length <= MAX_CHARS;
+  const canSend = hasContent || files.length > 0;
 
   return (
     <section className="flex flex-col h-full">
@@ -190,6 +258,23 @@ export default function Chat({
 
       <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
         <div className="flex items-end gap-2">
+          <button
+            title="attach file"
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors shrink-0"
+          >
+            <IoAttachOutline size={18} />
+          </button>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
+          />
+
           <textarea
             rows={1}
             value={input}
@@ -208,7 +293,7 @@ export default function Chat({
             title="send message button"
             type="button"
             onClick={handleSend}
-            disabled={!input.trim() || input.length > MAX_CHARS}
+            disabled={!canSend}
             className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <IoSend size={18} />
@@ -223,6 +308,31 @@ export default function Chat({
             <IoArrowDownOutline size={18} />
           </button>
         </div>
+
+        {files.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {files.map((file, i) => (
+              <div
+                key={`${file.name}-${i}`}
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface border border-border text-xs"
+              >
+                <span className="text-text truncate max-w-40">{file.name}</span>
+                <span className="text-text-muted shrink-0">
+                  {formatFileSize(file.size)}
+                </span>
+                <button
+                  type="button"
+                  title="remove file"
+                  onClick={() => removeFile(i)}
+                  className="text-text-muted hover:text-danger transition-colors shrink-0"
+                >
+                  <IoClose size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <span
           className={`text-xs text-right px-1 ${
             input.length > MAX_CHARS

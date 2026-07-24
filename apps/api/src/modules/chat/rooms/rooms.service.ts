@@ -10,14 +10,18 @@ import * as bcrypt from 'bcrypt';
 import { ROOM_VISIBILITY } from '@repo/shared';
 import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
+import { UploadFilesDto } from './dto/upload-url.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ChatPayload } from 'src/modules/auth/types/payload';
+import { FilesService } from '../files/files.service';
+
 @Injectable()
 export class RoomsService {
   private readonly pageSize = 20;
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
+    private filesService: FilesService,
   ) {}
 
   async getRooms(getRoomsDto: GetRoomsDto) {
@@ -33,7 +37,7 @@ export class RoomsService {
         },
       },
       orderBy: {
-        lastMessageAt: 'desc', // Ordenado por Último mensaje (por defecto al crear pone ahora)
+        lastMessageAt: 'desc',
       },
     });
 
@@ -51,7 +55,7 @@ export class RoomsService {
         where: {
           name: {
             contains: name,
-            mode: 'insensitive', // Búsqueda que ignora mayúsculas/minúsculas
+            mode: 'insensitive',
           },
           access: null,
         },
@@ -82,7 +86,6 @@ export class RoomsService {
   }
 
   async getRoom(roomId: string) {
-    // Búsqueda incluyendo selación (omito passwordhash)
     const room = await this.prisma.room.findUnique({
       where: { id: roomId },
       include: {
@@ -102,11 +105,12 @@ export class RoomsService {
     };
   }
 
-  async findMessagesByRoom(roomId: string, accessToken?: string) {
+  private async validateRoomAccess(roomId: string, accessToken?: string) {
     const room = await this.prisma.room.findUnique({
       where: { id: roomId },
       include: { access: true },
     });
+
     if (!room) throw new NotFoundException('Sala no encontrada');
 
     if (room.access) {
@@ -120,7 +124,6 @@ export class RoomsService {
         const payload =
           await this.jwtService.verifyAsync<ChatPayload>(accessToken);
 
-        // Verifica si el roomId del payload es el mismo de esta sala
         if (payload.roomId !== roomId) {
           throw new UnauthorizedException('El token no pertenece a esta sala');
         }
@@ -130,6 +133,12 @@ export class RoomsService {
         );
       }
     }
+
+    return room;
+  }
+
+  async findMessagesByRoom(roomId: string, accessToken?: string) {
+    await this.validateRoomAccess(roomId, accessToken);
 
     return this.prisma.message.findMany({
       where: { roomId },
@@ -143,7 +152,6 @@ export class RoomsService {
   }
 
   async createRoom({ name, description, visibility, password }: CreateRoomDto) {
-    // $transaction para que ambas operaciones sean atómicas
     return this.prisma.$transaction(async (tx) => {
       const room = await tx.room.create({
         data: {
@@ -207,5 +215,15 @@ export class RoomsService {
     if (!room) throw new NotFoundException('Room doesn`t exists');
 
     return !!room.access;
+  }
+
+  async getUploadUrls(
+    roomId: string,
+    dto: UploadFilesDto,
+    accessToken?: string,
+  ) {
+    await this.validateRoomAccess(roomId, accessToken);
+
+    return this.filesService.generateUploadUrls(roomId, dto.files);
   }
 }
