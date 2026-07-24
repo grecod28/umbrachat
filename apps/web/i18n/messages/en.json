@@ -57,7 +57,11 @@
     "codeError": "The code must be exactly 6 characters",
     "accessSubmit": "Access",
     "wrongCode": "Incorrect code",
-    "expireNotice": "Messages are deleted every 24 hours"
+    "expireNotice": "Messages are deleted every 24 hours",
+    "uploadError": "Error uploading files",
+    "uploadSuccess": "Files uploaded successfully",
+    "uploadingFiles": "Uploading files...",
+    "fileSizeError": "Files must be under 5 MB"
   },
   "ShareChat": {
     "title": "Share this room",

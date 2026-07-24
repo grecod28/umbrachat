@@ -42,6 +42,9 @@ export default function Chat({
   const [input, setInput] = useState("");
   const [isSomeoneTyping, setIsSomeoneTyping] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<
+    "idle" | "uploading" | "success" | "error" | "sizeError"
+  >("idle");
   const [isAtBottom, setIsAtBottom] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -155,8 +158,20 @@ export default function Chat({
 
   const handleFileChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const selected = Array.from(e.target.files ?? []);
-      setFiles((prev) => [...prev, ...selected]);
+      const FIVE_MB = 5 * 1024 * 1024;
+      const allFiles = Array.from(e.target.files ?? []);
+      const valid = allFiles.filter((file) => file.size <= FIVE_MB);
+      const rejected = allFiles.length - valid.length;
+
+      if (valid.length > 0) {
+        setFiles((prev) => [...prev, ...valid]);
+      }
+
+      if (rejected > 0) {
+        setUploadStatus("sizeError");
+        setTimeout(() => setUploadStatus("idle"), 3000);
+      }
+
       if (fileInputRef.current) fileInputRef.current.value = "";
     },
     [],
@@ -184,6 +199,8 @@ export default function Chat({
     }
 
     if (files.length > 0) {
+      setUploadStatus("uploading");
+
       const presignedPayload = {
         files: files.map((file) => ({
           name: file.name,
@@ -192,15 +209,12 @@ export default function Chat({
         })),
       };
 
-      console.log(presignedPayload);
-
       const url = new URL(`${API_URL}/rooms/${roomIdRef.current}/upload-urls`);
       if (tokenRef.current) url.searchParams.set("token", tokenRef.current);
 
       fetch(url.toString(), {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${tokenRef.current}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(presignedPayload),
@@ -214,9 +228,9 @@ export default function Chat({
               fields: Record<string, string>;
             }[];
           }) => {
-            data.files.forEach((presigned, idx) => {
+            const uploads = data.files.map((presigned, idx) => {
               const file = files[idx];
-              if (!file) return;
+              if (!file) return Promise.resolve();
 
               const formData = new FormData();
               if (presigned.fields) {
@@ -227,21 +241,24 @@ export default function Chat({
 
               formData.append("file", file);
 
-              fetch(presigned.url, {
+              return fetch(presigned.url, {
                 method: "POST",
                 body: formData,
-              })
-                .then(() =>
-                  setFiles((prev) => prev.filter((_, i) => i !== idx)),
-                )
-                .catch((err) =>
-                  console.error(`Error uploading ${file.name}:`, err),
-                );
+              }).then(() => {
+                setFiles((prev) => prev.filter((_, i) => i !== idx));
+              });
+            });
+
+            return Promise.allSettled(uploads).then((results) => {
+              const allOk = results.every((r) => r.status === "fulfilled");
+              setUploadStatus(allOk ? "success" : "error");
+              setTimeout(() => setUploadStatus("idle"), 3000);
             });
           },
         )
-        .catch((err) => {
-          console.error("Error fetching upload URLs:", err);
+        .catch(() => {
+          setUploadStatus("error");
+          setTimeout(() => setUploadStatus("idle"), 3000);
         });
     }
 
@@ -313,6 +330,23 @@ export default function Chat({
       </section>
 
       <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
+        {uploadStatus !== "idle" && (
+          <div
+            className={`text-xs px-3 py-1.5 rounded-lg text-center ${
+              uploadStatus === "uploading"
+                ? "bg-primary/10 text-primary"
+                : uploadStatus === "success"
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "bg-red-500/10 text-red-400"
+            }`}
+          >
+            {uploadStatus === "uploading" && t("uploadingFiles")}
+            {uploadStatus === "success" && t("uploadSuccess")}
+            {uploadStatus === "error" && t("uploadError")}
+            {uploadStatus === "sizeError" && t("fileSizeError")}
+          </div>
+        )}
+
         <div className="flex items-end gap-2">
           <button
             title="attach file"

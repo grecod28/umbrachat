@@ -57,7 +57,11 @@
     "codeError": "El código debe tener exactamente 6 caracteres",
     "accessSubmit": "Acceder",
     "wrongCode": "Código incorrecto",
-    "expireNotice": "Los mensajes se eliminan cada 24 horas"
+    "expireNotice": "Los mensajes se eliminan cada 24 horas",
+    "uploadError": "Error al subir archivos",
+    "uploadSuccess": "Archivos subidos correctamente",
+    "uploadingFiles": "Subiendo archivos...",
+    "fileSizeError": "Los archivos deben pesar menos de 5 MB"
   },
   "ShareChat": {
     "title": "Compartir esta sala",
