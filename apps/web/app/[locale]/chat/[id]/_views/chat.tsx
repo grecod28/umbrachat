@@ -42,8 +42,10 @@ export default function Chat({
   const [input, setInput] = useState("");
   const [isSomeoneTyping, setIsSomeoneTyping] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [isAtBottom, setIsAtBottom] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
   const { withSound } = useTypingSound();
 
@@ -60,6 +62,15 @@ export default function Chat({
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const el = messagesContainerRef.current;
+    if (!el) return;
+    const threshold = 50;
+    setIsAtBottom(
+      el.scrollHeight - el.scrollTop - el.clientHeight < threshold,
+    );
   }, []);
 
   useEffect(() => {
@@ -108,8 +119,10 @@ export default function Chat({
   }, [socket, scrollToBottom]);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [scrollToBottom]);
+    if (isAtBottom) {
+      scrollToBottom();
+    }
+  }, [messages, isAtBottom, scrollToBottom]);
 
   const emitTyping = useCallback(
     (isTyping: boolean) => {
@@ -212,7 +225,11 @@ export default function Chat({
 
   return (
     <section className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+      <div
+          ref={messagesContainerRef}
+          onScroll={handleScroll}
+          className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+        >
         {messages.map((msg) => (
           <div key={msg.id} className="flex items-start gap-3">
             <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">
@@ -255,14 +272,16 @@ export default function Chat({
       <section className="relative shrink-0 text-xs text-text-muted text-center py-4 bg-background">
         <p>{t("expireNotice")}</p>
 
-        <button
-          title="scroll bottom button"
-          type="button"
-          onClick={scrollToBottom}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
-        >
-          <IoArrowDownOutline size={24} />
-        </button>
+        {!isAtBottom && (
+          <button
+            title="scroll bottom button"
+            type="button"
+            onClick={scrollToBottom}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
+          >
+            <IoArrowDownOutline size={24} />
+          </button>
+        )}
       </section>
 
       <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
