@@ -7,26 +7,41 @@ import { FetchMessagesDto } from '../dto/fetch-messages.dto';
 export class MessagesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createMessage(data: CreateMessageDto) {
+  async createMessage({ roomId, content }: CreateMessageDto) {
     return this.prismaService.$transaction(async (tx) => {
+      const chatItem = await tx.chatItem.create({
+        data: { roomId },
+      });
+
       const message = await tx.message.create({
-        data,
+        data: { itemId: chatItem.id, content },
       });
 
       await tx.room.update({
-        where: { id: data.roomId },
+        where: { id: roomId },
         data: { lastMessageAt: new Date() },
       });
 
-      return message;
+      return {
+        ...chatItem,
+        ...message,
+      };
     });
   }
 
-  async findByRoom(data: FetchMessagesDto) {
-    if (!data.afterThan) return []; // Si se acaba de unir al chat
+  async findByRoom({ roomId, afterThan }: FetchMessagesDto) {
+    if (!afterThan) return [];
 
-    return await this.prismaService.message.findMany({
-      where: { roomId: data.roomId, createdAt: { gt: data.afterThan } },
+    return this.prismaService.chatItem.findMany({
+      where: {
+        roomId,
+        createdAt: {
+          gt: afterThan,
+        },
+      },
+      include: {
+        message: true,
+      },
       orderBy: {
         createdAt: 'asc',
       },

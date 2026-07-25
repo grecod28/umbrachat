@@ -18,7 +18,7 @@ export class TasksService {
     threshold.setHours(threshold.getHours() - 24);
 
     try {
-      const { count } = await this.prisma.message.deleteMany({
+      const { count } = await this.prisma.chatItem.deleteMany({
         where: {
           createdAt: {
             lt: threshold, // "lt" significa "less than"

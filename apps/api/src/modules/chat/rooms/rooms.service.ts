@@ -140,15 +140,20 @@ export class RoomsService {
   async findMessagesByRoom(roomId: string, accessToken?: string) {
     await this.validateRoomAccess(roomId, accessToken);
 
-    return this.prisma.message.findMany({
+    const items = await this.prisma.chatItem.findMany({
       where: { roomId },
-      select: {
-        id: true,
-        content: true,
-        createdAt: true,
+      include: {
+        message: true,
+        file: true,
       },
       orderBy: { createdAt: 'asc' },
     });
+
+    return items.map(({ message, file, ...item }) => ({
+      ...item,
+      ...(message ?? {}),
+      ...(file ?? {}),
+    }));
   }
 
   async createRoom({ name, description, visibility, password }: CreateRoomDto) {
