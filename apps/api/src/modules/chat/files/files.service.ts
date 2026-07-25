@@ -88,4 +88,8 @@ export class FilesService {
       return results;
     });
   }
+
+  async getDownloadUrl(key: string) {
+    return this.s3Service.getDownloadSignedUrl(key);
+  }
 }

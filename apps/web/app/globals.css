@@ -218,10 +218,6 @@ button {
   transition: transform 0.3s ease;
 }
 
-button:hover {
-  transform: scale(1.05);
-}
-
 /* Scrollbar */
 * {
   scrollbar-width: thin;
