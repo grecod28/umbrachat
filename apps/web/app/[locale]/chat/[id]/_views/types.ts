@@ -1,5 +1,6 @@
 export interface Message {
   id: string;
+  roomId?: string;
   content?: string;
   key?: string;
   fileName?: string;

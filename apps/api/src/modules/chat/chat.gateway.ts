@@ -148,6 +148,7 @@ export class ChatGateway implements OnGatewayDisconnect {
 
     client.emit('reply', {
       success: true,
+      id: msg.id,
     });
     this.server.to(roomId).emit('new-message', {
       ...msg,
@@ -170,7 +171,10 @@ export class ChatGateway implements OnGatewayDisconnect {
 
     const records = await this.filesService.createFileRecords(roomId, files);
 
-    client.emit('reply', { success: true });
+    client.emit('reply', {
+      success: true,
+      ids: records.map((r) => r.id),
+    });
 
     for (const record of records) {
       this.server.to(roomId).emit('new-message', record);

@@ -96,13 +96,30 @@ export default function Chat({
       }
     };
 
+    const onReply = (data: {
+      success: boolean;
+      id?: string;
+      ids?: string[];
+    }) => {
+      if (!data.success) return;
+      const key = `own-msgs:${roomIdRef.current}`;
+      const existing: string[] = JSON.parse(
+        localStorage.getItem(key) || "[]",
+      );
+      if (data.id) existing.push(data.id);
+      if (data.ids) existing.push(...data.ids);
+      localStorage.setItem(key, JSON.stringify(existing));
+    };
+
     socket.on("new-message", onNewMessage);
     socket.on("user-typing", onUserTyping);
+    socket.on("reply", onReply);
 
     return () => {
       socket.emit("leave-room", { roomId: roomIdRef.current });
       socket.off("new-message", onNewMessage);
       socket.off("user-typing", onUserTyping);
+      socket.off("reply", onReply);
     };
   }, [socket, scrollToBottom]);
 
@@ -283,7 +300,7 @@ export default function Chat({
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto px-4 py-4 space-y-3"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 space-y-3"
       >
         {messages.map((msg) => (
           <MessageBubble key={msg.id} message={msg} />
