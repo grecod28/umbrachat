@@ -214,6 +214,13 @@ export default function Chat({
               fields: Record<string, string>;
             }[];
           }) => {
+            const uploadedFiles: {
+              key: string;
+              fileName: string;
+              mimeType: string;
+              size: number;
+            }[] = [];
+
             const uploads = data.files.map((presigned, idx) => {
               const file = files[idx];
               if (!file) return Promise.resolve();
@@ -231,12 +238,29 @@ export default function Chat({
                 method: "POST",
                 body: formData,
               }).then(() => {
-                setFiles((prev) => prev.filter((_, i) => i !== idx));
+                uploadedFiles.push({
+                  key: presigned.key,
+                  fileName: file.name,
+                  mimeType: file.type,
+                  size: file.size,
+                });
               });
             });
 
             return Promise.allSettled(uploads).then((results) => {
               const allOk = results.every((r) => r.status === "fulfilled");
+
+              if (allOk && uploadedFiles.length > 0 && socket) {
+                socket.emit("send-files", {
+                  roomId: roomIdRef.current,
+                  files: uploadedFiles,
+                });
+              }
+
+              if (allOk) {
+                setFiles([]);
+              }
+
               setUploadStatus(allOk ? "success" : "error");
               setTimeout(() => setUploadStatus("idle"), 3000);
             });

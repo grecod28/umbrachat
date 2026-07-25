@@ -10,6 +10,8 @@ import {
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from './messages/services/messages.service';
 import { CreateMessageDto } from './messages/dto/create-message.dto';
+import { FilesService } from './files/files.service';
+import { CreateFilesDto } from './files/dto/create-file-record.dto';
 import { JoinRoomDto } from './dto/join-room.dto';
 import { RoomsService } from './rooms/rooms.service';
 import { JwtService } from '@nestjs/jwt';
@@ -30,6 +32,7 @@ export class ChatGateway implements OnGatewayDisconnect {
     private readonly jwtService: JwtService,
     private readonly messagesService: MessagesService,
     private readonly roomsService: RoomsService,
+    private readonly filesService: FilesService,
   ) {}
 
   @WebSocketServer()
@@ -149,5 +152,28 @@ export class ChatGateway implements OnGatewayDisconnect {
     this.server.to(roomId).emit('new-message', {
       ...msg,
     });
+  }
+
+  @SubscribeMessage('send-files')
+  async handleFileSend(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: CreateFilesDto,
+  ) {
+    const { roomId, files } = data;
+
+    if (!client.rooms.has(roomId)) {
+      return client.emit('reply', {
+        success: false,
+        error: 'Not joined to room',
+      });
+    }
+
+    const records = await this.filesService.createFileRecords(roomId, files);
+
+    client.emit('reply', { success: true });
+
+    for (const record of records) {
+      this.server.to(roomId).emit('new-message', record);
+    }
   }
 }

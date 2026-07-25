@@ -1,6 +1,10 @@
 export interface Message {
   id: string;
-  content: string;
+  content?: string;
+  key?: string;
+  fileName?: string;
+  mimeType?: string;
+  size?: number;
   createdAt: string;
 }
 

@@ -11,6 +11,7 @@ import { ROOM_VISIBILITY } from '@repo/shared';
 import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
 import { UploadFilesDto } from './dto/upload-url.dto';
+import { FileRecordDto } from '../files/dto/create-file-record.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ChatPayload } from 'src/modules/auth/types/payload';
 import { FilesService } from '../files/files.service';
@@ -230,5 +231,11 @@ export class RoomsService {
     await this.validateRoomAccess(roomId, accessToken);
 
     return this.filesService.generateUploadUrls(roomId, dto.files);
+  }
+
+  async createFiles(roomId: string, files: FileRecordDto[]) {
+    await this.validateRoomAccess(roomId);
+
+    return this.filesService.createFileRecords(roomId, files);
   }
 }

@@ -21,6 +21,7 @@ import { SearchRoomsDto } from './dto/search-rooms.dto';
 import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
 import { UploadFilesDto } from './dto/upload-url.dto';
+import { CreateFilesDto } from '../files/dto/create-file-record.dto';
 
 @ApiTags('Rooms')
 @Controller('rooms')
@@ -151,6 +152,26 @@ export class RoomsController {
   ) {
     console.log('id', roomId);
     return this.roomsService.getUploadUrls(roomId, dto, accessToken);
+  }
+
+  @Post(':id/files')
+  @ApiOperation({
+    summary: 'Create file records after S3 upload',
+    description:
+      'Creates ChatItem + File records in the database after files have been uploaded to S3 via presigned URLs.',
+  })
+  @ApiParam({ name: 'id', description: 'Room UUID', format: 'uuid' })
+  @ApiResponse({
+    status: 201,
+    description: 'File records created successfully',
+  })
+  @ApiResponse({ status: 400, description: 'Validation error' })
+  @ApiResponse({ status: 404, description: 'Room not found' })
+  createFiles(
+    @Param('id', new ParseUUIDPipe()) roomId: string,
+    @Body() dto: CreateFilesDto,
+  ) {
+    return this.roomsService.createFiles(roomId, dto.files);
   }
 
   @Delete(':id')
