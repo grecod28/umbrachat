@@ -61,7 +61,10 @@
     "uploadError": "Error uploading files",
     "uploadSuccess": "Files uploaded successfully",
     "uploadingFiles": "Uploading files...",
-    "fileSizeError": "Files must be under 5 MB"
+    "fileSizeError": "Files must be under 5 MB",
+    "attachDocument": "Document",
+    "attachMedia": "Photo & Video",
+    "attachCamera": "Camera"
   },
   "ShareChat": {
     "title": "Share this room",
@@ -131,10 +134,13 @@
   },
   "ChatList": {
     "title": "My Chats",
+    "noTitle": "Untitled chat",
     "empty": "No active chats",
     "recent": "Your recent conversations",
     "loading": "Loading rooms...",
-    "create": "Create room"
+    "create": "Create room",
+    "search": "Search chats...",
+    "incognito": "100% anonymous profile"
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"

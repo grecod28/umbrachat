@@ -32,7 +32,6 @@ export default function Chat({
   const [files, setFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
   const [isAtBottom, setIsAtBottom] = useState(true);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
@@ -174,8 +173,6 @@ export default function Chat({
         setUploadStatus("sizeError");
         setTimeout(() => setUploadStatus("idle"), 3000);
       }
-
-      if (fileInputRef.current) fileInputRef.current.value = "";
     },
     [],
   );
@@ -331,7 +328,6 @@ export default function Chat({
         canSend={canSend}
         files={files}
         uploadStatus={uploadStatus}
-        fileInputRef={fileInputRef}
         onInputChange={handleInputChange}
         onSend={handleSend}
         onFileChange={handleFileChange}

@@ -61,7 +61,10 @@
     "uploadError": "Error al subir archivos",
     "uploadSuccess": "Archivos subidos correctamente",
     "uploadingFiles": "Subiendo archivos...",
-    "fileSizeError": "Los archivos deben pesar menos de 5 MB"
+    "fileSizeError": "Los archivos deben pesar menos de 5 MB",
+    "attachDocument": "Documento",
+    "attachMedia": "Foto y video",
+    "attachCamera": "Cámara"
   },
   "ShareChat": {
     "title": "Compartir esta sala",
@@ -131,10 +134,13 @@
   },
   "ChatList": {
     "title": "Mis Chats",
+    "noTitle": "Chat sin nombre",
     "empty": "No tienes chats activos",
     "recent": "Tus conversaciones recientes",
     "loading": "Cargando salas...",
-    "create": "Crear sala"
+    "create": "Crear sala",
+    "search": "Buscar chats...",
+    "incognito": "Perfil 100% anónimo"
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"

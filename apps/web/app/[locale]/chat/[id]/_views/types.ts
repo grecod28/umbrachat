@@ -16,7 +16,7 @@ export type UploadStatus =
   | "error"
   | "sizeError";
 
-export const MAX_CHARS = 2048;
+export const MAX_CHARS = 16000;
 export const FIVE_MB = 5 * 1024 * 1024;
 
 export function formatFileSize(bytes: number): string {
