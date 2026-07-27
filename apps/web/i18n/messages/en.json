@@ -68,7 +68,10 @@
     "createNew": "New group",
     "searchRoom": "Search rooms",
     "settings": "Settings",
-    "goToWebsite": "Go to website"
+    "goToWebsite": "Go to website",
+    "searchMessages": "Search messages...",
+    "searchNoResults": "No results",
+    "searchMatch": "{current} of {total}"
   },
   "ShareChat": {
     "title": "Share this room",

@@ -1,8 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { IoArrowDownOutline } from "react-icons/io5";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { IoArrowDownOutline, IoArrowUp, IoArrowDown, IoClose, IoSearchOutline } from "react-icons/io5";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { useSocket } from "@/providers/socket-provider";
 import { API_URL } from "@/libs/constants/api";
@@ -27,6 +27,10 @@ export default function Chat({
   const [files, setFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
   const [isAtBottom, setIsAtBottom] = useState(true);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchIndex, setSearchIndex] = useState(0);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const socket = useSocket();
@@ -51,6 +55,68 @@ export default function Chat({
     if (!el) return;
     const threshold = 50;
     setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold);
+  }, []);
+
+  useEffect(() => {
+    const handler = () => {
+      setSearchOpen((prev) => {
+        const next = !prev;
+        if (next) {
+          setSearchQuery("");
+          setSearchIndex(0);
+          setTimeout(() => searchInputRef.current?.focus(), 50);
+        }
+        return next;
+      });
+    };
+    window.addEventListener("toggle-chat-search", handler);
+    return () => window.removeEventListener("toggle-chat-search", handler);
+  }, []);
+
+  const matchingIndices = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    const q = searchQuery.toLowerCase();
+    return messages.reduce<number[]>((acc, msg, i) => {
+      if (msg.content?.toLowerCase().includes(q)) acc.push(i);
+      return acc;
+    }, []);
+  }, [messages, searchQuery]);
+
+  const scrollToMatch = useCallback(
+    (index: number) => {
+      const container = messagesContainerRef.current;
+      if (!container) return;
+      const msgIndex = matchingIndices[index];
+      if (msgIndex == null) return;
+      const children = container.children;
+      const target = children[msgIndex] as HTMLElement | undefined;
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    },
+    [matchingIndices],
+  );
+
+  const goToNextMatch = useCallback(() => {
+    setSearchIndex((prev) => {
+      const next = prev + 1 >= matchingIndices.length ? 0 : prev + 1;
+      setTimeout(() => scrollToMatch(next), 50);
+      return next;
+    });
+  }, [matchingIndices.length, scrollToMatch]);
+
+  const goToPrevMatch = useCallback(() => {
+    setSearchIndex((prev) => {
+      const next = prev - 1 < 0 ? matchingIndices.length - 1 : prev - 1;
+      setTimeout(() => scrollToMatch(next), 50);
+      return next;
+    });
+  }, [matchingIndices.length, scrollToMatch]);
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+    setSearchQuery("");
+    setSearchIndex(0);
   }, []);
 
   useEffect(() => {
@@ -285,13 +351,68 @@ export default function Chat({
 
   return (
     <section className="flex flex-col h-full">
+      {searchOpen && (
+        <div className="shrink-0 flex items-center gap-2 px-3 py-2 bg-surface border-b border-border">
+          <IoSearchOutline size={18} className="text-text-muted shrink-0" />
+          <input
+            ref={searchInputRef}
+            type="text"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setSearchIndex(0);
+            }}
+            placeholder={t("searchMessages")}
+            className="flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+          />
+          {searchQuery.trim() && (
+            <span className="text-xs text-text-muted shrink-0">
+              {matchingIndices.length > 0
+                ? t("searchMatch", {
+                    current: searchIndex + 1,
+                    total: matchingIndices.length,
+                  })
+                : t("searchNoResults")}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={goToPrevMatch}
+            disabled={matchingIndices.length === 0}
+            className="p-1 text-text-muted hover:text-text disabled:opacity-30 shrink-0"
+          >
+            <IoArrowUp size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={goToNextMatch}
+            disabled={matchingIndices.length === 0}
+            className="p-1 text-text-muted hover:text-text disabled:opacity-30 shrink-0"
+          >
+            <IoArrowDown size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={closeSearch}
+            className="p-1 text-text-muted hover:text-text shrink-0"
+          >
+            <IoClose size={18} />
+          </button>
+        </div>
+      )}
+
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 space-y-3"
       >
-        {messages.map((msg) => (
-          <MessageBubble key={msg.id} message={msg} />
+        {messages.map((msg, i) => (
+          <MessageBubble
+            key={msg.id}
+            message={msg}
+            searchHighlight={searchOpen && searchQuery.trim() ? searchQuery : undefined}
+            isSearchActive={searchOpen && matchingIndices[searchIndex] === i}
+          />
         ))}
 
         {isSomeoneTyping && <TypingIndicator />}

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import { IoArrowBack, IoShareSocial } from "react-icons/io5";
 import Chat from "./_views/chat";
 import AccessRoom from "./_views/access-room";
+import { ChatSearchBtn } from "./_views/chat-search-btn";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
 import { LuMessageSquarePlus } from "react-icons/lu";
@@ -94,6 +95,7 @@ export default async function ChatPage({
                   </span>
                   <IoShareSocial size={18} />
                 </Link>
+                <ChatSearchBtn />
               </div>
             </header>
 

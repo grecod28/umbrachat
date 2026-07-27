@@ -68,7 +68,10 @@
     "createNew": "Nuevo grupo",
     "searchRoom": "Buscar salas",
     "settings": "Configuración",
-    "goToWebsite": "Ir a la web"
+    "goToWebsite": "Ir a la web",
+    "searchMessages": "Buscar mensajes...",
+    "searchNoResults": "Sin resultados",
+    "searchMatch": "{current} de {total}"
   },
   "ShareChat": {
     "title": "Compartir esta sala",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Message } from "./types";
 import { formatFileSize } from "./types";
 import { formatDate } from "@/libs/functions/format-date";
@@ -118,15 +118,51 @@ function FilePreview({
   );
 }
 
-function TextBubble({ content }: { content: string }) {
+function highlightText(text: string, query: string): ReactNode {
+  if (!query) return text;
+  const idx = text.toLowerCase().indexOf(query.toLowerCase());
+  if (idx === -1) return text;
   return (
-    <p className="text-sm text-text leading-relaxed break-words">
-      {content}
+    <>
+      {text.slice(0, idx)}
+      <mark className="bg-amber-400/30 text-inherit rounded-sm px-0.5">
+        {text.slice(idx, idx + query.length)}
+      </mark>
+      {text.slice(idx + query.length)}
+    </>
+  );
+}
+
+function TextBubble({
+  content,
+  highlight,
+  isActive,
+}: {
+  content: string;
+  highlight?: string;
+  isActive?: boolean;
+}) {
+  return (
+    <p
+      className={`text-sm text-text leading-relaxed break-words ${
+        isActive ? "bg-amber-400/15 -mx-1 px-1 rounded" : ""
+      }`}
+    >
+      {highlight ? highlightText(content, highlight) : content}
     </p>
   );
 }
 
-export function MessageBubble({ message }: { message: Message }) {
+
+export function MessageBubble({
+  message,
+  searchHighlight,
+  isSearchActive,
+}: {
+  message: Message;
+  searchHighlight?: string;
+  isSearchActive?: boolean;
+}) {
   const isOwn = useIsOwnMessage(message);
   const isFile = !message.content;
 
@@ -170,7 +206,7 @@ export function MessageBubble({ message }: { message: Message }) {
           }`}
         >
           {message.content ? (
-            <TextBubble content={message.content} />
+            <TextBubble content={message.content} highlight={searchHighlight} isActive={isSearchActive} />
           ) : (
             <FilePreview message={message} onDownload={handleDownload} />
           )}
