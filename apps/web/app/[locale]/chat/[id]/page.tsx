@@ -41,9 +41,13 @@ export default async function ChatPage({
 
   return (
     <main className="h-screen flex">
-      <DesktopOnly>
+      {id === "default" ? (
         <ChatSidebar />
-      </DesktopOnly>
+      ) : (
+        <DesktopOnly>
+          <ChatSidebar />
+        </DesktopOnly>
+      )}
 
       <div className="flex-1 min-w-0 flex flex-col relative">
         {id === "default" ? (
@@ -55,7 +59,7 @@ export default async function ChatPage({
             <header className="absolute top-0 left-0 z-10 flex w-full items-center justify-between border-b border-border bg-background/80 px-4 py-3 backdrop-blur-md">
               <div className="flex items-center gap-2">
                 <Link
-                  href="/chat"
+                  href="/chat/default"
                   className="lg:hidden -ml-1.5 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text"
                 >
                   <IoArrowBack size={22} />
