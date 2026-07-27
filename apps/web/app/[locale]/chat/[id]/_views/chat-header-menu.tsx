@@ -76,7 +76,7 @@ export function ChatHeaderMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-50 mt-1 w-52 overflow-hidden rounded-xl border border-border bg-surface shadow-lg animate-fade-in">
+        <div className="absolute top-full z-50 mt-1 w-52 overflow-hidden rounded-xl border border-border bg-surface shadow-lg animate-fade-in max-lg:right-0 lg:left-0">
           {menuItems.map(({ key, icon: Icon, href, external = false }) => {
             const content = (
               <button
