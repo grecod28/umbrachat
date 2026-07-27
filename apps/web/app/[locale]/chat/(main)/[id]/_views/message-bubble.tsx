@@ -120,17 +120,31 @@ function FilePreview({
 
 function highlightText(text: string, query: string): ReactNode {
   if (!query) return text;
-  const idx = text.toLowerCase().indexOf(query.toLowerCase());
-  if (idx === -1) return text;
-  return (
-    <>
-      {text.slice(0, idx)}
-      <mark className="bg-amber-400/30 text-inherit rounded-sm px-0.5">
-        {text.slice(idx, idx + query.length)}
-      </mark>
-      {text.slice(idx + query.length)}
-    </>
-  );
+  const parts: ReactNode[] = [];
+  const lower = text.toLowerCase();
+  const q = query.toLowerCase();
+  let last = 0;
+
+  for (let i = 0; i < text.length; ) {
+    const idx = lower.indexOf(q, i);
+    if (idx === -1) {
+      parts.push(text.slice(last));
+      break;
+    }
+    if (idx > last) parts.push(text.slice(last, idx));
+    parts.push(
+      <mark
+        key={idx}
+        className="bg-amber-400/25 text-text rounded-[2px]"
+      >
+        {text.slice(idx, idx + q.length)}
+      </mark>,
+    );
+    i = idx + q.length;
+    last = i;
+  }
+
+  return parts.length > 0 ? <>{parts}</> : text;
 }
 
 function TextBubble({
@@ -145,7 +159,7 @@ function TextBubble({
   return (
     <p
       className={`text-sm text-text leading-relaxed break-words ${
-        isActive ? "bg-amber-400/15 -mx-1 px-1 rounded" : ""
+        isActive ? "bg-amber-400/10 -mx-1 px-1 rounded ring-1 ring-amber-400/30" : ""
       }`}
     >
       {highlight ? highlightText(content, highlight) : content}

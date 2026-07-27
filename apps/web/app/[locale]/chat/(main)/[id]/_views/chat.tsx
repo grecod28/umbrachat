@@ -352,49 +352,58 @@ export default function Chat({
   return (
     <section className="flex flex-col h-full">
       {searchOpen && (
-        <div className="shrink-0 flex items-center gap-2 px-3 py-2 bg-surface border-b border-border">
-          <IoSearchOutline size={18} className="text-text-muted shrink-0" />
-          <input
-            ref={searchInputRef}
-            type="text"
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setSearchIndex(0);
-            }}
-            placeholder={t("searchMessages")}
-            className="flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
-          />
-          {searchQuery.trim() && (
-            <span className="text-xs text-text-muted shrink-0">
-              {matchingIndices.length > 0
-                ? t("searchMatch", {
-                    current: searchIndex + 1,
-                    total: matchingIndices.length,
-                  })
-                : t("searchNoResults")}
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={goToPrevMatch}
-            disabled={matchingIndices.length === 0}
-            className="p-1 text-text-muted hover:text-text disabled:opacity-30 shrink-0"
-          >
-            <IoArrowUp size={18} />
-          </button>
-          <button
-            type="button"
-            onClick={goToNextMatch}
-            disabled={matchingIndices.length === 0}
-            className="p-1 text-text-muted hover:text-text disabled:opacity-30 shrink-0"
-          >
-            <IoArrowDown size={18} />
-          </button>
+        <div className="shrink-0 flex items-center gap-2.5 px-4 py-2.5 bg-background/80 backdrop-blur-md border-b border-border">
+          <div className="flex items-center gap-2 flex-1 min-w-0 bg-surface border border-border rounded-lg px-3 py-1.5">
+            <IoSearchOutline size={16} className="text-text-muted shrink-0" />
+            <input
+              ref={searchInputRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setSearchIndex(0);
+              }}
+              placeholder={t("searchMessages")}
+              className="flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+            />
+            {searchQuery.trim() && (
+              <span className="text-[11px] text-text-muted shrink-0 tabular-nums">
+                {matchingIndices.length > 0
+                  ? t("searchMatch", {
+                      current: searchIndex + 1,
+                      total: matchingIndices.length,
+                    })
+                  : t("searchNoResults")}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={goToPrevMatch}
+              disabled={matchingIndices.length === 0}
+              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors shrink-0"
+              title="Previous"
+            >
+              <IoArrowUp size={18} />
+            </button>
+            <button
+              type="button"
+              onClick={goToNextMatch}
+              disabled={matchingIndices.length === 0}
+              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors shrink-0"
+              title="Next"
+            >
+              <IoArrowDown size={18} />
+            </button>
+          </div>
+
           <button
             type="button"
             onClick={closeSearch}
-            className="p-1 text-text-muted hover:text-text shrink-0"
+            className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface transition-colors shrink-0"
+            title="Close search"
           >
             <IoClose size={18} />
           </button>
