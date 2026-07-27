@@ -8,6 +8,7 @@ import { formatDate } from "@/libs/functions/format-date";
 import { IoSearchOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import type { RoomWithPrivate } from "@repo/database";
 import { LuMessageSquarePlus } from "react-icons/lu";
+import { IoEllipsisVertical } from "react-icons/io5";
 import NavChip from "@/components/navigation/nav-chip";
 
 export function ChatSidebar() {
@@ -65,12 +66,19 @@ export function ChatSidebar() {
         <section className="flex justify-between items-center ">
           <h2 className="text-sm font-semibold text-text">{t("title")}</h2>
 
-          <section className="px-3 py-2">
+          <section className="flex gap-8 px-3 py-2">
             <Link
               href="/chat/create"
               className="text-sm text-text-muted hover:text-primary transition-colors"
             >
               <LuMessageSquarePlus size={20} />
+            </Link>
+
+            <Link
+              href="/chat/create"
+              className="text-sm text-text-muted hover:text-primary transition-colors"
+            >
+              <IoEllipsisVertical size={20} />
             </Link>
           </section>
         </section>
