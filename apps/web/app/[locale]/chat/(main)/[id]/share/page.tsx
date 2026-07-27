@@ -48,7 +48,7 @@ export default function ShareChatPage({
   };
 
   return (
-    <main className="h-screen flex flex-col items-center justify-center px-4">
+    <section className="h-screen flex-1 flex flex-col items-center justify-center px-4">
       <div className="animate-fade-in w-full max-w-md space-y-8">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-primary tracking-tight">
@@ -107,6 +107,6 @@ export default function ShareChatPage({
           <span className="text-sm font-medium">{t("backToChat")}</span>
         </Link>
       </div>
-    </main>
+    </section>
   );
 }
