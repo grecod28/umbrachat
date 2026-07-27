@@ -7,6 +7,8 @@ import { API_URL } from "@/libs/constants/api";
 import { formatDate } from "@/libs/functions/format-date";
 import { IoSearchOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import type { RoomWithPrivate } from "@repo/database";
+import { LuMessageSquarePlus } from "react-icons/lu";
+import NavChip from "@/components/navigation/nav-chip";
 
 export function ChatSidebar() {
   const t = useTranslations("ChatList");
@@ -59,17 +61,23 @@ export function ChatSidebar() {
 
   return (
     <aside className="hidden lg:flex lg:flex-col w-80 shrink-0 border-r border-border bg-background h-full">
-      <header className="shrink-0 px-4 py-3 border-b border-border">
-        <Link
-          href="/chat"
-          className="text-sm font-semibold text-text hover:text-primary transition-colors"
-        >
-          {t("title")}
-        </Link>
+      <header className="shrink-0 px-4 py-2">
+        <section className="flex justify-between items-center ">
+          <h2 className="text-sm font-semibold text-text">{t("title")}</h2>
+
+          <section className="px-3 py-2">
+            <Link
+              href="/chat/create"
+              className="text-sm text-text-muted hover:text-primary transition-colors"
+            >
+              <LuMessageSquarePlus size={20} />
+            </Link>
+          </section>
+        </section>
       </header>
 
-      <div className="shrink-0 px-3 py-2 border-b border-border">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface border border-border">
+      <section className="shrink-0 px-3 py-2 border-b border-border">
+        <div className="flex items-center gap-3 px-3 py-2 rounded-3xl bg-surface border border-border">
           <IoSearchOutline size={16} className="text-text-muted shrink-0" />
           <input
             type="text"
@@ -79,7 +87,19 @@ export function ChatSidebar() {
             className="flex-1 bg-transparent text-sm text-text placeholder:text-text-muted outline-none"
           />
         </div>
-      </div>
+
+        <section className="flex gap-1 mt-2">
+          <NavChip param="filter" value="">
+            Todos
+          </NavChip>
+          <NavChip param="filter" value="unread">
+            No leídos
+          </NavChip>
+          <NavChip param="filter" value="favorites">
+            Favoritos
+          </NavChip>
+        </section>
+      </section>
 
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
@@ -89,14 +109,6 @@ export function ChatSidebar() {
             <p className="text-sm text-text-muted mb-3">
               {search.trim() ? "No results" : t("empty")}
             </p>
-            {!search.trim() && (
-              <Link
-                href="/chat/create"
-                className="inline-block px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-hover transition-colors"
-              >
-                {t("create")}
-              </Link>
-            )}
           </div>
         ) : (
           <div className="flex flex-col">
@@ -118,8 +130,7 @@ export function ChatSidebar() {
                     </span>
                   </div>
                   <p className="text-xs text-text-muted mt-0.5 truncate">
-                    {room.description ||
-                      formatDate(room.lastMessageAt, "time")}
+                    {room.description || formatDate(room.lastMessageAt, "time")}
                   </p>
                 </Link>
               );
