@@ -9,12 +9,7 @@ import { API_URL } from "@/libs/constants/api";
 import { MessageBubble } from "./message-bubble";
 import { TypingIndicator } from "./typing-indicator";
 import { ChatFooter } from "./chat-footer";
-import {
-  type Message,
-  type UploadStatus,
-  MAX_CHARS,
-  FIVE_MB,
-} from "./types";
+import { type Message, type UploadStatus, MAX_CHARS, FIVE_MB } from "./types";
 
 export default function Chat({
   initMessages,
@@ -55,9 +50,7 @@ export default function Chat({
     const el = messagesContainerRef.current;
     if (!el) return;
     const threshold = 50;
-    setIsAtBottom(
-      el.scrollHeight - el.scrollTop - el.clientHeight < threshold,
-    );
+    setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold);
   }, []);
 
   useEffect(() => {
@@ -102,9 +95,7 @@ export default function Chat({
     }) => {
       if (!data.success) return;
       const key = `own-msgs:${roomIdRef.current}`;
-      const existing: string[] = JSON.parse(
-        localStorage.getItem(key) || "[]",
-      );
+      const existing: string[] = JSON.parse(localStorage.getItem(key) || "[]");
       if (data.id) existing.push(data.id);
       if (data.ids) existing.push(...data.ids);
       localStorage.setItem(key, JSON.stringify(existing));

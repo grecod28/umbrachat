@@ -60,7 +60,7 @@ export function ChatSidebar() {
   }, [rooms, search]);
 
   return (
-    <aside className="hidden lg:flex lg:flex-col w-80 shrink-0 border-r border-border bg-background h-full">
+    <aside className="flex h-full w-full flex-col border-r border-border bg-background lg:w-80 lg:shrink-0">
       <header className="shrink-0 px-4 py-2">
         <section className="flex justify-between items-center ">
           <h2 className="text-sm font-semibold text-text">{t("title")}</h2>

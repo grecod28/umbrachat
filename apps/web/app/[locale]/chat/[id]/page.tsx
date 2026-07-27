@@ -43,36 +43,45 @@ export default async function ChatPage({
       <ChatSidebar />
 
       <div className="flex-1 min-w-0 flex flex-col relative">
-        <header className="absolute top-0 left-0 w-full z-10 flex items-center justify-between px-4 py-3 border-b border-border bg-background/80 backdrop-blur-md">
-          <div className="flex items-center gap-2">
-            <Link
-              href="/chat"
-              className="lg:hidden p-1.5 -ml-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface transition-colors"
-            >
-              <IoArrowBack size={22} />
-            </Link>
-            <h1 className="text-sm font-semibold text-text truncate max-w-50">
-              {data.name || t("noTitle")}
-            </h1>
-          </div>
+        {id === "default" ? (
+          <section className="hid lg:flex h-full flex-col items-center justify-center px-4 text-center">
+            <h1>Chat</h1>
+          </section>
+        ) : (
+          <>
+            <header className="absolute top-0 left-0 z-10 flex w-full items-center justify-between border-b border-border bg-background/80 px-4 py-3 backdrop-blur-md">
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/chat"
+                  className="lg:hidden -ml-1.5 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text"
+                >
+                  <IoArrowBack size={22} />
+                </Link>
 
-          <Link
-            href={`/chat/${id}/share`}
-            className="flex items-center gap-1.5 p-1.5 -mr-1.5 rounded-lg text-text-muted hover:text-primary hover:bg-surface transition-colors"
-            title={t("share")}
-          >
-            <span className="hidden md:inline text-xs font-medium">
-              {t("share")}
-            </span>
-            <IoShareSocial size={18} />
-          </Link>
-        </header>
+                <h1 className="max-w-50 truncate text-sm font-semibold text-text">
+                  {data.name || t("noTitle")}
+                </h1>
+              </div>
 
-        <div className="shrink-0 h-12.25" />
+              <Link
+                href={`/chat/${id}/share`}
+                className="flex items-center gap-1.5 -mr-1.5 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-primary"
+                title={t("share")}
+              >
+                <span className="hidden text-xs font-medium md:inline">
+                  {t("share")}
+                </span>
+                <IoShareSocial size={18} />
+              </Link>
+            </header>
 
-        <div className="flex-1 min-h-0">
-          <Chat initMessages={messagesData} roomId={id} />
-        </div>
+            <div className="h-12.25 shrink-0" />
+
+            <div className="min-h-0 flex-1">
+              <Chat initMessages={messagesData} roomId={id} />
+            </div>
+          </>
+        )}
       </div>
     </main>
   );
