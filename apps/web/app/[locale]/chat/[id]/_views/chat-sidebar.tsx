@@ -115,7 +115,7 @@ export function ChatSidebar() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col">
+          <div className="flex flex-col p-2">
             {filtered.map((room) => {
               const roomPath = `/chat/${room.id}`;
               const isActive = pathname === roomPath;
@@ -124,8 +124,8 @@ export function ChatSidebar() {
                 <Link
                   key={room.id}
                   href={roomPath}
-                  className={`flex flex-col px-4 py-3 border-b border-border/50 transition-colors hover:bg-surface ${
-                    isActive ? "bg-primary/10 border-l-2 border-l-primary" : ""
+                  className={`flex flex-col rounded-xl px-4 py-3 transition-colors hover:bg-surface ${
+                    isActive ? "bg-primary/10 border-2 border-primary" : ""
                   }`}
                 >
                   <div className="flex items-center gap-2">
