@@ -8,9 +8,7 @@ export default function ChatLayout({
 }) {
   return (
     <div className="h-screen flex">
-      <DesktopOnly>
-        <ChatSidebar />
-      </DesktopOnly>
+      <ChatSidebar />
 
       {children}
     </div>

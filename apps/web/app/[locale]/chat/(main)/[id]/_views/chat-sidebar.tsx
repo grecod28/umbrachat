@@ -8,13 +8,13 @@ import { formatDate } from "@/libs/functions/format-date";
 import { IoSearchOutline, IoShieldCheckmarkOutline } from "react-icons/io5";
 import type { RoomWithPrivate } from "@repo/database";
 import { LuMessageSquarePlus } from "react-icons/lu";
-import { IoEllipsisVertical } from "react-icons/io5";
 import NavChip from "@/components/navigation/nav-chip";
 import { ChatHeaderMenu } from "./chat-header-menu";
 
 export function ChatSidebar() {
-  const t = useTranslations("ChatList");
   const pathname = usePathname();
+  const id = pathname.split("/")[2];
+  const t = useTranslations("ChatList");
   const [rooms, setRooms] = useState<RoomWithPrivate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -62,7 +62,9 @@ export function ChatSidebar() {
   }, [rooms, search]);
 
   return (
-    <aside className="flex h-full w-full flex-col border-r border-border bg-background lg:w-80 lg:shrink-0">
+    <aside
+      className={`${id !== "default" ? "hidden lg:flex" : "flex"} h-full w-full flex-col border-r border-border bg-background lg:w-80 lg:shrink-0`}
+    >
       <header className="shrink-0 px-4 py-2">
         <section className="flex justify-between items-center ">
           <h2 className="text-sm font-semibold text-text">{t("title")}</h2>
