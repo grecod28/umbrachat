@@ -350,10 +350,10 @@ export default function Chat({
   const canSend = hasContent || files.length > 0;
 
   return (
-    <section className="flex flex-col h-full">
+    <section className="flex flex-col h-full relative">
       {searchOpen && (
-        <div className="shrink-0 flex items-center gap-2.5 px-4 py-2.5 bg-background/80 backdrop-blur-md border-b border-border">
-          <div className="flex items-center gap-2 flex-1 min-w-0 bg-surface border border-border rounded-lg px-3 py-1.5">
+        <div className="absolute top-0 left-0 w-full z-20 flex flex-wrap items-center gap-2 sm:gap-2.5 px-2 sm:px-4 py-2 bg-background/80 backdrop-blur-md border-b border-border">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0 bg-surface border border-border rounded-lg px-2 sm:px-3 py-1.5">
             <IoSearchOutline size={16} className="text-text-muted shrink-0" />
             <input
               ref={searchInputRef}
@@ -364,7 +364,7 @@ export default function Chat({
                 setSearchIndex(0);
               }}
               placeholder={t("searchMessages")}
-              className="flex-1 bg-transparent text-sm text-text outline-none placeholder:text-text-muted"
+              className="flex-1 min-w-0 bg-transparent text-sm text-text outline-none placeholder:text-text-muted truncate"
             />
             {searchQuery.trim() && (
               <span className="text-[11px] text-text-muted shrink-0 tabular-nums">
@@ -378,12 +378,12 @@ export default function Chat({
             )}
           </div>
 
-          <div className="flex items-center gap-0.5">
+          <div className="flex items-center gap-0.5 shrink-0">
             <button
               type="button"
               onClick={goToPrevMatch}
               disabled={matchingIndices.length === 0}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors shrink-0"
+              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
               title="Previous"
             >
               <IoArrowUp size={18} />
@@ -392,7 +392,7 @@ export default function Chat({
               type="button"
               onClick={goToNextMatch}
               disabled={matchingIndices.length === 0}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors shrink-0"
+              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
               title="Next"
             >
               <IoArrowDown size={18} />

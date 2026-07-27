@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useRef, useState, useEffect, type RefObject, type ChangeEvent } from "react";
+import { useRef, type RefObject, type ChangeEvent } from "react";
 import {
   IoAttachOutline,
   IoSend,
@@ -11,6 +11,7 @@ import {
   IoClose,
 } from "react-icons/io5";
 import { useTypingSound } from "@/libs/hooks/use-typing-sound";
+import { Dropdown } from "@/components/ui/dropdown";
 import { UploadStatusBanner } from "./upload-status-banner";
 import { FileChip } from "./file-chip";
 import { MAX_CHARS, type UploadStatus } from "./types";
@@ -27,26 +28,10 @@ interface ChatFooterProps {
 }
 
 const menuOptions = [
-  {
-    key: "document",
-    icon: IoDocumentOutline,
-    accept: "*",
-    labelKey: "attachDocument" as const,
-  },
-  {
-    key: "media",
-    icon: IoImageOutline,
-    accept: "image/*,video/*",
-    labelKey: "attachMedia" as const,
-  },
-  {
-    key: "camera",
-    icon: IoCameraOutline,
-    accept: "image/*",
-    capture: true,
-    labelKey: "attachCamera" as const,
-  },
-] as const;
+  { key: "document", icon: IoDocumentOutline, accept: "*", labelKey: "attachDocument" as const },
+  { key: "media", icon: IoImageOutline, accept: "image/*,video/*", labelKey: "attachMedia" as const },
+  { key: "camera", icon: IoCameraOutline, accept: "image/*", capture: true, labelKey: "attachCamera" as const },
+];
 
 export function ChatFooter({
   input,
@@ -60,8 +45,6 @@ export function ChatFooter({
 }: ChatFooterProps) {
   const t = useTranslations("ChatRoom");
   const { withSound } = useTypingSound();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const documentRef = useRef<HTMLInputElement>(null);
   const mediaRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
@@ -72,25 +55,9 @@ export function ChatFooter({
     camera: cameraRef,
   };
 
-  useEffect(() => {
-    if (!menuOpen) return;
-    const handler = (e: MouseEvent | TouchEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    document.addEventListener("touchstart", handler);
-    return () => {
-      document.removeEventListener("mousedown", handler);
-      document.removeEventListener("touchstart", handler);
-    };
-  }, [menuOpen]);
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     onFileChange(e);
     e.target.value = "";
-    setMenuOpen(false);
   };
 
   const handleMenuOption = (key: string) => {
@@ -102,57 +69,35 @@ export function ChatFooter({
       <UploadStatusBanner status={uploadStatus} />
 
       <div className="flex items-end gap-2">
-        <div ref={menuRef} className="relative shrink-0">
-          <button
-            title="attach file"
-            type="button"
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors"
-          >
-            {menuOpen ? <IoClose size={18} /> : <IoAttachOutline size={18} />}
-          </button>
-
-          {menuOpen && (
-            <div className="absolute bottom-full left-0 mb-2 w-56 bg-surface border border-border rounded-xl shadow-lg overflow-hidden animate-fade-in">
-              {menuOptions.map(({ key, icon: Icon, labelKey }) => (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => handleMenuOption(key)}
-                  className="flex items-center gap-3 w-full px-4 py-3 text-sm text-text hover:bg-primary/10 transition-colors"
-                >
-                  <Icon size={20} className="text-primary shrink-0" />
-                  <span>{t(labelKey)}</span>
-                </button>
-              ))}
-            </div>
+        <Dropdown
+          side="top"
+          align="left"
+          trigger={(open) => (
+            <button
+              title="attach file"
+              type="button"
+              className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors"
+            >
+              {open ? <IoClose size={18} /> : <IoAttachOutline size={18} />}
+            </button>
           )}
-        </div>
+        >
+          {menuOptions.map(({ key, icon: Icon, labelKey }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => handleMenuOption(key)}
+              className="flex items-center gap-3 w-full px-4 py-3 text-sm text-text hover:bg-primary/10 transition-colors"
+            >
+              <Icon size={20} className="text-primary shrink-0" />
+              <span>{t(labelKey)}</span>
+            </button>
+          ))}
+        </Dropdown>
 
-        <input
-          ref={documentRef}
-          type="file"
-          multiple
-          accept="*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <input
-          ref={mediaRef}
-          type="file"
-          multiple
-          accept="image/*,video/*"
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <input
-          ref={cameraRef}
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={handleFileChange}
-          className="hidden"
-        />
+        <input ref={documentRef} type="file" multiple accept="*" onChange={handleFileChange} className="hidden" />
+        <input ref={mediaRef} type="file" multiple accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
+        <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
 
         <textarea
           rows={1}
@@ -182,22 +127,14 @@ export function ChatFooter({
       {files.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {files.map((file, i) => (
-            <FileChip
-              key={`${file.name}-${i}`}
-              file={file}
-              onRemove={() => onRemoveFile(i)}
-            />
+            <FileChip key={`${file.name}-${i}`} file={file} onRemove={() => onRemoveFile(i)} />
           ))}
         </div>
       )}
 
       <span
         className={`text-xs text-right px-1 ${
-          input.length > MAX_CHARS
-            ? "text-danger"
-            : input.length > MAX_CHARS * 0.9
-              ? "text-warning"
-              : "text-text-muted"
+          input.length > MAX_CHARS ? "text-danger" : input.length > MAX_CHARS * 0.9 ? "text-warning" : "text-text-muted"
         }`}
       >
         {input.length}/{MAX_CHARS}

@@ -85,17 +85,15 @@ export default async function ChatPage({
               </div>
 
               <div className="flex items-center gap-1">
+                <ChatSearchBtn />
+
                 <Link
                   href={`/chat/${id}/share`}
                   className="flex items-center gap-1.5 -mr-1.5 rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-primary"
                   title={t("share")}
                 >
-                  <span className="hidden text-xs font-medium md:inline">
-                    {t("share")}
-                  </span>
                   <IoShareSocial size={18} />
                 </Link>
-                <ChatSearchBtn />
               </div>
             </header>
 
