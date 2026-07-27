@@ -5,10 +5,10 @@ import {
   IoEnter,
   IoChatbubbles,
   IoLockClosed,
-  IoSearch,
   IoColorPalette,
   IoLanguage,
   IoTime,
+  IoSearchSharp,
 } from "react-icons/io5";
 
 const features = [
@@ -16,7 +16,7 @@ const features = [
   { key: "joinRoom", icon: IoEnter },
   { key: "realTimeChat", icon: IoChatbubbles },
   { key: "privateRooms", icon: IoLockClosed },
-  { key: "searchRooms", icon: IoSearch },
+  { key: "searchRooms", icon: IoSearchSharp },
   { key: "customization", icon: IoColorPalette },
   { key: "language", icon: IoLanguage },
   { key: "chatHistory", icon: IoTime },

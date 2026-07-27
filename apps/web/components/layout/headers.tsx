@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { IoSearch, IoSettingsOutline } from "react-icons/io5";
+import { IoSearchSharp, IoSettingsOutline } from "react-icons/io5";
 import { getTranslations } from "next-intl/server";
 import { Route } from "@/libs/types/navigation";
 import { Navbar } from "./navbar";
@@ -21,7 +21,7 @@ export async function RootHeader() {
 
         <section className="flex gap-3 items-center">
           <Link href="/search" className="hover:text-primary transition-colors">
-            <IoSearch size={24} />
+            <IoSearchSharp size={24} />
           </Link>
 
           <Link href="/config" className="hover:text-primary transition-colors">

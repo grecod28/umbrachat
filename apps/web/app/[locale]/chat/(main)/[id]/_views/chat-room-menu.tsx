@@ -53,11 +53,11 @@ export function ChatRoomMenu({ roomId }: { roomId: string }) {
   return (
     <Dropdown
       align="right"
-      className="max-lg:!right-auto max-lg:left-0 lg:right-0 lg:!left-auto"
+      className="max-lg:right-auto! max-lg:left-0 lg:right-0 lg:left-auto!"
       trigger={
         <button
           type="button"
-          className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text"
+          className="rounded-lg p-2 text-text-muted transition-colors hover:bg-surface hover:text-text"
           title={t("settings")}
         >
           <IoEllipsisVertical size={20} />
