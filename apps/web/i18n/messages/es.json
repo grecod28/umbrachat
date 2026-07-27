@@ -71,7 +71,11 @@
     "goToWebsite": "Ir a la web",
     "searchMessages": "Buscar mensajes...",
     "searchNoResults": "Sin resultados",
-    "searchMatch": "{current} de {total}"
+    "searchMatch": "{current} de {total}",
+    "closeChat": "Cerrar chat",
+    "addFavorite": "Añadir a favoritos",
+    "removeFavorite": "Eliminar de favoritos",
+    "deleteChat": "Eliminar chat"
   },
   "ShareChat": {
     "title": "Compartir esta sala",

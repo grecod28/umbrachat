@@ -71,7 +71,11 @@
     "goToWebsite": "Go to website",
     "searchMessages": "Search messages...",
     "searchNoResults": "No results",
-    "searchMatch": "{current} of {total}"
+    "searchMatch": "{current} of {total}",
+    "closeChat": "Close chat",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "deleteChat": "Delete chat"
   },
   "ShareChat": {
     "title": "Share this room",
