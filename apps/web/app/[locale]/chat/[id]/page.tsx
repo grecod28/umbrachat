@@ -7,6 +7,9 @@ import { ChatSidebar } from "./_views/chat-sidebar";
 import { DesktopOnly } from "@/components/ui/desktop-only";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
+import { LuMessageSquarePlus } from "react-icons/lu";
+import Chip from "@/components/ui/chip";
+import { IoMdSearch } from "react-icons/io";
 
 export async function generateMetadata({
   params,
@@ -51,8 +54,28 @@ export default async function ChatPage({
 
       <div className="flex-1 min-w-0 flex flex-col relative">
         {id === "default" ? (
-          <section className="hid lg:flex h-full flex-col items-center justify-center px-4 text-center">
-            <h1>Chat</h1>
+          <section className="hidden lg:flex h-full items-center justify-center gap-6 px-4 text-center">
+            <Link
+              href="/chat/create"
+              className="flex flex-col items-center p-2 text-text-muted"
+            >
+              <Chip className="rounded-2xl py-3! px-4! mb-2">
+                <LuMessageSquarePlus size={24} />
+              </Chip>
+
+              <p className="text-sm font-medium">{t("createNew")}</p>
+            </Link>
+
+            <Link
+              href="/chat/create"
+              className="flex flex-col items-center  p-2 text-text-muted"
+            >
+              <Chip className="rounded-2xl py-3! px-4! mb-2" active>
+                <IoMdSearch size={24} />
+              </Chip>
+
+              <p className="text-sm font-medium">{t("searchRoom")}</p>
+            </Link>
           </section>
         ) : (
           <>

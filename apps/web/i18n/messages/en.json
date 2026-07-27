@@ -64,7 +64,9 @@
     "fileSizeError": "Files must be under 5 MB",
     "attachDocument": "Document",
     "attachMedia": "Photo & Video",
-    "attachCamera": "Camera"
+    "attachCamera": "Camera",
+    "createNew": "New group",
+    "searchRoom": "Search rooms"
   },
   "ShareChat": {
     "title": "Share this room",

@@ -64,7 +64,9 @@
     "fileSizeError": "Los archivos deben pesar menos de 5 MB",
     "attachDocument": "Documento",
     "attachMedia": "Foto y video",
-    "attachCamera": "Cámara"
+    "attachCamera": "Cámara",
+    "createNew": "Nuevo grupo",
+    "searchRoom": "Buscar salas"
   },
   "ShareChat": {
     "title": "Compartir esta sala",
