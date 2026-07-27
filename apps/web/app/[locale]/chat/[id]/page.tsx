@@ -4,6 +4,7 @@ import { IoArrowBack, IoShareSocial } from "react-icons/io5";
 import Chat from "./_views/chat";
 import AccessRoom from "./_views/access-room";
 import { ChatSidebar } from "./_views/chat-sidebar";
+import { DesktopOnly } from "@/components/ui/desktop-only";
 import { getTranslations } from "next-intl/server";
 import { API_URL } from "@/libs/constants/api";
 
@@ -40,7 +41,9 @@ export default async function ChatPage({
 
   return (
     <main className="h-screen flex">
-      <ChatSidebar />
+      <DesktopOnly>
+        <ChatSidebar />
+      </DesktopOnly>
 
       <div className="flex-1 min-w-0 flex flex-col relative">
         {id === "default" ? (
