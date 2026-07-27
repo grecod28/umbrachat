@@ -10,6 +10,7 @@ import type { RoomWithPrivate } from "@repo/database";
 import { LuMessageSquarePlus } from "react-icons/lu";
 import { IoEllipsisVertical } from "react-icons/io5";
 import NavChip from "@/components/navigation/nav-chip";
+import { ChatHeaderMenu } from "./chat-header-menu";
 
 export function ChatSidebar() {
   const t = useTranslations("ChatList");
@@ -69,17 +70,12 @@ export function ChatSidebar() {
           <section className="flex gap-8 px-3 py-2">
             <Link
               href="/chat/create"
-              className="text-sm text-text-muted hover:text-primary transition-colors"
+              className="p-1.5 text-sm rounded-lg! hover:bg-surface transition-colors"
             >
               <LuMessageSquarePlus size={20} />
             </Link>
 
-            <Link
-              href="/chat/create"
-              className="text-sm text-text-muted hover:text-primary transition-colors"
-            >
-              <IoEllipsisVertical size={20} />
-            </Link>
+            <ChatHeaderMenu />
           </section>
         </section>
       </header>
