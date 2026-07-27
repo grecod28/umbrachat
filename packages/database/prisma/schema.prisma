@@ -39,7 +39,7 @@ model Message {
   itemId  String @id
   content   String
 
-  item ChatItem @relation(fields: [itemId], references: [id])
+  item ChatItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
 
 model File {
@@ -49,5 +49,5 @@ model File {
   mimeType String
   size    Int
 
-  item ChatItem @relation(fields: [itemId], references: [id])
+  item ChatItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
