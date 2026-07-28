@@ -4,7 +4,7 @@ import { useRouter, usePathname } from "@/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { FiSearch } from "react-icons/fi";
+import { IoSearchOutline, IoClose } from "react-icons/io5";
 import { useTypingSound } from "@/libs/hooks/use-typing-sound";
 
 export default function SearchForm() {
@@ -17,8 +17,7 @@ export default function SearchForm() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { withSound } = useTypingSound();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
+  const handleChange = (newValue: string) => {
     setValue(newValue);
 
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -28,6 +27,7 @@ export default function SearchForm() {
 
       if (newValue) {
         params.set("name", newValue);
+        params.delete("page");
       } else {
         params.delete("name");
       }
@@ -37,23 +37,39 @@ export default function SearchForm() {
     }, 300);
   };
 
+  const handleClear = () => {
+    setValue("");
+    router.replace(pathname);
+  };
+
   useEffect(() => {
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
   }, []);
 
   return (
     <div className="relative">
-      <FiSearch
+      <IoSearchOutline
         className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"
         size={20}
       />
       <input
         type="text"
         value={value}
-        onChange={withSound(handleChange)}
+        onChange={withSound((e) => handleChange(e.target.value))}
         placeholder={t("placeholder")}
-        className="w-full pl-12 pr-4 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+        className="w-full rounded-xl border border-border bg-surface py-3 pl-12 pr-10 text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
       />
+      {value && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-text-muted transition-colors hover:bg-surface hover:text-text"
+        >
+          <IoClose size={18} />
+        </button>
+      )}
     </div>
   );
 }
