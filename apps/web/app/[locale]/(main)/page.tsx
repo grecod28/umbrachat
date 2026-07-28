@@ -66,7 +66,7 @@ export default async function Home() {
   return (
     <main>
       {/* Hero */}
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 pt-20 pb-16">
+      <section className="relative flex min-h-screen flex-col items-center justify-center px-4 pt-32 pb-16 md:pt-40">
         <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,var(--color-primary)/8%,transparent)]" />
 
         <ScrollReveal>
@@ -126,7 +126,7 @@ export default async function Home() {
       </section>
 
       {/* Features */}
-      <section className="px-4 py-24 md:py-32">
+      <section className="bg-surface/30 px-4 py-24 md:py-32">
         <div className="mx-auto max-w-5xl">
           <ScrollReveal>
             <div className="mb-16 text-center">
@@ -190,7 +190,7 @@ export default async function Home() {
       </section>
 
       {/* CTA */}
-      <section className="px-4 py-24 md:py-32">
+      <section className="bg-surface/30 px-4 py-24 md:py-32">
         <div className="mx-auto max-w-2xl">
           <ScrollReveal>
             <div className="relative overflow-hidden rounded-3xl bg-linear-to-br from-primary to-accent p-10 text-center text-white shadow-2xl shadow-primary/20 md:p-16">
