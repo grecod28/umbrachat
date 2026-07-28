@@ -95,6 +95,11 @@ export function ChatSidebar() {
         if (!response.ok) throw new Error("Error loading rooms");
         const data: RoomWithPrivate[] = await response.json();
         setRooms(data);
+        const names: Record<string, string> = {};
+        data.forEach((r) => {
+          names[r.id] = r.name || "Untitled chat";
+        });
+        localStorage.setItem("room-names", JSON.stringify(names));
       } catch {
         // silent
       } finally {
@@ -103,6 +108,8 @@ export function ChatSidebar() {
     };
 
     fetchRooms();
+    window.addEventListener("rooms-changed", fetchRooms);
+    return () => window.removeEventListener("rooms-changed", fetchRooms);
   }, []);
 
   const filtered = useMemo(() => {

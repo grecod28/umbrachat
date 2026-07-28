@@ -126,6 +126,7 @@ export default function Chat({
       ...previous.filter((id: string) => id !== roomIdRef.current),
     ];
     localStorage.setItem("rooms", JSON.stringify(updated));
+    window.dispatchEvent(new Event("rooms-changed"));
   }, []);
 
   useEffect(() => {
