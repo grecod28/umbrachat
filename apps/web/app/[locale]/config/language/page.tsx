@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { Select } from "@/components/ui/select";
 import { LANGUAGES } from "@/libs/constants/languages";
+import { IoLanguageOutline } from "react-icons/io5";
 
 const LOCALE_COOKIE = "NEXT_LOCALE";
 const LOCALE_STORAGE_KEY = "umbra-locale";
@@ -33,22 +34,23 @@ export default function ConfigLanguagePage() {
   };
 
   return (
-    <div className="flex flex-col items-center mt-16 px-4 w-full">
-      <div className="animate-fade-in w-full max-w-xs space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold text-primary tracking-tight">
-            {t("title")}
-          </h1>
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <IoLanguageOutline size={24} />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-text">{t("title")}</h2>
           <p className="text-sm text-text-muted">{t("description")}</p>
         </div>
-
-        <Select
-          label={t("title")}
-          options={LANGUAGES}
-          value={locale}
-          onChange={handleChange}
-        />
       </div>
+
+      <Select
+        label={t("title")}
+        options={LANGUAGES}
+        value={locale}
+        onChange={handleChange}
+      />
     </div>
   );
 }

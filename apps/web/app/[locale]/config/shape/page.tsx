@@ -9,6 +9,7 @@ import {
   COLOR_OPTIONS,
   SHAPE_STORAGE_KEY,
 } from "@/libs/constants/shape";
+import { IoColorPaletteOutline } from "react-icons/io5";
 
 type ShapeConfig = {
   font: string;
@@ -72,15 +73,18 @@ export default function ConfigShapePage() {
   }));
 
   return (
-    <div className="flex flex-col items-center mt-16 px-4 w-full">
-      <div className="animate-fade-in w-full max-w-xs space-y-8">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight text-primary">
-            {t("title")}
-          </h1>
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+          <IoColorPaletteOutline size={24} />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-text">{t("title")}</h2>
           <p className="text-sm text-text-muted">{t("description")}</p>
         </div>
+      </div>
 
+      <div className="space-y-5">
         <Select
           label={t("font")}
           options={fontOptions}
