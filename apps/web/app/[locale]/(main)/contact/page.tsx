@@ -1,9 +1,6 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import {
-  IoLogoInstagram,
-  IoMail,
-} from "react-icons/io5";
+import { IoLogoInstagram, IoMail } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
 
 const SOCIALS = [
@@ -63,24 +60,33 @@ export default async function ContactPage() {
             </p>
 
             <div className="mt-10 space-y-6">
-              {SOCIALS.map(({ label, value, href, icon: Icon, description }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-start gap-4"
-                >
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-primary/30">
-                    <Icon size={18} className="text-text-muted transition-colors group-hover:text-primary" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-text">{label}</p>
-                    <p className="truncate text-sm text-text-muted">{value}</p>
-                    <p className="text-xs text-text-muted/60">{description}</p>
-                  </div>
-                </a>
-              ))}
+              {SOCIALS.map(
+                ({ label, value, href, icon: Icon, description }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-start gap-4"
+                  >
+                    <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-primary/30">
+                      <Icon
+                        size={18}
+                        className="text-text-muted transition-colors group-hover:text-primary"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium text-text">{label}</p>
+                      <p className="truncate text-sm text-text-muted">
+                        {value}
+                      </p>
+                      <p className="text-xs text-text-muted/60">
+                        {description}
+                      </p>
+                    </div>
+                  </a>
+                ),
+              )}
             </div>
           </section>
 
@@ -94,7 +100,7 @@ export default async function ContactPage() {
               </p>
 
               <form
-                action="https://formspree.io/f/umbra-contact"
+                action="https://formspree.io/f/xnjewdwg"
                 method="POST"
                 className="mt-8 space-y-5"
               >
