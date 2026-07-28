@@ -43,7 +43,11 @@ const steps = [
     titleKey: "step2Title",
     descKey: "step2Desc",
   },
-  { icon: IoShieldCheckmarkOutline, titleKey: "step3Title", descKey: "step3Desc" },
+  {
+    icon: IoShieldCheckmarkOutline,
+    titleKey: "step3Title",
+    descKey: "step3Desc",
+  },
 ] as const;
 
 export async function generateMetadata({
@@ -98,7 +102,7 @@ export default async function Home() {
                 {t("createRoom")}
               </Link>
               <Link
-                href="/search"
+                href="/chat/search"
                 className="rounded-xl border border-border bg-surface px-8 py-3.5 text-sm font-semibold text-text transition-all hover:border-primary/30 hover:bg-surface-light"
               >
                 {t("searchRoom")}
@@ -116,7 +120,9 @@ export default async function Home() {
                 { value: "∞", label: "Rooms to explore" },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <p className="text-2xl font-bold text-primary">{stat.value}</p>
+                  <p className="text-2xl font-bold text-primary">
+                    {stat.value}
+                  </p>
                   <p className="mt-1 text-xs text-text-muted">{stat.label}</p>
                 </div>
               ))}

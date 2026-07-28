@@ -49,7 +49,7 @@ export default async function SearchPage({
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center pt-20 px-4">
+    <main className="flex-1 min-h-screen flex flex-col items-center pt-8 px-4">
       <section className="animate-fade-in w-full max-w-2xl space-y-8">
         <header className="text-center space-y-2">
           <h1 className="text-3xl font-bold text-primary tracking-tight">

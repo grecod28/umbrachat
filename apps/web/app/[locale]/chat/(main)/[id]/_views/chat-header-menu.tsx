@@ -21,9 +21,14 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   { key: "createNew", icon: LuMessageSquarePlus, href: "/chat/create" },
-  { key: "searchRoom", icon: IoSearchOutline, href: "/search" },
+  { key: "searchRoom", icon: IoSearchOutline, href: "/chat/search" },
   { key: "settings", icon: IoSettingsOutline, href: "/config" },
-  { key: "goToWebsite", icon: IoGlobeOutline, href: "https://umbrachat.org", external: true },
+  {
+    key: "goToWebsite",
+    icon: IoGlobeOutline,
+    href: "https://umbrachat.org",
+    external: true,
+  },
 ];
 
 export function ChatHeaderMenu() {

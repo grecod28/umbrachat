@@ -19,7 +19,10 @@ export async function RootHeader() {
         <Navbar routes={routes} />
 
         <section className="flex gap-3 items-center">
-          <Link href="/search" className="hover:text-primary transition-colors">
+          <Link
+            href="/chat/search"
+            className="hover:text-primary transition-colors"
+          >
             <IoSearchSharp size={24} />
           </Link>
 

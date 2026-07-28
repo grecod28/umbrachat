@@ -59,7 +59,7 @@ export default async function ChatPage({
             </Link>
 
             <Link
-              href="/chat/create"
+              href="/chat/search"
               className="flex flex-col items-center  p-2 text-text-muted"
             >
               <Chip className="rounded-2xl py-3! px-4! mb-2" active>
