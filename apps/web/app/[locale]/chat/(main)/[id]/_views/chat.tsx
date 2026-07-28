@@ -158,6 +158,20 @@ export default function Chat({
     clearUnread();
 
     const onNewMessage = (msg: Message) => {
+      const now = new Date().toISOString();
+
+      try {
+        const activityKey = "last-activity";
+        const activity: Record<string, string> = JSON.parse(
+          localStorage.getItem(activityKey) || "{}",
+        );
+        activity[msg.roomId!] = now;
+        localStorage.setItem(activityKey, JSON.stringify(activity));
+        window.dispatchEvent(new Event("last-activity-changed"));
+      } catch {
+        // ignore
+      }
+
       if (msg.roomId === roomIdRef.current) {
         setMessages((prev) => [...prev, msg]);
       } else {

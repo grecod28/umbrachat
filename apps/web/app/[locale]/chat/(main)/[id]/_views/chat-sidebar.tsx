@@ -25,6 +25,9 @@ export function ChatSidebar() {
   const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>(
     {},
   );
+  const [lastActivity, setLastActivity] = useState<Record<string, string>>(
+    {},
+  );
 
   useEffect(() => {
     const load = () => {
@@ -52,13 +55,23 @@ export function ChatSidebar() {
       } catch {
         setUnreadCounts({});
       }
+      try {
+        setLastActivity(
+          JSON.parse(localStorage.getItem("last-activity") || "{}"),
+        );
+      } catch {
+        setLastActivity({});
+      }
     };
     load();
-    window.addEventListener("storage", load);
-    window.addEventListener("unread-counts-changed", load);
+    const handler = () => load();
+    window.addEventListener("storage", handler);
+    window.addEventListener("unread-counts-changed", handler);
+    window.addEventListener("last-activity-changed", handler);
     return () => {
-      window.removeEventListener("storage", load);
-      window.removeEventListener("unread-counts-changed", load);
+      window.removeEventListener("storage", handler);
+      window.removeEventListener("unread-counts-changed", handler);
+      window.removeEventListener("last-activity-changed", handler);
     };
   }, []);
 
@@ -81,13 +94,7 @@ export function ChatSidebar() {
         const response = await fetch(`${API_URL}/rooms?${params.toString()}`);
         if (!response.ok) throw new Error("Error loading rooms");
         const data: RoomWithPrivate[] = await response.json();
-        setRooms(
-          data.sort(
-            (a, b) =>
-              new Date(b.lastMessageAt).getTime() -
-              new Date(a.lastMessageAt).getTime(),
-          ),
-        );
+        setRooms(data);
       } catch {
         // silent
       } finally {
@@ -114,8 +121,16 @@ export function ChatSidebar() {
       result = result.filter((r) => r.name.toLowerCase().includes(q));
     }
 
-    return result;
-  }, [rooms, search, filter, favorites, unreadCounts]);
+    return [...result].sort((a, b) => {
+      const aTime = lastActivity[a.id]
+        ? new Date(lastActivity[a.id]).getTime()
+        : new Date(a.lastMessageAt).getTime();
+      const bTime = lastActivity[b.id]
+        ? new Date(lastActivity[b.id]).getTime()
+        : new Date(b.lastMessageAt).getTime();
+      return bTime - aTime;
+    });
+  }, [rooms, search, filter, favorites, unreadCounts, lastActivity]);
 
   return (
     <aside
