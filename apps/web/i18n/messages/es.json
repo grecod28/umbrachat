@@ -36,7 +36,16 @@
     "ctaTitle": "¿Listo para empezar?",
     "ctaDesc": "Únete a miles de usuarios chateando anónimamente cada día.",
     "ctaButton": "Crea tu primera sala",
-    "startChatting": "Empezar a chatear"
+    "startChatting": "Empezar a chatear",
+    "statsData": "Datos personales recopilados",
+    "statsLifetime": "Vida de los mensajes",
+    "statsExplore": "Salas por explorar",
+    "featuresBadge": "Funcionalidades",
+    "footerContact": "Contacto",
+    "footerChats": "Chats",
+    "footerSearch": "Buscar",
+    "footerSettings": "Configuración",
+    "copyright": "UmbraChat. Todos los derechos reservados."
   },
   "ChatLayout": {
     "back": "Volver",
@@ -166,7 +175,22 @@
   },
   "Contact": {
     "title": "Contacto",
-    "description": "¿Tienes preguntas, feedback o necesitas ayuda? Estaremos encantados de escucharte."
+    "description": "¿Tienes preguntas, feedback o necesitas ayuda? Estaremos encantados de escucharte.",
+    "badge": "Contacto",
+    "emailLabel": "Email",
+    "emailDesc": "Soporte directo",
+    "instagramLabel": "Instagram",
+    "instagramDesc": "Novedades y anuncios",
+    "tiktokLabel": "TikTok",
+    "tiktokDesc": "Contenido breve",
+    "formTitle": "Envíanos un mensaje",
+    "formSubtitle": "Normalmente respondemos en 24 horas.",
+    "formName": "Nombre",
+    "formEmail": "Email",
+    "formSubject": "Asunto",
+    "formMessage": "Mensaje",
+    "formSend": "Enviar mensaje",
+    "footer": "UmbraChat. Todos los derechos reservados."
   },
   "ChatList": {
     "title": "Mis Chats",
@@ -176,7 +200,13 @@
     "loading": "Cargando salas...",
     "create": "Crear sala",
     "search": "Buscar chats...",
-    "incognito": "Perfil 100% anónimo"
+    "incognito": "Perfil 100% anónimo",
+    "filterAll": "Todos",
+    "filterUnread": "No leídos",
+    "filterFavorites": "Favoritos",
+    "noResults": "Sin resultados",
+    "noFavorites": "No hay favoritos aún",
+    "noUnread": "No hay mensajes sin leer"
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"

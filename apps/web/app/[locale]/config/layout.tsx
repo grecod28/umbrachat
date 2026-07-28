@@ -4,10 +4,8 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 import { ConfigBackButton } from "./_views/config-back-button";
-import {
-  IoLanguageOutline,
-  IoColorPaletteOutline,
-} from "react-icons/io5";
+import { Link } from "@/i18n/navigation";
+import { IoHomeOutline } from "react-icons/io5";
 
 export async function generateMetadata({
   params,
@@ -40,7 +38,16 @@ export default async function ConfigLayout({
       <div className="mx-auto max-w-lg">
         <div className="mb-10 flex items-center justify-between">
           <h1 className="text-xl font-bold text-text">Settings</h1>
-          <ConfigBackButton />
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-text-muted transition-colors hover:bg-surface hover:text-text"
+            >
+              <IoHomeOutline size={16} />
+              Home
+            </Link>
+            <ConfigBackButton />
+          </div>
         </div>
 
         <nav className="mb-10 flex gap-2">

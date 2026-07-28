@@ -174,13 +174,13 @@ export function ChatSidebar() {
 
         <section className="flex gap-1 mt-2">
           <NavChip param="filter" value="">
-            Todos
+            {t("filterAll")}
           </NavChip>
           <NavChip param="filter" value="unread">
-            No leídos
+            {t("filterUnread")}
           </NavChip>
           <NavChip param="filter" value="favorites">
-            Favoritos
+            {t("filterFavorites")}
           </NavChip>
         </section>
       </section>
@@ -192,11 +192,11 @@ export function ChatSidebar() {
           <div className="p-4 text-center">
             <p className="text-sm text-text-muted mb-3">
               {search.trim()
-                ? "No results"
+                ? t("noResults")
                 : filter === "favorites"
-                  ? "No favorites yet"
+                  ? t("noFavorites")
                   : filter === "unread"
-                    ? "No unread messages"
+                    ? t("noUnread")
                     : t("empty")}
             </p>
           </div>
