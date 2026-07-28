@@ -44,7 +44,7 @@ export default async function ChatPage({
 
   return (
     <main className="flex-1 w-full">
-      <div className="h-screen min-w-0 flex flex-col relative">
+      <div className="h-screen min-w-0 flex flex-col relative" id="chat-container">
         {id === "default" ? (
           <section className="hidden lg:flex h-full items-center justify-center gap-6 px-4 text-center">
             <Link

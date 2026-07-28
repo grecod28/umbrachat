@@ -96,7 +96,11 @@
     "closeChat": "Close chat",
     "addFavorite": "Add to favorites",
     "removeFavorite": "Remove from favorites",
-    "deleteChat": "Delete chat"
+    "deleteChat": "Delete chat",
+    "deleteChatTitle": "Delete this chat?",
+    "deleteChatDesc": "It will be removed from your chat list. This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
   },
   "ShareChat": {
     "title": "Share this room",
