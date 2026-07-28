@@ -65,10 +65,10 @@ export function ChatFooter({
   };
 
   return (
-    <footer className="p-3 flex flex-col gap-1 bg-background/70 backdrop-blur-md border-t border-border">
+    <footer className="p-3 flex flex-col gap-1 bg-transparent">
       <UploadStatusBanner status={uploadStatus} />
 
-      <div className="flex items-end gap-2">
+      <div className="flex items-center gap-2">
         <Dropdown
           side="top"
           align="left"
@@ -76,7 +76,7 @@ export function ChatFooter({
             <button
               title="attach file"
               type="button"
-              className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors"
+              className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors shrink-0"
             >
               {open ? <IoClose size={18} /> : <IoAttachOutline size={18} />}
             </button>
@@ -99,20 +99,33 @@ export function ChatFooter({
         <input ref={mediaRef} type="file" multiple accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
         <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
 
-        <textarea
-          rows={1}
-          value={input}
-          maxLength={MAX_CHARS}
-          onChange={withSound((e) => onInputChange(e.target.value))}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey) {
-              e.preventDefault();
-              onSend();
-            }
-          }}
-          placeholder={t("inputPlaceholder")}
-          className="flex-1 resize-none px-4 py-2.5 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
-        />
+        <div className="flex-1 relative">
+          <textarea
+            rows={1}
+            value={input}
+            maxLength={MAX_CHARS}
+            onChange={withSound((e) => onInputChange(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+              }
+            }}
+            placeholder={t("inputPlaceholder")}
+            className="w-full resize-none px-4 py-2.5 pr-14 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
+          />
+          <span
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-[10px] px-1 rounded pointer-events-none ${
+              input.length > MAX_CHARS
+                ? "text-danger"
+                : input.length > MAX_CHARS * 0.9
+                  ? "text-warning"
+                  : "text-text-muted/50"
+            }`}
+          >
+            {input.length}/{MAX_CHARS}
+          </span>
+        </div>
         <button
           title="send message button"
           type="button"
@@ -132,13 +145,6 @@ export function ChatFooter({
         </div>
       )}
 
-      <span
-        className={`text-xs text-right px-1 ${
-          input.length > MAX_CHARS ? "text-danger" : input.length > MAX_CHARS * 0.9 ? "text-warning" : "text-text-muted"
-        }`}
-      >
-        {input.length}/{MAX_CHARS}
-      </span>
     </footer>
   );
 }

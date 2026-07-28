@@ -2,7 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { IoArrowDownOutline, IoArrowUp, IoArrowDown, IoClose, IoSearchOutline } from "react-icons/io5";
+import {
+  IoArrowDownOutline,
+  IoArrowUp,
+  IoArrowDown,
+  IoClose,
+  IoSearchOutline,
+} from "react-icons/io5";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { useSocket } from "@/providers/socket-provider";
 import { API_URL } from "@/libs/constants/api";
@@ -465,13 +471,15 @@ export default function Chat({
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 pb-40 space-y-3 chat-bg"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-8 pb-40 space-y-3 chat-bg"
       >
         {messages.map((msg, i) => (
           <MessageBubble
             key={msg.id}
             message={msg}
-            searchHighlight={searchOpen && searchQuery.trim() ? searchQuery : undefined}
+            searchHighlight={
+              searchOpen && searchQuery.trim() ? searchQuery : undefined
+            }
             isSearchActive={searchOpen && matchingIndices[searchIndex] === i}
           />
         ))}
@@ -482,7 +490,7 @@ export default function Chat({
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 z-10">
-        <section className="relative text-xs text-text-muted text-center py-2 bg-background/80 backdrop-blur-sm">
+        <section className="relative text-xs text-text-muted text-center py-2 bg-transparent">
           <p>{t("expireNotice")}</p>
 
           {!isAtBottom && (
