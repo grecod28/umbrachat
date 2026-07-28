@@ -115,9 +115,9 @@ export default async function Home() {
           <ScrollReveal delay={100}>
             <div className="grid grid-cols-3 gap-4 rounded-2xl border border-border/50 bg-surface/30 px-8 py-6 backdrop-blur-sm">
               {[
-                { value: "0", label: "Personal data collected" },
-                { value: "24h", label: "Message lifetime" },
-                { value: "∞", label: "Rooms to explore" },
+                { value: "0", label: t("statsData") },
+                { value: "24h", label: t("statsLifetime") },
+                { value: "∞", label: t("statsExplore") },
               ].map((stat) => (
                 <div key={stat.label} className="text-center">
                   <p className="text-2xl font-bold text-primary">
@@ -137,7 +137,7 @@ export default async function Home() {
           <ScrollReveal>
             <div className="mb-16 text-center">
               <p className="mb-3 text-xs font-semibold tracking-widest text-primary uppercase">
-                Features
+                {t("featuresBadge")}
               </p>
               <h2 className="text-3xl font-bold tracking-tight text-text md:text-4xl">
                 {t("featuresTitle")}
@@ -219,19 +219,19 @@ export default async function Home() {
       {/* Footer */}
       <footer className="border-t border-border px-4 py-12">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-6 text-sm text-text-muted">
-          <p>&copy; {new Date().getFullYear()} UmbraChat</p>
+          <p>&copy; {new Date().getFullYear()} {t("copyright")}</p>
           <nav className="flex flex-wrap gap-6">
             <Link href="/contact" className="transition-colors hover:text-text">
-              Contact
+              {t("footerContact")}
             </Link>
             <Link href="/chat" className="transition-colors hover:text-text">
-              Chats
+              {t("footerChats")}
             </Link>
             <Link href="/search" className="transition-colors hover:text-text">
-              Search
+              {t("footerSearch")}
             </Link>
             <Link href="/config" className="transition-colors hover:text-text">
-              Settings
+              {t("footerSettings")}
             </Link>
           </nav>
         </div>

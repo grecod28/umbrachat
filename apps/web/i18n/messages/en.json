@@ -36,7 +36,16 @@
     "ctaTitle": "Ready to start?",
     "ctaDesc": "Join thousands of users chatting anonymously every day.",
     "ctaButton": "Create your first room",
-    "startChatting": "Start chatting"
+    "startChatting": "Start chatting",
+    "statsData": "Personal data collected",
+    "statsLifetime": "Message lifetime",
+    "statsExplore": "Rooms to explore",
+    "featuresBadge": "Features",
+    "footerContact": "Contact",
+    "footerChats": "Chats",
+    "footerSearch": "Search",
+    "footerSettings": "Settings",
+    "copyright": "UmbraChat. All rights reserved."
   },
   "ChatLayout": {
     "back": "Back",
@@ -166,7 +175,22 @@
   },
   "Contact": {
     "title": "Contact",
-    "description": "Have questions, feedback, or need help? We'd love to hear from you."
+    "description": "Have questions, feedback, or need help? We'd love to hear from you.",
+    "badge": "Contact",
+    "emailLabel": "Email",
+    "emailDesc": "Direct support inbox",
+    "instagramLabel": "Instagram",
+    "instagramDesc": "Updates & announcements",
+    "tiktokLabel": "TikTok",
+    "tiktokDesc": "Short-form content",
+    "formTitle": "Send us a message",
+    "formSubtitle": "We typically respond within 24 hours.",
+    "formName": "Name",
+    "formEmail": "Email",
+    "formSubject": "Subject",
+    "formMessage": "Message",
+    "formSend": "Send message",
+    "footer": "UmbraChat. All rights reserved."
   },
   "ChatList": {
     "title": "My Chats",
@@ -176,7 +200,13 @@
     "loading": "Loading rooms...",
     "create": "Create room",
     "search": "Search chats...",
-    "incognito": "100% anonymous profile"
+    "incognito": "100% anonymous profile",
+    "filterAll": "All",
+    "filterUnread": "Unread",
+    "filterFavorites": "Favorites",
+    "noResults": "No results",
+    "noFavorites": "No favorites yet",
+    "noUnread": "No unread messages"
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"
