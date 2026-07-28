@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import ChatListPage from "@/app/[locale]/chat/(root)/page";
+import ChatListPage from "@/app/[locale]/chat/page";
 
 beforeEach(() => {
   localStorage.clear();

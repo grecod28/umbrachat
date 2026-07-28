@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { IoSearch, IoSettingsOutline } from "react-icons/io5";
+import { IoSearchSharp, IoSettingsOutline } from "react-icons/io5";
 import { getTranslations } from "next-intl/server";
 import { Route } from "@/libs/types/navigation";
 import { Navbar } from "./navbar";
@@ -9,7 +9,6 @@ export async function RootHeader() {
 
   const routes: Route[] = [
     { label: t("home"), href: "/" },
-    { label: t("info"), href: "/info" },
     { label: t("contact"), href: "/contact" },
     { label: t("chats"), href: "/chat" },
   ];
@@ -20,8 +19,11 @@ export async function RootHeader() {
         <Navbar routes={routes} />
 
         <section className="flex gap-3 items-center">
-          <Link href="/search" className="hover:text-primary transition-colors">
-            <IoSearch size={24} />
+          <Link
+            href="/chat/search"
+            className="hover:text-primary transition-colors"
+          >
+            <IoSearchSharp size={24} />
           </Link>
 
           <Link href="/config" className="hover:text-primary transition-colors">

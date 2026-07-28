@@ -1,0 +1,150 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import { useRef, type RefObject, type ChangeEvent } from "react";
+import {
+  IoAttachOutline,
+  IoSend,
+  IoDocumentOutline,
+  IoImageOutline,
+  IoCameraOutline,
+  IoClose,
+} from "react-icons/io5";
+import { useTypingSound } from "@/libs/hooks/use-typing-sound";
+import { Dropdown } from "@/components/ui/dropdown";
+import { UploadStatusBanner } from "./upload-status-banner";
+import { FileChip } from "./file-chip";
+import { MAX_CHARS, type UploadStatus } from "./types";
+
+interface ChatFooterProps {
+  input: string;
+  canSend: boolean;
+  files: File[];
+  uploadStatus: UploadStatus;
+  onInputChange: (value: string) => void;
+  onSend: () => void;
+  onFileChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onRemoveFile: (index: number) => void;
+}
+
+const menuOptions = [
+  { key: "document", icon: IoDocumentOutline, accept: "*", labelKey: "attachDocument" as const },
+  { key: "media", icon: IoImageOutline, accept: "image/*,video/*", labelKey: "attachMedia" as const },
+  { key: "camera", icon: IoCameraOutline, accept: "image/*", capture: true, labelKey: "attachCamera" as const },
+];
+
+export function ChatFooter({
+  input,
+  canSend,
+  files,
+  uploadStatus,
+  onInputChange,
+  onSend,
+  onFileChange,
+  onRemoveFile,
+}: ChatFooterProps) {
+  const t = useTranslations("ChatRoom");
+  const { withSound } = useTypingSound();
+  const documentRef = useRef<HTMLInputElement>(null);
+  const mediaRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
+
+  const inputRefs: Record<string, RefObject<HTMLInputElement | null>> = {
+    document: documentRef,
+    media: mediaRef,
+    camera: cameraRef,
+  };
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    onFileChange(e);
+    e.target.value = "";
+  };
+
+  const handleMenuOption = (key: string) => {
+    inputRefs[key]?.current?.click();
+  };
+
+  return (
+    <footer className="p-3 flex flex-col gap-1 bg-transparent">
+      <UploadStatusBanner status={uploadStatus} />
+
+      <div className="flex items-center gap-2">
+        <Dropdown
+          side="top"
+          align="left"
+          trigger={(open) => (
+            <button
+              title="attach file"
+              type="button"
+              className="p-2.5 rounded-xl bg-surface border border-border text-text-muted hover:text-text hover:border-primary/60 transition-colors shrink-0"
+            >
+              {open ? <IoClose size={18} /> : <IoAttachOutline size={18} />}
+            </button>
+          )}
+        >
+          {menuOptions.map(({ key, icon: Icon, labelKey }) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => handleMenuOption(key)}
+              className="flex items-center gap-3 w-full px-4 py-3 text-sm text-text hover:bg-primary/10 transition-colors"
+            >
+              <Icon size={20} className="text-primary shrink-0" />
+              <span>{t(labelKey)}</span>
+            </button>
+          ))}
+        </Dropdown>
+
+        <input ref={documentRef} type="file" multiple accept="*" onChange={handleFileChange} className="hidden" />
+        <input ref={mediaRef} type="file" multiple accept="image/*,video/*" onChange={handleFileChange} className="hidden" />
+        <input ref={cameraRef} type="file" accept="image/*" capture="environment" onChange={handleFileChange} className="hidden" />
+
+        <div className="flex-1 relative">
+          <textarea
+            rows={1}
+            value={input}
+            maxLength={MAX_CHARS}
+            onChange={withSound((e) => onInputChange(e.target.value))}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+              }
+            }}
+            placeholder={t("inputPlaceholder")}
+            className="w-full resize-none px-4 py-2.5 pr-14 rounded-xl bg-surface border border-border text-text text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors max-h-32"
+          />
+          <span
+            className={`absolute right-3 top-1/2 -translate-y-1/2 text-[10px] px-1 rounded pointer-events-none ${
+              input.length > MAX_CHARS
+                ? "text-danger"
+                : input.length > MAX_CHARS * 0.9
+                  ? "text-warning"
+                  : "text-text-muted/50"
+            }`}
+          >
+            {input.length}/{MAX_CHARS}
+          </span>
+        </div>
+        <button
+          title="send message button"
+          type="button"
+          onClick={onSend}
+          disabled={!canSend}
+          className="p-2.5 rounded-xl bg-primary text-white hover:bg-primary-hover transition-colors shrink-0 disabled:opacity-40 disabled:cursor-not-allowed"
+        >
+          <IoSend size={18} />
+        </button>
+      </div>
+
+      {files.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {files.map((file, i) => (
+            <FileChip key={`${file.name}-${i}`} file={file} onRemove={() => onRemoveFile(i)} />
+          ))}
+        </div>
+      )}
+
+    </footer>
+  );
+}

@@ -15,7 +15,28 @@
     "welcome": "Welcome to",
     "description": "Chat in real time with friends or strangers. Create your own room or join an existing one to start conversing.",
     "createRoom": "Create a room",
-    "searchRoom": "Search rooms"
+    "searchRoom": "Search rooms",
+    "featuresTitle": "Why UmbraChat?",
+    "featuresSubtitle": "Private, fast, and effortless communication.",
+    "featureIncognito": "100% Incognito",
+    "featureIncognitoDesc": "No accounts, no phone numbers, no personal data. Your identity stays completely anonymous. Messages are deleted every 24 hours.",
+    "featureRealtime": "Real-time Chat",
+    "featureRealtimeDesc": "Messages appear instantly for everyone in the room. No delays, no refreshes — just pure conversation.",
+    "featureRooms": "Public & Private Rooms",
+    "featureRoomsDesc": "Create open rooms for anyone to join, or lock them behind a 6-character code for private conversations.",
+    "featureFiles": "File Sharing",
+    "featureFilesDesc": "Share images, videos, and documents up to 5 MB directly in the chat with drag-and-drop simplicity.",
+    "howItWorks": "How it works",
+    "step1Title": "Create or join",
+    "step1Desc": "Start a new room in seconds, or join an existing one with a link.",
+    "step2Title": "Chat freely",
+    "step2Desc": "Send messages, share files, and talk in real time with no limits.",
+    "step3Title": "Stay anonymous",
+    "step3Desc": "No sign-up required. Your data is never stored. Messages vanish daily.",
+    "ctaTitle": "Ready to start?",
+    "ctaDesc": "Join thousands of users chatting anonymously every day.",
+    "ctaButton": "Create your first room",
+    "startChatting": "Start chatting"
   },
   "ChatLayout": {
     "back": "Back",
@@ -57,7 +78,29 @@
     "codeError": "The code must be exactly 6 characters",
     "accessSubmit": "Access",
     "wrongCode": "Incorrect code",
-    "expireNotice": "Messages are deleted every 24 hours"
+    "expireNotice": "Messages are deleted every 24 hours",
+    "uploadError": "Error uploading files",
+    "uploadSuccess": "Files uploaded successfully",
+    "uploadingFiles": "Uploading files...",
+    "fileSizeError": "Files must be under 5 MB",
+    "attachDocument": "Document",
+    "attachMedia": "Photo & Video",
+    "attachCamera": "Camera",
+    "createNew": "New group",
+    "searchRoom": "Search rooms",
+    "settings": "Settings",
+    "goToWebsite": "Go to website",
+    "searchMessages": "Search messages...",
+    "searchNoResults": "No results",
+    "searchMatch": "{current} of {total}",
+    "closeChat": "Close chat",
+    "addFavorite": "Add to favorites",
+    "removeFavorite": "Remove from favorites",
+    "deleteChat": "Delete chat",
+    "deleteChatTitle": "Delete this chat?",
+    "deleteChatDesc": "It will be removed from your chat list. This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
   },
   "ShareChat": {
     "title": "Share this room",
@@ -123,14 +166,17 @@
   },
   "Contact": {
     "title": "Contact",
-    "description": "Get in touch with the creator."
+    "description": "Have questions, feedback, or need help? We'd love to hear from you."
   },
   "ChatList": {
     "title": "My Chats",
+    "noTitle": "Untitled chat",
     "empty": "No active chats",
     "recent": "Your recent conversations",
     "loading": "Loading rooms...",
-    "create": "Create room"
+    "create": "Create room",
+    "search": "Search chats...",
+    "incognito": "100% anonymous profile"
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"
@@ -146,7 +192,7 @@
     },
     "contact": {
       "title": "Contact | UmbraChat",
-      "description": "Get in touch with the creator."
+    "description": "Reach out through any of these channels."
     },
     "info": {
       "title": "Info | UmbraChat",

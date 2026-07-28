@@ -15,7 +15,28 @@
     "welcome": "Bienvenido a",
     "description": "Chatea en tiempo real con amigos o desconocidos. Crea tu propia sala o únete a una existente para comenzar a conversar.",
     "createRoom": "Crear una sala",
-    "searchRoom": "Buscar salas"
+    "searchRoom": "Buscar salas",
+    "featuresTitle": "¿Por qué UmbraChat?",
+    "featuresSubtitle": "Comunicación privada, rápida y sin esfuerzo.",
+    "featureIncognito": "100% Incógnito",
+    "featureIncognitoDesc": "Sin cuentas, sin números de teléfono, sin datos personales. Tu identidad permanece completamente anónima. Los mensajes se eliminan cada 24 horas.",
+    "featureRealtime": "Chat en tiempo real",
+    "featureRealtimeDesc": "Los mensajes aparecen al instante para todos en la sala. Sin demoras, sin refrescos — solo conversación pura.",
+    "featureRooms": "Salas públicas y privadas",
+    "featureRoomsDesc": "Crea salas abiertas para que cualquiera pueda unirse, o protégelas con un código de 6 caracteres para conversaciones privadas.",
+    "featureFiles": "Compartir archivos",
+    "featureFilesDesc": "Comparte imágenes, videos y documentos de hasta 5 MB directamente en el chat con simplicidad.",
+    "howItWorks": "Cómo funciona",
+    "step1Title": "Crea o únete",
+    "step1Desc": "Inicia una sala nueva en segundos, o únete a una existente con un enlace.",
+    "step2Title": "Chatea libremente",
+    "step2Desc": "Envía mensajes, comparte archivos y habla en tiempo real sin límites.",
+    "step3Title": "Mantente anónimo",
+    "step3Desc": "Sin registro necesario. Tus datos nunca se almacenan. Los mensajes desaparecen a diario.",
+    "ctaTitle": "¿Listo para empezar?",
+    "ctaDesc": "Únete a miles de usuarios chateando anónimamente cada día.",
+    "ctaButton": "Crea tu primera sala",
+    "startChatting": "Empezar a chatear"
   },
   "ChatLayout": {
     "back": "Volver",
@@ -57,7 +78,29 @@
     "codeError": "El código debe tener exactamente 6 caracteres",
     "accessSubmit": "Acceder",
     "wrongCode": "Código incorrecto",
-    "expireNotice": "Los mensajes se eliminan cada 24 horas"
+    "expireNotice": "Los mensajes se eliminan cada 24 horas",
+    "uploadError": "Error al subir archivos",
+    "uploadSuccess": "Archivos subidos correctamente",
+    "uploadingFiles": "Subiendo archivos...",
+    "fileSizeError": "Los archivos deben pesar menos de 5 MB",
+    "attachDocument": "Documento",
+    "attachMedia": "Foto y video",
+    "attachCamera": "Cámara",
+    "createNew": "Nuevo grupo",
+    "searchRoom": "Buscar salas",
+    "settings": "Configuración",
+    "goToWebsite": "Ir a la web",
+    "searchMessages": "Buscar mensajes...",
+    "searchNoResults": "Sin resultados",
+    "searchMatch": "{current} de {total}",
+    "closeChat": "Cerrar chat",
+    "addFavorite": "Añadir a favoritos",
+    "removeFavorite": "Eliminar de favoritos",
+    "deleteChat": "Eliminar chat",
+    "deleteChatTitle": "¿Eliminar este chat?",
+    "deleteChatDesc": "Se eliminará de tu lista de chats. Esta acción no se puede deshacer.",
+    "confirm": "Eliminar",
+    "cancel": "Cancelar"
   },
   "ShareChat": {
     "title": "Compartir esta sala",
@@ -123,14 +166,17 @@
   },
   "Contact": {
     "title": "Contacto",
-    "description": "Ponte en contacto con el creador."
+    "description": "¿Tienes preguntas, feedback o necesitas ayuda? Estaremos encantados de escucharte."
   },
   "ChatList": {
     "title": "Mis Chats",
+    "noTitle": "Chat sin nombre",
     "empty": "No tienes chats activos",
     "recent": "Tus conversaciones recientes",
     "loading": "Cargando salas...",
-    "create": "Crear sala"
+    "create": "Crear sala",
+    "search": "Buscar chats...",
+    "incognito": "Perfil 100% anónimo"
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"

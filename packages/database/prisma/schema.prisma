@@ -13,7 +13,7 @@ model Room {
   createdAt DateTime @default(now())
   lastMessageAt DateTime  @default(now())
 
-  messages  Message[]
+  items  ChatItem[]
   access      RoomAccess?
   @@index([lastMessageAt]) // Importante para la velocidad
 }
@@ -25,10 +25,29 @@ model RoomAccess {
   room Room @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
-model Message {
+model ChatItem {
   id        String   @id @default(uuid())
-  content   String
   roomId    String
   createdAt DateTime @default(now())
+
+  message Message?
+  file File?
   room      Room     @relation(fields: [roomId], references: [id])
+} 
+
+model Message {
+  itemId  String @id
+  content   String
+
+  item ChatItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+}
+
+model File {
+  itemId  String @id
+  key     String
+  fileName String
+  mimeType String
+  size    Int
+
+  item ChatItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
