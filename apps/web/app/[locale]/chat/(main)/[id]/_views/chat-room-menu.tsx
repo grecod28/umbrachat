@@ -61,7 +61,6 @@ export function ChatRoomMenu({ roomId }: { roomId: string }) {
     <>
       <Dropdown
         align="right"
-        className="max-lg:right-auto! max-lg:left-0 lg:right-0 lg:left-auto!"
         trigger={
           <button
             type="button"

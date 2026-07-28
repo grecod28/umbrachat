@@ -36,8 +36,7 @@ export function ChatHeaderMenu() {
 
   return (
     <Dropdown
-      align="left"
-      className="max-lg:!left-auto max-lg:right-0 lg:left-0 lg:!right-auto"
+      align="right"
       trigger={
         <button
           type="button"
