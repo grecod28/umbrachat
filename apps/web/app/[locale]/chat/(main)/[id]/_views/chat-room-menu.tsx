@@ -42,6 +42,7 @@ export function ChatRoomMenu({ roomId }: { roomId: string }) {
       : [...favs, roomId];
     saveFavorites(next);
     setIsFav(next.includes(roomId));
+    window.dispatchEvent(new Event("fav-rooms-changed"));
   }, [roomId]);
 
   const deleteChat = useCallback(() => {

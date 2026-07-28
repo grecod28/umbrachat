@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import { Link, usePathname } from "@/i18n/navigation";
 import { API_URL } from "@/libs/constants/api";
 import { formatDate } from "@/libs/functions/format-date";
@@ -18,6 +19,26 @@ export function ChatSidebar() {
   const [rooms, setRooms] = useState<RoomWithPrivate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const searchParams = useSearchParams();
+  const filter = searchParams.get("filter") || "";
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  useEffect(() => {
+    const load = () => {
+      try {
+        setFavorites(JSON.parse(localStorage.getItem("fav-rooms") || "[]"));
+      } catch {
+        setFavorites([]);
+      }
+    };
+    load();
+    window.addEventListener("storage", load);
+    window.addEventListener("fav-rooms-changed", load);
+    return () => {
+      window.removeEventListener("storage", load);
+      window.removeEventListener("fav-rooms-changed", load);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -56,10 +77,19 @@ export function ChatSidebar() {
   }, []);
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return rooms;
-    const q = search.toLowerCase();
-    return rooms.filter((r) => r.name.toLowerCase().includes(q));
-  }, [rooms, search]);
+    let result = rooms;
+
+    if (filter === "favorites") {
+      result = result.filter((r) => favorites.includes(r.id));
+    }
+
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      result = result.filter((r) => r.name.toLowerCase().includes(q));
+    }
+
+    return result;
+  }, [rooms, search, filter, favorites]);
 
   return (
     <aside
@@ -113,7 +143,11 @@ export function ChatSidebar() {
         ) : filtered.length === 0 ? (
           <div className="p-4 text-center">
             <p className="text-sm text-text-muted mb-3">
-              {search.trim() ? "No results" : t("empty")}
+              {search.trim()
+                ? "No results"
+                : filter === "favorites"
+                  ? "No favorites yet"
+                  : t("empty")}
             </p>
           </div>
         ) : (
