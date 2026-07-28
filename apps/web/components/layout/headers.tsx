@@ -9,7 +9,6 @@ export async function RootHeader() {
 
   const routes: Route[] = [
     { label: t("home"), href: "/" },
-    { label: t("info"), href: "/info" },
     { label: t("contact"), href: "/contact" },
     { label: t("chats"), href: "/chat" },
   ];

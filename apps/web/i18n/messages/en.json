@@ -141,7 +141,7 @@
   },
   "Contact": {
     "title": "Contact",
-    "description": "Get in touch with the creator."
+    "description": "Have questions, feedback, or need help? We'd love to hear from you."
   },
   "ChatList": {
     "title": "My Chats",
@@ -167,7 +167,7 @@
     },
     "contact": {
       "title": "Contact | UmbraChat",
-      "description": "Get in touch with the creator."
+    "description": "Reach out through any of these channels."
     },
     "info": {
       "title": "Info | UmbraChat",
