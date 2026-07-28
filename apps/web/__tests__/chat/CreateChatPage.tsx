@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import CreateChatPage from "@/app/[locale]/chat/(root)/create/page";
+import CreateChatPage from "@/app/[locale]/chat/(main)/create/page";
 
 it("Renders create chat form with title and inputs", () => {
   render(<CreateChatPage />);
