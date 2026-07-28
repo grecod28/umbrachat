@@ -65,7 +65,7 @@ export function ChatFooter({
   };
 
   return (
-    <footer className="shrink-0 border-t border-border bg-background p-3 flex flex-col gap-1">
+    <footer className="p-3 flex flex-col gap-1 bg-background/70 backdrop-blur-md border-t border-border">
       <UploadStatusBanner status={uploadStatus} />
 
       <div className="flex items-end gap-2">

@@ -243,3 +243,9 @@ button {
 *::-webkit-scrollbar-thumb:hover {
   background: var(--color-primary-hover);
 }
+
+.chat-bg {
+  background-color: var(--color-background);
+  background-image:
+    url("data:image/svg+xml,%3Csvg width='200' height='200' viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%236C5CE7' fill-opacity='0.04'%3E%3Ccircle cx='40' cy='35' r='18'/%3E%3Ccircle cx='170' cy='160' r='22'/%3E%3Ccircle cx='120' cy='50' r='14'/%3E%3Ccircle cx='25' cy='140' r='12'/%3E%3Ccircle cx='90' cy='170' r='16'/%3E%3Ccircle cx='180' cy='30' r='10'/%3E%3Ccircle cx='55' cy='95' r='8'/%3E%3Ccircle cx='145' cy='100' r='20'/%3E%3C/g%3E%3Cg fill='%236C5CE7' fill-opacity='0.025'%3E%3Cpath d='M75 25 Q85 10 95 25 Q85 40 75 25Z'/%3E%3Cpath d='M30 80 Q20 95 30 110 Q40 95 30 80Z'/%3E%3Cpath d='M160 75 Q170 60 180 75 Q170 90 160 75Z'/%3E%3Cpath d='M110 130 Q120 115 130 130 Q120 145 110 130Z'/%3E%3Cpath d='M50 170 Q60 155 70 170 Q60 185 50 170Z'/%3E%3C/g%3E%3Cg stroke='%236C5CE7' stroke-opacity='0.03' stroke-width='1.5' fill='none'%3E%3Cpath d='M15 15 Q25 5 35 15'/%3E%3Cpath d='M100 10 Q110 0 120 10'/%3E%3Cpath d='M70 185 Q80 175 90 185'/%3E%3Cpath d='M140 150 Q150 140 160 150'/%3E%3Cpath d='M175 100 Q185 90 195 100'/%3E%3C/g%3E%3C/svg%3E");
+}

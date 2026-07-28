@@ -465,7 +465,7 @@ export default function Chat({
       <div
         ref={messagesContainerRef}
         onScroll={handleScroll}
-        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 space-y-3"
+        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-4 pb-40 space-y-3 chat-bg"
       >
         {messages.map((msg, i) => (
           <MessageBubble
@@ -481,31 +481,33 @@ export default function Chat({
         <div ref={messagesEndRef} />
       </div>
 
-      <section className="relative shrink-0 text-xs text-text-muted text-center py-4 bg-background">
-        <p>{t("expireNotice")}</p>
+      <div className="absolute bottom-0 left-0 right-0 z-10">
+        <section className="relative text-xs text-text-muted text-center py-2 bg-background/80 backdrop-blur-sm">
+          <p>{t("expireNotice")}</p>
 
-        {!isAtBottom && (
-          <button
-            title="scroll bottom button"
-            type="button"
-            onClick={scrollToBottom}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
-          >
-            <IoArrowDownOutline size={24} />
-          </button>
-        )}
-      </section>
+          {!isAtBottom && (
+            <button
+              title="scroll bottom button"
+              type="button"
+              onClick={scrollToBottom}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
+            >
+              <IoArrowDownOutline size={24} />
+            </button>
+          )}
+        </section>
 
-      <ChatFooter
-        input={input}
-        canSend={canSend}
-        files={files}
-        uploadStatus={uploadStatus}
-        onInputChange={handleInputChange}
-        onSend={handleSend}
-        onFileChange={handleFileChange}
-        onRemoveFile={removeFile}
-      />
+        <ChatFooter
+          input={input}
+          canSend={canSend}
+          files={files}
+          uploadStatus={uploadStatus}
+          onInputChange={handleInputChange}
+          onSend={handleSend}
+          onFileChange={handleFileChange}
+          onRemoveFile={removeFile}
+        />
+      </div>
     </section>
   );
 }
