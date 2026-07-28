@@ -131,13 +131,48 @@ export default function Chat({
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit("join-room", {
-      roomId: roomIdRef.current,
-      token: tokenRef.current ?? null,
+    const storedRooms: string[] = JSON.parse(
+      localStorage.getItem("rooms") || "[]",
+    );
+
+    storedRooms.forEach((id) => {
+      socket.emit("join-room", {
+        roomId: id,
+        token: tokenRef.current ?? null,
+      });
     });
 
+    const clearUnread = () => {
+      const key = "unread-counts";
+      try {
+        const counts: Record<string, number> = JSON.parse(
+          localStorage.getItem(key) || "{}",
+        );
+        delete counts[roomIdRef.current];
+        localStorage.setItem(key, JSON.stringify(counts));
+        window.dispatchEvent(new Event("unread-counts-changed"));
+      } catch {
+        // ignore
+      }
+    };
+    clearUnread();
+
     const onNewMessage = (msg: Message) => {
-      setMessages((prev) => [...prev, msg]);
+      if (msg.roomId === roomIdRef.current) {
+        setMessages((prev) => [...prev, msg]);
+      } else {
+        try {
+          const key = "unread-counts";
+          const counts: Record<string, number> = JSON.parse(
+            localStorage.getItem(key) || "{}",
+          );
+          counts[msg.roomId!] = (counts[msg.roomId!] || 0) + 1;
+          localStorage.setItem(key, JSON.stringify(counts));
+          window.dispatchEvent(new Event("unread-counts-changed"));
+        } catch {
+          // ignore
+        }
+      }
     };
 
     const onUserTyping = (data: { userId: string; isTyping: boolean }) => {
@@ -172,7 +207,9 @@ export default function Chat({
     socket.on("reply", onReply);
 
     return () => {
-      socket.emit("leave-room", { roomId: roomIdRef.current });
+      storedRooms.forEach((id) => {
+        socket.emit("leave-room", { roomId: id });
+      });
       socket.off("new-message", onNewMessage);
       socket.off("user-typing", onUserTyping);
       socket.off("reply", onReply);

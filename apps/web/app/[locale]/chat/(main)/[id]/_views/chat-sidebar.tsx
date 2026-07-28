@@ -22,6 +22,9 @@ export function ChatSidebar() {
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter") || "";
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [unreadCounts, setUnreadCounts] = useState<Record<string, number>>(
+    {},
+  );
 
   useEffect(() => {
     const load = () => {
@@ -37,6 +40,25 @@ export function ChatSidebar() {
     return () => {
       window.removeEventListener("storage", load);
       window.removeEventListener("fav-rooms-changed", load);
+    };
+  }, []);
+
+  useEffect(() => {
+    const load = () => {
+      try {
+        setUnreadCounts(
+          JSON.parse(localStorage.getItem("unread-counts") || "{}"),
+        );
+      } catch {
+        setUnreadCounts({});
+      }
+    };
+    load();
+    window.addEventListener("storage", load);
+    window.addEventListener("unread-counts-changed", load);
+    return () => {
+      window.removeEventListener("storage", load);
+      window.removeEventListener("unread-counts-changed", load);
     };
   }, []);
 
@@ -83,13 +105,17 @@ export function ChatSidebar() {
       result = result.filter((r) => favorites.includes(r.id));
     }
 
+    if (filter === "unread") {
+      result = result.filter((r) => (unreadCounts[r.id] || 0) > 0);
+    }
+
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter((r) => r.name.toLowerCase().includes(q));
     }
 
     return result;
-  }, [rooms, search, filter, favorites]);
+  }, [rooms, search, filter, favorites, unreadCounts]);
 
   return (
     <aside
@@ -147,7 +173,9 @@ export function ChatSidebar() {
                 ? "No results"
                 : filter === "favorites"
                   ? "No favorites yet"
-                  : t("empty")}
+                  : filter === "unread"
+                    ? "No unread messages"
+                    : t("empty")}
             </p>
           </div>
         ) : (
@@ -155,6 +183,7 @@ export function ChatSidebar() {
             {filtered.map((room) => {
               const roomPath = `/chat/${room.id}`;
               const isActive = pathname === roomPath;
+              const unread = unreadCounts[room.id] || 0;
 
               return (
                 <Link
@@ -165,9 +194,14 @@ export function ChatSidebar() {
                   }`}
                 >
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-text truncate">
+                    <span className="text-sm font-medium text-text truncate flex-1">
                       {room.name || t("noTitle")}
                     </span>
+                    {!isActive && unread > 0 && (
+                      <span className="shrink-0 min-w-5 h-5 flex items-center justify-center rounded-full bg-primary text-white text-[10px] font-bold px-1.5">
+                        {unread > 99 ? "99+" : unread}
+                      </span>
+                    )}
                   </div>
                   <p className="text-xs text-text-muted mt-0.5 truncate">
                     {room.description || formatDate(room.lastMessageAt, "time")}
