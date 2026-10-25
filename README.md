@@ -17,7 +17,7 @@ Aplicación de chat en tiempo real con soporte de salas públicas y privadas. Co
 
 ## Requisitos
 
-- **Node.js** >= 18
+- **Node.js** >= 22.18
 - **pnpm** >= 9
 - **Docker** (para PostgreSQL local)
 
@@ -42,13 +42,25 @@ pnpm dev
 
 El frontend arranca en `http://localhost:3000` y la API en `http://localhost:3001`.
 
+## Despliegue
+
+Producción corre en un VPS de Hostinger con **PM2 + Nginx + PostgreSQL en Docker**. Cada push a `main` dispara GitHub Actions, que entra por SSH, compila, sincroniza Prisma, recarga PM2 y valida los tres servicios.
+
+- Workflow: [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
+- Guía completa (DNS, TLS, secrets, primer deploy): [`deploy/README.md`](./deploy/README.md)
+- Configuración de procesos: [`ecosystem.config.js`](./ecosystem.config.js)
+- Reverse proxy: [`deploy/nginx/umbrachat.conf`](./deploy/nginx/umbrachat.conf)
+
 ## Variables de entorno
 
 ### Raíz (`.env`)
 | Variable | Descripción |
 |----------|-------------|
+| `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Credenciales de PostgreSQL para Docker Compose |
 | `DATABASE_URL` | URL de conexión a PostgreSQL |
 | `JWT_SECRET` | Clave secreta para firmar tokens JWT |
+| `PORT` | Puerto de la API REST (por defecto `3001`) |
+| `AWS_S3_BUCKET_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | Credenciales de Amazon S3 para archivos |
 
 ### Web (`apps/web/.env.local`)
 | Variable | Descripción |
