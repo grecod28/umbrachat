@@ -21,12 +21,12 @@ VPS /var/www/umbrachat
    └─ healthcheck de los 3 servicios
 ```
 
-| Servicio | Proceso PM2 | Puerto local | Dominio |
-|----------|-------------|--------------|---------|
-| Next.js 16 | `umbra-web` | `127.0.0.1:3000` | `umbrachat.org`, `www.umbrachat.org` |
-| NestJS REST | `umbra-api` | `0.0.0.0:3001` | `back.umbrachat.org` |
-| Socket.IO | `umbra-api` (gateway) | `0.0.0.0:3002` | `socket.umbrachat.org` |
-| PostgreSQL 15 | contenedor `umbra-db` | `127.0.0.1:5432` | — |
+| Servicio      | Proceso PM2           | Puerto local     | Dominio                              |
+| ------------- | --------------------- | ---------------- | ------------------------------------ |
+| Next.js 16    | `umbra-web`           | `127.0.0.1:3000` | `umbrachat.org`, `www.umbrachat.org` |
+| NestJS REST   | `umbra-api`           | `0.0.0.0:3001`   | `back.umbrachat.org`                 |
+| Socket.IO     | `umbra-api` (gateway) | `0.0.0.0:3002`   | `socket.umbrachat.org`               |
+| PostgreSQL 15 | contenedor `umbra-db` | `127.0.0.1:5432` | —                                    |
 
 Nginx termina TLS y hace de reverse proxy. La base de datos **no** se expone a internet.
 
@@ -48,7 +48,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.
 sudo apt update
 sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-# Node.js 22 LTS
+# Node.js 22 LTS en adelante
 curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 sudo apt install -y nodejs
 
@@ -87,12 +87,12 @@ Después iniciar sesión como ese usuario (`su - umbra`).
 
 Crear registros **A** (y **AAAA** si el VPS tiene IPv6) apuntando a la IP del VPS:
 
-| Tipo | Nombre | Valor |
-|------|--------|-------|
-| A | `@` | IP del VPS |
-| A | `www` | IP del VPS |
-| A | `back` | IP del VPS |
-| A | `socket` | IP del VPS |
+| Tipo | Nombre   | Valor      |
+| ---- | -------- | ---------- |
+| A    | `@`      | IP del VPS |
+| A    | `www`    | IP del VPS |
+| A    | `back`   | IP del VPS |
+| A    | `socket` | IP del VPS |
 
 Esperar la propagación antes de ejecutar Certbot.
 
@@ -242,13 +242,13 @@ ssh -i ~/.ssh/umbra_deploy umbra@IP_DEL_VPS 'echo conexion OK'
 
 En **GitHub → Settings → Secrets and variables → Actions → Secrets**:
 
-| Secret | Valor |
-|--------|-------|
-| `VPS_HOST` | IP o hostname del VPS |
-| `VPS_USER` | `umbra` |
-| `VPS_PORT` | `22` (si se cambió el puerto SSH, el nuevo) |
-| `VPS_SSH_KEY` | contenido completo de `~/.ssh/umbra_deploy` (incluye `BEGIN`/`END`) |
-| `VPS_HOST_FINGERPRINT` | huella del host (recomendado, evita MITM) |
+| Secret                 | Valor                                                               |
+| ---------------------- | ------------------------------------------------------------------- |
+| `VPS_HOST`             | IP o hostname del VPS                                               |
+| `VPS_USER`             | `umbra`                                                             |
+| `VPS_PORT`             | `22` (si se cambió el puerto SSH, el nuevo)                         |
+| `VPS_SSH_KEY`          | contenido completo de `~/.ssh/umbra_deploy` (incluye `BEGIN`/`END`) |
+| `VPS_HOST_FINGERPRINT` | huella del host (recomendado, evita MITM)                           |
 
 Obtener la huella:
 
@@ -260,8 +260,8 @@ Copiar el valor completo, por ejemplo `SHA256:AbCd...`.
 
 Opcional, en **Variables** (no Secrets):
 
-| Variable | Valor |
-|----------|-------|
+| Variable      | Valor                                      |
+| ------------- | ------------------------------------------ |
 | `VPS_APP_DIR` | `/var/www/umbrachat` (si se usa otra ruta) |
 
 Con GitHub CLI:
@@ -351,14 +351,14 @@ pm2 set pm2-logrotate:retain 14
 
 ## 7. Problemas comunes
 
-| Síntoma | Causa / solución |
-|---------|------------------|
-| `Permission denied (publickey)` | La llave privada del secret no coincide con `authorized_keys` del usuario, o `VPS_USER` es incorrecto. Probar el mismo comando SSH a mano. |
-| `Host key verification failed` | `VPS_HOST_FINGERPRINT` desactualizado (el VPS se reinstaló). Regenerarlo con `ssh-keyscan`. |
-| `pnpm: command not found` por SSH | Instalar pnpm globalmente (`sudo npm install -g pnpm@9`) y verificar `ssh usuario@host 'pnpm -v'`. |
-| `Cannot find module '@repo/database'` | Node.js menor a 22.18. Actualizar Node. |
-| `next: not found` | `pnpm install` no terminó; revisar el log del job. |
-| `prisma db push` pide `--accept-data-loss` | El cambio de esquema borra datos. Resolver la migración manualmente; el deploy no lo fuerza a propósito. |
-| Healthcheck en rojo | `pm2 logs umbra-web` / `pm2 logs umbra-api`, y verificar que Nginx y los puertos locales respondan. |
-| La web carga pero la API falla | Revisar `apps/web/.env.production` y que `NEXT_PUBLIC_API_URL` apunte a `https://back.umbrachat.org`. |
-| El WebSocket no conecta | Verificar `NEXT_PUBLIC_SOCKET_URL`, el bloque `socket.umbrachat.org` de Nginx y que el puerto 3002 esté escuchando. |
+| Síntoma                                    | Causa / solución                                                                                                                           |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `Permission denied (publickey)`            | La llave privada del secret no coincide con `authorized_keys` del usuario, o `VPS_USER` es incorrecto. Probar el mismo comando SSH a mano. |
+| `Host key verification failed`             | `VPS_HOST_FINGERPRINT` desactualizado (el VPS se reinstaló). Regenerarlo con `ssh-keyscan`.                                                |
+| `pnpm: command not found` por SSH          | Instalar pnpm globalmente (`sudo npm install -g pnpm@9`) y verificar `ssh usuario@host 'pnpm -v'`.                                         |
+| `Cannot find module '@repo/database'`      | Node.js menor a 22.18. Actualizar Node.                                                                                                    |
+| `next: not found`                          | `pnpm install` no terminó; revisar el log del job.                                                                                         |
+| `prisma db push` pide `--accept-data-loss` | El cambio de esquema borra datos. Resolver la migración manualmente; el deploy no lo fuerza a propósito.                                   |
+| Healthcheck en rojo                        | `pm2 logs umbra-web` / `pm2 logs umbra-api`, y verificar que Nginx y los puertos locales respondan.                                        |
+| La web carga pero la API falla             | Revisar `apps/web/.env.production` y que `NEXT_PUBLIC_API_URL` apunte a `https://back.umbrachat.org`.                                      |
+| El WebSocket no conecta                    | Verificar `NEXT_PUBLIC_SOCKET_URL`, el bloque `socket.umbrachat.org` de Nginx y que el puerto 3002 esté escuchando.                        |
