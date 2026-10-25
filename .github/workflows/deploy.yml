@@ -6,8 +6,7 @@ on:
       - main
   workflow_dispatch:
 
-# Un solo despliegue a la vez. Si llegan varios pushes seguidos se ejecutan en
-# orden en lugar de pisarse entre ellos.
+# Un solo despliegue a la vez.
 concurrency:
   group: production-deploy
   cancel-in-progress: false
@@ -29,12 +28,14 @@ jobs:
           VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
           missing=0
+
           for name in VPS_HOST VPS_USER VPS_SSH_KEY; do
             if [ -z "${!name}" ]; then
               echo "::error::Falta configurar el secret $name en el repositorio."
               missing=1
             fi
           done
+
           exit "$missing"
 
       - name: Deploy over SSH
@@ -46,13 +47,26 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
-          # Recomendado: guardar la huella del servidor para evitar MITM.
-          # Si el secret no existe, la acción no valida la huella.
           fingerprint: ${{ secrets.VPS_HOST_FINGERPRINT }}
           command_timeout: 25m
-          script_stop: true
           envs: APP_DIR
           script: |
+            set -e
+
+            # Configurar Node.js instalado mediante NVM en /opt/nvm.
+            export NVM_DIR="/opt/nvm"
+            export PATH="/opt/nvm/versions/node/v24.16.0/bin:$PATH"
+
+            echo "Usuario SSH: $(whoami)"
+            echo "Directorio de Node: $(command -v node)"
+            node -v
+            npm -v
+
+            # Directorio de producción.
             APP_DIR="${APP_DIR:-/var/www/umbrachat}"
             cd "$APP_DIR"
+
+            echo "Directorio de aplicación: $PWD"
+
+            # Ejecutar el despliegue.
             bash deploy/deploy.sh
