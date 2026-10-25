@@ -8,7 +8,7 @@ module.exports = {
   additionalPaths: async (config) => {
     const result = [];
     const locales = ["es", "en"]; // Tus idiomas configurados
-    const pages = ["", "/about", "/contact", "/info", "/search", "/config"]; // dejé la home vacía para que no duplique la barra
+    const pages = ["", "/info", "/contact", "/chat/search"]; // rutas públicas reales
 
     for (const locale of locales) {
       for (const page of pages) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { IoEyeOutline, IoEyeOffOutline } from "react-icons/io5";
 import { UseFormRegisterReturn } from "react-hook-form";
 
@@ -22,32 +22,40 @@ export function InputPassword({
   maxLength,
 }: Props) {
   const [show, setShow] = useState(false);
+  const id = useId();
 
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-center">{label}</label>
+      <label htmlFor={id} className="field-label">
+        {label}
+      </label>
 
       <div className="relative">
         <input
+          id={id}
           type={show ? "text" : "password"}
           placeholder={placeholder}
           disabled={disabled}
           maxLength={maxLength}
-          className="text-center w-full px-12 py-3 rounded-xl bg-surface border border-border placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-50 uppercase font-mono tracking-[0.3em]"
+          aria-invalid={Boolean(error)}
+          className={`field pr-11 font-mono tracking-[0.22em] uppercase ${
+            error ? "field-error" : ""
+          }`}
           {...register}
         />
 
         <button
           type="button"
-          onClick={() => setShow((v) => !v)}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted hover:text-primary transition-colors"
+          onClick={() => setShow((previous) => !previous)}
+          className="absolute top-1/2 right-3 -translate-y-1/2 text-text-muted transition-colors hover:text-accent"
           tabIndex={-1}
+          aria-label={show ? "Hide password" : "Show password"}
         >
-          {show ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+          {show ? <IoEyeOffOutline size={18} /> : <IoEyeOutline size={18} />}
         </button>
       </div>
 
-      {error && <p className="text-sm text-danger">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
 }

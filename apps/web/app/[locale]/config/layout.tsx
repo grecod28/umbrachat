@@ -1,11 +1,10 @@
-import { Navbar } from "@/components/layout/navbar";
-import { Route } from "@/libs/types/navigation";
+import { RootHeader } from "@/components/layout/headers";
+import { PageHeading } from "@/components/layout/page-heading";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import React from "react";
 import { ConfigBackButton } from "./_views/config-back-button";
-import { Link } from "@/i18n/navigation";
-import { IoHomeOutline } from "react-icons/io5";
+import { ConfigTabs } from "./_views/config-tabs";
 
 export async function generateMetadata({
   params,
@@ -28,36 +27,35 @@ export default async function ConfigLayout({
 }) {
   const t = await getTranslations("Config");
 
-  const CONFIG_ROUTES: Route[] = [
-    { label: t("language"), href: "/config/language" },
-    { label: t("shape"), href: "/config/shape" },
-  ];
-
   return (
-    <main className="min-h-screen px-4 py-24">
-      <div className="mx-auto max-w-lg">
-        <div className="mb-10 flex items-center justify-between">
-          <h1 className="text-xl font-bold text-text">Settings</h1>
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-text-muted transition-colors hover:bg-surface hover:text-text"
-            >
-              <IoHomeOutline size={16} />
-              Home
-            </Link>
+    <div className="min-h-dvh">
+      <RootHeader />
+
+      <div className="pt-16 md:pt-20">
+        <div className="page-shell max-w-3xl py-10 md:py-14">
+          <div className="mb-5 flex justify-end">
             <ConfigBackButton />
           </div>
-        </div>
 
-        <nav className="mb-10 flex gap-2">
-          <Navbar routes={CONFIG_ROUTES} />
-        </nav>
+          <PageHeading
+            eyebrow={`${t("title")} / 004`}
+            title={t("title")}
+            description={t("subtitle")}
+          />
 
-        <div className="rounded-2xl border border-border bg-surface/50 p-6">
-          {children}
+          <ConfigTabs />
+
+          <div className="mt-6">{children}</div>
+
+          <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-5">
+            <span className="status-line">
+              <span className="status-dot" />
+              {t("localPreferences")}
+            </span>
+            <span className="mono-label">{t("storedOnDevice")}</span>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

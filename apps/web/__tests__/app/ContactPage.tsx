@@ -6,8 +6,8 @@ it("Renders contact page with social links", async () => {
 
   expect(screen.getByText("title")).toBeInTheDocument();
   expect(screen.getByText("description")).toBeInTheDocument();
-  expect(screen.getByText("Instagram")).toBeInTheDocument();
-  expect(screen.getByText("TikTok")).toBeInTheDocument();
-  expect(screen.getByText("Gmail")).toBeInTheDocument();
-  expect(screen.getAllByText("@umbrachat")).toHaveLength(3);
+  expect(screen.getByText("instagramLabel")).toBeInTheDocument();
+  expect(screen.getByText("tiktokLabel")).toBeInTheDocument();
+  expect(screen.getByText("emailLabel")).toBeInTheDocument();
+  expect(screen.getAllByText("@umbrachat")).toHaveLength(2);
 });

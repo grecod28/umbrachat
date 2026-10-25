@@ -1,5 +1,5 @@
 import { render, screen, waitFor } from "@testing-library/react";
-import ChatListPage from "@/app/[locale]/chat/page";
+import { ChatSidebar } from "@/app/[locale]/chat/(main)/[id]/_views/chat-sidebar";
 
 beforeEach(() => {
   localStorage.clear();
@@ -9,7 +9,7 @@ beforeEach(() => {
 it("Renders empty chat list", async () => {
   localStorage.setItem("rooms", "[]");
 
-  render(<ChatListPage />);
+  render(<ChatSidebar className="flex" />);
 
   await waitFor(() => {
     expect(screen.getByText("title")).toBeInTheDocument();
@@ -28,12 +28,13 @@ it("Renders chat list with rooms", async () => {
         name: "My Room",
         description: "Test description",
         createdAt: "2025-01-01T00:00:00.000Z",
+        lastMessageAt: "2025-01-01T00:00:00.000Z",
         isPrivate: false,
       },
     ],
   });
 
-  render(<ChatListPage />);
+  render(<ChatSidebar className="flex" />);
 
   await waitFor(() => {
     expect(screen.getByText("My Room")).toBeInTheDocument();

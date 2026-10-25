@@ -4,6 +4,8 @@ import SearchForm from "./_views/search-form";
 import { Pagination } from "@/components/ui/pagination";
 import { ChatCard } from "@/components/chat/chat-card";
 import { API_URL } from "@/libs/constants/api";
+import { Eclipse } from "@/components/brand/eclipse";
+import { PageHeading } from "@/components/layout/page-heading";
 import { IoSearchOutline } from "react-icons/io5";
 
 export async function generateMetadata({
@@ -20,6 +22,18 @@ export async function generateMetadata({
   };
 }
 
+type SearchResult = {
+  data: {
+    id: string;
+    name: string;
+    description?: string;
+    createdAt: string;
+    lastMessageAt?: string;
+    isPrivate?: boolean;
+  }[];
+  meta: { total: number; lastPage: number };
+};
+
 export default async function SearchPage({
   searchParams,
 }: {
@@ -28,16 +42,8 @@ export default async function SearchPage({
   const t = await getTranslations("Search");
   const { name, page } = await searchParams;
 
-  let result: {
-    data: {
-      id: string;
-      name: string;
-      description?: string;
-      createdAt: string;
-      lastMessageAt?: string;
-    }[];
-    meta: { total: number; lastPage: number };
-  } | null = null;
+  let result: SearchResult | null = null;
+  let error = false;
 
   if (name) {
     const query = new URLSearchParams({
@@ -45,56 +51,76 @@ export default async function SearchPage({
       page: page ?? "1",
     }).toString();
 
-    const res = await fetch(`${API_URL}/rooms/search?${query}`);
-    result = await res.json();
+    try {
+      const res = await fetch(`${API_URL}/rooms/search?${query}`, {
+        cache: "no-store",
+      });
+      if (!res.ok) throw new Error("Search failed");
+      result = await res.json();
+    } catch {
+      error = true;
+    }
   }
 
   return (
-    <main className="flex-1 min-h-screen px-4 py-24">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-8 text-center">
-          <h1 className="text-primary text-2xl font-bold tracking-tight md:text-3xl">
-            {t("title")}
-          </h1>
-          <p className="mt-2 text-sm text-text-muted">{t("description")}</p>
+    <main className="h-full overflow-y-auto">
+      <div className="mx-auto w-full max-w-3xl px-4 py-7 md:px-8 md:py-10">
+        <PageHeading
+          eyebrow={t("eyebrow")}
+          title={t("title")}
+          description={t("description")}
+        />
+
+        <div className="panel mt-7 p-2">
+          <SearchForm />
         </div>
 
-        <SearchForm />
-
-        <div className="mt-8">
+        <div className="mt-7">
           {!name && (
-            <div className="flex flex-col items-center gap-4 py-16 text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                <IoSearchOutline size={28} />
+            <div className="relative overflow-hidden rounded-xl border border-dashed border-border px-6 py-16 text-center">
+              <div className="dossier-grid absolute inset-0" />
+              <div className="relative z-10 flex flex-col items-center">
+                <Eclipse className="h-24 w-24 text-primary/45" />
+                <p className="mt-5 max-w-xs text-sm leading-relaxed text-text-muted">
+                  {t("need")}
+                </p>
+                <p className="mono-label mt-3 text-text-faint">
+                  {t("searchAgain")}
+                </p>
               </div>
-              <p className="text-lg text-text-muted">{t("need")}</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-xl border border-danger/25 bg-danger/10 px-4 py-4 text-center text-sm text-danger">
+              {t("error")}
             </div>
           )}
 
           {name && result && (
-            <div className="mb-6">
-              <p className="text-sm text-text-muted">
-                <span className="font-semibold text-text">
-                  {result.meta.total}
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <p className="font-mono text-[0.62rem] tracking-[0.14em] text-text-faint uppercase">
+                <span className="text-accent">
+                  {String(result.meta.total).padStart(2, "0")}
                 </span>{" "}
-                {t("resultsFor")}{" "}
-                <span className="font-medium text-text">
-                  &quot;{name}&quot;
-                </span>
+                {t("results")} · &quot;{name}&quot;
               </p>
+              <IoSearchOutline size={14} className="text-text-faint" />
             </div>
           )}
 
           {result && result.data.length > 0 && (
-            <div className="space-y-3">
-              {result.data.map((item) => (
+            <div className="space-y-2">
+              {result.data.map((item, index) => (
                 <ChatCard
                   key={item.id}
                   id={item.id}
+                  index={index + 1}
                   name={item.name}
                   description={item.description}
                   createdAt={item.createdAt}
                   lastMessageAt={item.lastMessageAt}
+                  isPrivate={item.isPrivate}
                   noTitleLabel={t("noTitle")}
                 />
               ))}
@@ -102,8 +128,12 @@ export default async function SearchPage({
           )}
 
           {result && result.data.length === 0 && (
-            <div className="py-16 text-center">
-              <p className="text-text-muted">{t("noResults")}</p>
+            <div className="rounded-xl border border-dashed border-border px-6 py-16 text-center">
+              <Eclipse className="mx-auto h-20 w-20 text-primary/30" />
+              <p className="mt-4 text-sm text-text-muted">{t("noResults")}</p>
+              <p className="mono-label mt-2 text-text-faint">
+                {t("searchAgain")}
+              </p>
             </div>
           )}
 

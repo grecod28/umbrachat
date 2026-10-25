@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef } from "react";
 import { createPortal } from "react-dom";
 import { IoClose } from "react-icons/io5";
 
@@ -26,58 +26,73 @@ export function ConfirmDialog({
   variant = "default",
 }: ConfirmDialogProps) {
   const confirmRef = useRef<HTMLButtonElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (open) confirmRef.current?.focus();
-  }, [open]);
+  const titleId = useId();
+  const descriptionId = useId();
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onCancel();
+
+    confirmRef.current?.focus();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onCancel();
     };
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", handler);
+    };
   }, [open, onCancel]);
 
-  if (!open || !mounted) return null;
-
-  const container = document.getElementById("chat-container");
-  if (!container) return null;
+  if (!open) return null;
 
   return createPortal(
-    <div className="absolute inset-0 z-50 flex items-center justify-center p-4">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+    <div className="fixed inset-0 z-[90] flex items-center justify-center p-4">
+      <button
+        type="button"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onCancel}
+        aria-label={cancelLabel}
       />
-      <div className="relative z-10 w-full max-w-sm animate-fade-in rounded-2xl border border-border bg-surface p-6 shadow-2xl">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={titleId}
+        aria-describedby={description ? descriptionId : undefined}
+        className="panel corner-frame relative z-10 w-full max-w-sm animate-fade-in p-6"
+      >
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <h2 className="text-base font-semibold text-text">{title}</h2>
+            <h2 id={titleId} className="text-base font-semibold text-text">
+              {title}
+            </h2>
             {description && (
-              <p className="mt-1 text-sm text-text-muted">{description}</p>
+              <p
+                id={descriptionId}
+                className="mt-1.5 text-sm leading-relaxed text-text-muted"
+              >
+                {description}
+              </p>
             )}
           </div>
           <button
             type="button"
             onClick={onCancel}
-            className="shrink-0 rounded-lg p-1 text-text-muted transition-colors hover:bg-surface hover:text-text"
+            className="btn-icon h-8 w-8 shrink-0 border-transparent bg-transparent"
+            aria-label={cancelLabel}
           >
-            <IoClose size={18} />
+            <IoClose size={17} />
           </button>
         </div>
 
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex justify-end gap-2">
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-text transition-colors hover:bg-surface"
+            className="btn btn-secondary btn-sm"
           >
             {cancelLabel}
           </button>
@@ -85,10 +100,10 @@ export function ConfirmDialog({
             ref={confirmRef}
             type="button"
             onClick={onConfirm}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold text-white transition-colors ${
+            className={`btn btn-sm text-white ${
               variant === "danger"
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-primary hover:bg-primary-hover"
+                ? "bg-danger hover:brightness-110"
+                : "btn-primary"
             }`}
           >
             {confirmLabel}
@@ -96,6 +111,6 @@ export function ConfirmDialog({
         </div>
       </div>
     </div>,
-    container,
+    document.body,
   );
 }

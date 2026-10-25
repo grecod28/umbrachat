@@ -7,15 +7,22 @@ import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
 import { playSubmitSound } from "@/libs/functions/sounds";
-import { IoArrowBack, IoLockClosed, IoShareSocial } from "react-icons/io5";
+import {
+  IoArrowBack,
+  IoLockClosed,
+  IoKeyOutline,
+} from "react-icons/io5";
 import { InputPassword } from "@/components/ui/input-password";
+import { Link } from "@/i18n/navigation";
+import { Eclipse } from "@/components/brand/eclipse";
 import Chat from "./chat";
-import Link from "next/link";
+import { ChatRoomHeader } from "./chat-room-header";
 
 type Props = {
   roomId: string;
   data: {
     name: string;
+    description?: string;
   };
 };
 
@@ -28,6 +35,7 @@ type Status = {
 
 export default function AccessRoom({ roomId, data }: Props) {
   const t = useTranslations("ChatRoom");
+  const nav = useTranslations("ChatLayout");
   const [status, setStatus] = useState<Status>({
     granted: false,
     error: "",
@@ -49,12 +57,12 @@ export default function AccessRoom({ roomId, data }: Props) {
         }
         return res.json();
       })
-      .then((data) => {
-        if (data) {
+      .then((messages) => {
+        if (messages) {
           setStatus({
             granted: true,
             error: "",
-            messages: data,
+            messages,
             token: storedToken,
           });
         }
@@ -71,20 +79,20 @@ export default function AccessRoom({ roomId, data }: Props) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<AccessForm>({
     resolver: zodResolver(accessSchema),
   });
 
   const onSubmit = useCallback(
-    async (data: AccessForm) => {
+    async (formData: AccessForm) => {
       playSubmitSound();
       setStatus((prev) => ({ ...prev, error: "" }));
 
       const res = await fetch(`${API_URL}/rooms/${roomId}/access`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(formData),
       });
       const resData = await res.json();
 
@@ -100,11 +108,11 @@ export default function AccessRoom({ roomId, data }: Props) {
       );
 
       if (messagesRes.ok) {
-        const messagesData = await messagesRes.json();
+        const messages = await messagesRes.json();
         setStatus({
           granted: true,
           error: "",
-          messages: messagesData,
+          messages,
           token: resData.token,
         });
       } else {
@@ -116,31 +124,14 @@ export default function AccessRoom({ roomId, data }: Props) {
 
   if (status.granted) {
     return (
-      <main className="h-screen flex flex-col">
-        <header className="fixed top-0 left-0 w-full z-10 flex items-center justify-between px-4 py-3 border-b border-border bg-background">
-          <Link
-            href="/chat"
-            className="text-text-muted hover:text-text transition-colors"
-          >
-            <IoArrowBack size={22} />
-          </Link>
-
-          <h1 className="text-sm font-semibold text-text truncate max-w-50">
-            {data.name || t("noTitle")}
-          </h1>
-
-          <Link
-            href={`/chat/${roomId}/share`}
-            className="flex items-center gap-1.5 text-text-muted hover:text-primary transition-colors"
-          >
-            <span className="text-xs font-medium">{t("share")}</span>
-            <IoShareSocial size={18} />
-          </Link>
-        </header>
-
-        <div className="shrink-0 h-[49px]" />
-
-        <div className="flex-1 min-h-0">
+      <main className="flex h-full min-h-0 w-full flex-col">
+        <ChatRoomHeader
+          roomId={roomId}
+          name={data.name}
+          description={data.description}
+          isPrivate
+        />
+        <div className="min-h-0 flex-1">
           <Chat
             token={status.token}
             initMessages={status.messages}
@@ -152,41 +143,70 @@ export default function AccessRoom({ roomId, data }: Props) {
   }
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-4">
-      <div className="animate-fade-in w-full max-w-md space-y-8">
-        <div className="text-center space-y-2">
-          <IoLockClosed className="mx-auto text-primary" size={40} />
-          <h1 className="text-3xl font-bold text-primary tracking-tight">
-            {t("accessTitle")}
-          </h1>
-          <p className="text-text-muted">{t("accessDescription")}</p>
+    <section className="relative flex h-full min-h-0 flex-col items-center justify-center overflow-y-auto px-4 py-12">
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="dossier-grid absolute inset-0" />
+        <Eclipse className="absolute top-1/2 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 text-primary/30" />
+      </div>
+
+      <div className="panel corner-frame relative z-10 w-full max-w-md p-7 md:p-8">
+        <Link
+          href="/chat/default"
+          className="inline-flex items-center gap-1.5 text-[0.68rem] font-medium text-text-muted transition-colors hover:text-text"
+        >
+          <IoArrowBack size={15} />
+          {nav("back")}
+        </Link>
+
+        <div className="mt-7 flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-accent/30 bg-accent/10 text-accent">
+            <IoLockClosed size={20} />
+          </span>
+          <div className="min-w-0">
+            <p className="mono-label text-accent">{t("privateRoom")}</p>
+            <h1 className="truncate text-lg font-semibold text-text">
+              {data.name || t("noTitle")}
+            </h1>
+          </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6 text-center"
-        >
+        <p className="display mt-7 text-4xl leading-[0.95] text-text">
+          {t("accessTitle")}
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-text-muted">
+          {t("accessDescription")}
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-7 space-y-5">
           <InputPassword
             label={t("codeLabel")}
             placeholder={t("codePlaceholder")}
             maxLength={6}
             register={register("password", {
-              setValueAs: (v: string) => v?.toUpperCase() ?? "",
+              setValueAs: (value: string) => value?.toUpperCase() ?? "",
             })}
             error={errors.password?.message}
           />
 
           {status.error && (
-            <p className="text-sm text-danger">{status.error}</p>
+            <p className="rounded-lg border border-danger/25 bg-danger/10 px-3 py-2 text-center text-xs text-danger">
+              {status.error}
+            </p>
           )}
 
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-background-image-gradient-primary text-white font-semibold shadow-primary transition-shadow hover:brightness-110"
+            disabled={isSubmitting}
+            className="btn btn-primary w-full"
           >
+            <IoKeyOutline size={17} />
             {t("accessSubmit")}
           </button>
         </form>
+
+        <p className="mono-label mt-6 text-center text-text-faint">
+          {t("expireNotice")}
+        </p>
       </div>
     </section>
   );

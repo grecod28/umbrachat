@@ -40,35 +40,38 @@ export function ChatHeaderMenu() {
       trigger={
         <button
           type="button"
-          className="rounded-lg p-1.5 text-text-muted transition-colors hover:bg-surface hover:text-text"
+          className="btn-icon"
           title={t("settings")}
+          aria-label={t("settings")}
         >
-          <IoEllipsisVertical size={20} />
+          <IoEllipsisVertical size={18} />
         </button>
       }
     >
-      {menuItems.map(({ key, icon: Icon, href, external }) => {
-        const content = (
-          <div className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text transition-colors hover:bg-primary/10 cursor-pointer">
-            <Icon size={18} className="shrink-0 text-primary" />
-            <span>{t(key)}</span>
-          </div>
-        );
-
-        if (external) {
-          return (
-            <a key={key} href={href} target="_blank" rel="noopener noreferrer">
-              {content}
-            </a>
+      <div className="p-1">
+        {menuItems.map(({ key, icon: Icon, href, external }) => {
+          const content = (
+            <div className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text transition-colors hover:bg-surface-2">
+              <Icon size={17} className="shrink-0 text-accent" />
+              <span>{t(key)}</span>
+            </div>
           );
-        }
 
-        return (
-          <Link key={key} href={href}>
-            {content}
-          </Link>
-        );
-      })}
+          if (external) {
+            return (
+              <a key={key} href={href} target="_blank" rel="noopener noreferrer">
+                {content}
+              </a>
+            );
+          }
+
+          return (
+            <Link key={key} href={href}>
+              {content}
+            </Link>
+          );
+        })}
+      </div>
     </Dropdown>
   );
 }

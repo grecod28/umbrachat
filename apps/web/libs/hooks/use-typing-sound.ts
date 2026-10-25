@@ -1,21 +1,18 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { playKeySound } from "@/libs/functions/sounds";
 
+// Module-level timestamp: the typing sound is a global UI effect, not per-input
+// state. Avoiding a ref here also keeps the handler safe during render.
+let lastSound = 0;
+
 export function useTypingSound() {
-  const lastSound = useRef(0);
+  const playTypingSound = useCallback(() => {
+    const now = Date.now();
+    if (now - lastSound > 50) {
+      playKeySound();
+      lastSound = now;
+    }
+  }, []);
 
-  const withSound = useCallback(
-    <T>(handler?: (e: T) => void) =>
-      (e: T) => {
-        const now = Date.now();
-        if (now - lastSound.current > 50) {
-          playKeySound();
-          lastSound.current = now;
-        }
-        handler?.(e);
-      },
-    [],
-  );
-
-  return { withSound };
+  return { playTypingSound };
 }

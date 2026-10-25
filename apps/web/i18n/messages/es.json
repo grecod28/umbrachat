@@ -3,13 +3,24 @@
     "home": "Inicio",
     "info": "Info",
     "contact": "Contacto",
-    "chats": "Chats"
+    "chats": "Chats",
+    "search": "Buscar",
+    "settings": "Ajustes",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú",
+    "menu": "Menú",
+    "navigate": "Navegar",
+    "signal": "Señal activa",
+    "noTrace": "Sin cuentas. Sin rastro."
   },
   "NotFound": {
     "title": "404",
     "heading": "Página No Encontrada",
     "description": "La página que buscas no existe o ha sido movida.",
-    "cta": "Volver al Inicio"
+    "cta": "Volver al Inicio",
+    "eyebrow": "Error / 404",
+    "search": "Buscar salas",
+    "lost": "perdido en la oscuridad / 404"
   },
   "Home": {
     "welcome": "Bienvenido a",
@@ -45,11 +56,23 @@
     "footerChats": "Chats",
     "footerSearch": "Buscar",
     "footerSettings": "Configuración",
-    "copyright": "UmbraChat. Todos los derechos reservados."
+    "copyright": "UmbraChat. Todos los derechos reservados.",
+    "consoleLive": "EN VIVO",
+    "consoleRoom": "SALA / 04",
+    "consoleExpires": "SE BORRA EN 24 H",
+    "consoleMsg1": "¿Nos vemos en la sala de siempre?",
+    "consoleMsg2": "Nadie sabrá que estuvimos acá.",
+    "consolePlaceholder": "Escribí en la sombra...",
+    "trustAnonymous": "Sin cuentas",
+    "trustEphemeral": "Mensajes efímeros",
+    "trustFiles": "Archivos hasta 5 MB",
+    "heroNote": "Chat privado para después de medianoche.",
+    "stepLabel": "paso"
   },
   "ChatLayout": {
     "back": "Volver",
-    "myChats": "Mis Chats"
+    "myChats": "Mis Chats",
+    "newChat": "Nueva sala"
   },
   "CreateChat": {
     "title": "Crear una sala",
@@ -67,7 +90,17 @@
     "passwordPlaceholder": "Contraseña de la sala",
     "passwordRequired": "La contraseña es obligatoria para salas privadas",
     "passwordLengthError": "La contraseña debe contener 6 caracteres",
-    "submit": "Crear sala"
+    "submit": "Crear sala",
+    "eyebrow": "Nueva sala / 002",
+    "back": "Volver a chats",
+    "asideTitle": "Protocolo de la sala",
+    "asidePrivacy": "Sin cuentas. Solo un nombre para la sala y, si querés, un código de 6 caracteres.",
+    "asideEphemeral": "Todo mensaje desaparece a las 24 horas. La sala no deja historial.",
+    "asideFiles": "Compartí imágenes, videos y documentos de hasta 5 MB.",
+    "publicHint": "Cualquiera puede encontrarla y entrar.",
+    "privateHint": "Solo entra quien tenga el código.",
+    "ephemeralLabel": "24 h / efímero",
+    "noTraceLabel": "sin cuentas / sin rastro"
   },
   "JoinChat": {
     "title": "Unirse a una sala",
@@ -109,7 +142,22 @@
     "deleteChatTitle": "¿Eliminar este chat?",
     "deleteChatDesc": "Se eliminará de tu lista de chats. Esta acción no se puede deshacer.",
     "confirm": "Eliminar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "back": "Volver",
+    "welcomeEyebrow": "Línea segura / 001",
+    "welcomeTitle": "La noche es tuya.",
+    "welcomeDesc": "Elegí una sala o abrí una nueva línea privada. Sin cuentas, sin rastro.",
+    "privateRoom": "Sala privada",
+    "publicRoom": "Sala pública",
+    "roomNotFound": "Esta sala ya no existe",
+    "roomNotFoundDesc": "La sala no existe o ya se disolvió en la oscuridad.",
+    "emptyRoom": "Todavía no hay mensajes. Sé la primera voz en esta sala.",
+    "emptyRoomEyebrow": "Línea en silencio",
+    "searchPrevious": "Coincidencia anterior",
+    "searchNext": "Siguiente coincidencia",
+    "searchClose": "Cerrar búsqueda",
+    "scrollToBottom": "Ir al último mensaje",
+    "ephemeralLabel": "24 h / efímero"
   },
   "ShareChat": {
     "title": "Compartir esta sala",
@@ -118,15 +166,27 @@
     "copied": "¡Copiado!",
     "backToChat": "Volver al chat",
     "privateNotice": "Esta sala es privada. Los invitados deben introducir el código de acceso.",
-    "share": "Compartir vía..."
+    "share": "Compartir vía...",
+    "eyebrow": "Invitación / Línea privada",
+    "ephemeral": "24 h / efímero"
   },
   "Config": {
     "language": "Idioma",
-    "shape": "Forma"
+    "shape": "Forma",
+    "title": "Ajustes",
+    "subtitle": "Ajustá la señal a tu manera. Tus preferencias quedan en este dispositivo.",
+    "back": "Volver",
+    "tabLanguage": "Idioma",
+    "tabShape": "Apariencia",
+    "localPreferences": "Preferencias locales",
+    "storedOnDevice": "guardadas en este dispositivo"
   },
   "ConfigLanguage": {
     "title": "Idioma",
-    "description": "Selecciona tu idioma preferido."
+    "description": "Selecciona tu idioma preferido.",
+    "eyebrow": "Ajustes / Idioma",
+    "current": "Idioma actual",
+    "applies": "se aplica a toda la interfaz / al recargar"
   },
   "ConfigShape": {
     "title": "Apariencia",
@@ -142,7 +202,15 @@
     "colorOptions": {
       "purple": "Púrpura",
       "blue": "Azul"
-    }
+    },
+    "theme": "Tema",
+    "themeOptions": {
+      "dark": "Noche",
+      "light": "Papel"
+    },
+    "preview": "Vista previa",
+    "previewMessage": "La noche es tuya.",
+    "previewMeta": "Sala privada / ahora"
   },
   "Info": {
     "title": "Información",
@@ -162,7 +230,16 @@
     "language": "Idioma",
     "languageDesc": "Cambia entre español e inglés desde la página de configuración. El idioma de la interfaz se actualiza al instante.",
     "chatHistory": "Historial de chats",
-    "chatHistoryDesc": "Las salas que creas o a las que te unes se guardan en tu navegador. Accede a ellas en cualquier momento desde la página Mis Chats."
+    "chatHistoryDesc": "Las salas que creas o a las que te unes se guardan en tu navegador. Accede a ellas en cualquier momento desde la página Mis Chats.",
+    "eyebrow": "Manual de campo / 003",
+    "sectionFeatures": "Todo lo que necesitás para desaparecer",
+    "sectionSteps": "Cómo se usa",
+    "cta": "Empezar ahora",
+    "ctaDesc": "Abrí una sala o encontrá una conversación que ya esté pasando.",
+    "filesLabel": "08 archivos / sin rastro",
+    "ephemeralLabel": "24 h / efímero",
+    "noAccountsLabel": "sin cuentas / sin datos personales",
+    "vanishLabel": "los mensajes desaparecen a diario"
   },
   "Search": {
     "title": "Buscar",
@@ -171,7 +248,12 @@
     "resultsFor": "Resultados para",
     "need": "Debes escribir la temática que buscas",
     "noResults": "No se encontraron salas",
-    "noTitle": "Chat sin título"
+    "noTitle": "Chat sin título",
+    "eyebrow": "Explorar / Salas",
+    "results": "salas encontradas",
+    "searchAgain": "Probá con otra palabra",
+    "error": "No pudimos conectar con la búsqueda. Probá de nuevo en un momento.",
+    "clear": "Limpiar búsqueda"
   },
   "Contact": {
     "title": "Contacto",
@@ -190,7 +272,9 @@
     "formSubject": "Asunto",
     "formMessage": "Mensaje",
     "formSend": "Enviar mensaje",
-    "footer": "UmbraChat. Todos los derechos reservados."
+    "footer": "UmbraChat. Todos los derechos reservados.",
+    "responseWindow": "24 h / tiempo de respuesta",
+    "noTrace": "sin cuentas / sin rastro"
   },
   "ChatList": {
     "title": "Mis Chats",
@@ -206,7 +290,14 @@
     "filterFavorites": "Favoritos",
     "noResults": "Sin resultados",
     "noFavorites": "No hay favoritos aún",
-    "noUnread": "No hay mensajes sin leer"
+    "noUnread": "No hay mensajes sin leer",
+    "eyebrow": "Línea privada",
+    "newChat": "Nueva sala",
+    "status": "Sin cuentas. Sin rastro.",
+    "loadError": "No pudimos cargar tus salas.",
+    "retry": "Reintentar",
+    "searchRooms": "Buscar salas",
+    "noMessages": "Sin mensajes todavía"
   },
   "Errors": {
     "unexpected": "Error inesperado al enviar datos"
@@ -260,5 +351,21 @@
       "title": "404 | UmbraChat",
       "description": "Página no encontrada."
     }
+  },
+  "Footer": {
+    "tagline": "Conversaciones en la sombra.",
+    "description": "Un lugar para hablar sin dejar huella. Salas efímeras, sin cuentas y sin registro.",
+    "navigate": "Navegar",
+    "explore": "Explorar",
+    "signal": "Señal",
+    "status": "Sistema operativo",
+    "ephemeral": "Mensajes / 24 h",
+    "rights": "UmbraChat. Todos los derechos reservados.",
+    "signature": "Diseñado para la noche",
+    "searchRooms": "Buscar salas",
+    "createRoom": "Crear sala",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "settings": "Ajustes"
   }
 }

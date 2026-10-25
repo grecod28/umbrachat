@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import SearchPage from "@/app/[locale]/(main)/search/page";
+import SearchPage from "@/app/[locale]/chat/(main)/search/page";
 
 it("Renders empty search page with prompt message", async () => {
   render(await SearchPage({ searchParams: Promise.resolve({}) }));
@@ -11,6 +11,7 @@ it("Renders empty search page with prompt message", async () => {
 
 it("Renders search results when name is provided", async () => {
   global.fetch = jest.fn().mockResolvedValueOnce({
+    ok: true,
     json: async () => ({
       data: [
         {
@@ -36,6 +37,7 @@ it("Renders search results when name is provided", async () => {
 
 it("Shows no results message when search returns empty", async () => {
   global.fetch = jest.fn().mockResolvedValueOnce({
+    ok: true,
     json: async () => ({
       data: [],
       meta: { total: 0, lastPage: 1 },

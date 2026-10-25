@@ -34,15 +34,17 @@ export function ChatRoomMenu({ roomId }: { roomId: string }) {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
-    const favs = loadFavorites();
-    setIsFav(favs.includes(roomId));
+    // Favorites live in localStorage; sync after mount.
+    const favorites = loadFavorites();
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsFav(favorites.includes(roomId));
   }, [roomId]);
 
   const toggleFavorite = useCallback(() => {
-    const favs = loadFavorites();
-    const next = favs.includes(roomId)
-      ? favs.filter((id) => id !== roomId)
-      : [...favs, roomId];
+    const favorites = loadFavorites();
+    const next = favorites.includes(roomId)
+      ? favorites.filter((id) => id !== roomId)
+      : [...favorites, roomId];
     saveFavorites(next);
     setIsFav(next.includes(roomId));
     window.dispatchEvent(new Event("fav-rooms-changed"));
@@ -64,41 +66,44 @@ export function ChatRoomMenu({ roomId }: { roomId: string }) {
         trigger={
           <button
             type="button"
-            className="rounded-lg p-2 text-text-muted transition-colors hover:bg-surface hover:text-text"
+            className="btn-icon"
             title={t("settings")}
+            aria-label={t("settings")}
           >
-            <IoEllipsisVertical size={20} />
+            <IoEllipsisVertical size={18} />
           </button>
         }
       >
-        <Link href="/chat/default">
-          <div className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text transition-colors hover:bg-primary/10 cursor-pointer">
-            <IoCloseOutline size={18} className="shrink-0 text-primary" />
-            <span>{t("closeChat")}</span>
-          </div>
-        </Link>
+        <div className="p-1">
+          <Link href="/chat/default">
+            <div className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text transition-colors hover:bg-surface-2">
+              <IoCloseOutline size={17} className="shrink-0 text-accent" />
+              <span>{t("closeChat")}</span>
+            </div>
+          </Link>
 
-        <button
-          type="button"
-          onClick={toggleFavorite}
-          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-text transition-colors hover:bg-primary/10 cursor-pointer"
-        >
-          {isFav ? (
-            <IoStar size={18} className="shrink-0 text-primary" />
-          ) : (
-            <IoStarOutline size={18} className="shrink-0 text-primary" />
-          )}
-          <span>{isFav ? t("removeFavorite") : t("addFavorite")}</span>
-        </button>
+          <button
+            type="button"
+            onClick={toggleFavorite}
+            className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text transition-colors hover:bg-surface-2"
+          >
+            {isFav ? (
+              <IoStar size={17} className="shrink-0 text-accent" />
+            ) : (
+              <IoStarOutline size={17} className="shrink-0 text-accent" />
+            )}
+            <span>{isFav ? t("removeFavorite") : t("addFavorite")}</span>
+          </button>
 
-        <button
-          type="button"
-          onClick={() => setDeleteOpen(true)}
-          className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-400 transition-colors hover:bg-red-500/10 cursor-pointer"
-        >
-          <IoTrashOutline size={18} className="shrink-0" />
-          <span>{t("deleteChat")}</span>
-        </button>
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-danger transition-colors hover:bg-danger/10"
+          >
+            <IoTrashOutline size={17} className="shrink-0" />
+            <span>{t("deleteChat")}</span>
+          </button>
+        </div>
       </Dropdown>
 
       <ConfirmDialog

@@ -1,19 +1,21 @@
 "use client";
 
 import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { IoArrowBack } from "react-icons/io5";
 
 export function ConfigBackButton() {
   const router = useRouter();
+  const t = useTranslations("Config");
 
   return (
     <button
       type="button"
       onClick={() => router.back()}
-      className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-text-muted transition-colors hover:bg-surface hover:text-text"
+      className="btn btn-ghost btn-sm"
     >
       <IoArrowBack size={16} />
-      Back
+      {t("back")}
     </button>
   );
 }

@@ -1,18 +1,20 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { IoSearchSharp } from "react-icons/io5";
 
 export function ChatSearchBtn() {
+  const t = useTranslations("ChatRoom");
+
   return (
     <button
       type="button"
-      title="Search messages"
-      onClick={() =>
-        window.dispatchEvent(new CustomEvent("toggle-chat-search"))
-      }
-      className="rounded-lg p-2 text-text-muted transition-colors hover:bg-surface hover:text-text"
+      title={t("searchMessages")}
+      aria-label={t("searchMessages")}
+      onClick={() => window.dispatchEvent(new CustomEvent("toggle-chat-search"))}
+      className="btn-icon"
     >
-      <IoSearchSharp size={20} />
+      <IoSearchSharp size={17} />
     </button>
   );
 }
