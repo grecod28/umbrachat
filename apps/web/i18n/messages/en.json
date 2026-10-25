@@ -3,13 +3,24 @@
     "home": "Home",
     "info": "Info",
     "contact": "Contact",
-    "chats": "Chats"
+    "chats": "Chats",
+    "search": "Search",
+    "settings": "Settings",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "menu": "Menu",
+    "navigate": "Navigate",
+    "signal": "Signal live",
+    "noTrace": "No accounts. No trace."
   },
   "NotFound": {
     "title": "404",
     "heading": "Page Not Found",
     "description": "The page you're looking for doesn't exist or has been moved.",
-    "cta": "Go Back Home"
+    "cta": "Go Back Home",
+    "eyebrow": "Error / 404",
+    "search": "Search rooms",
+    "lost": "lost in the dark / 404"
   },
   "Home": {
     "welcome": "Welcome to",
@@ -45,11 +56,23 @@
     "footerChats": "Chats",
     "footerSearch": "Search",
     "footerSettings": "Settings",
-    "copyright": "UmbraChat. All rights reserved."
+    "copyright": "UmbraChat. All rights reserved.",
+    "consoleLive": "LIVE",
+    "consoleRoom": "ROOM / 04",
+    "consoleExpires": "ERASED IN 24 H",
+    "consoleMsg1": "Meet in the usual room?",
+    "consoleMsg2": "No one will know we were here.",
+    "consolePlaceholder": "Write into the shadow...",
+    "trustAnonymous": "No accounts",
+    "trustEphemeral": "Ephemeral messages",
+    "trustFiles": "Files up to 5 MB",
+    "heroNote": "Private chat for after midnight.",
+    "stepLabel": "step"
   },
   "ChatLayout": {
     "back": "Back",
-    "myChats": "My Chats"
+    "myChats": "My Chats",
+    "newChat": "New room"
   },
   "CreateChat": {
     "title": "Create a room",
@@ -67,7 +90,17 @@
     "passwordPlaceholder": "Room password",
     "passwordRequired": "Password is required for private rooms",
     "passwordLengthError": "The password must contain 6 characters",
-    "submit": "Create room"
+    "submit": "Create room",
+    "eyebrow": "New room / 002",
+    "back": "Back to chats",
+    "asideTitle": "Room protocol",
+    "asidePrivacy": "No accounts. Just a room name and, if you want, a 6-character code.",
+    "asideEphemeral": "Every message disappears after 24 hours. The room leaves no history.",
+    "asideFiles": "Share images, videos and documents up to 5 MB.",
+    "publicHint": "Anyone can find it and walk in.",
+    "privateHint": "Only people with the code can enter.",
+    "ephemeralLabel": "24H / ephemeral",
+    "noTraceLabel": "no accounts / no trace"
   },
   "JoinChat": {
     "title": "Join a room",
@@ -109,7 +142,22 @@
     "deleteChatTitle": "Delete this chat?",
     "deleteChatDesc": "It will be removed from your chat list. This action cannot be undone.",
     "confirm": "Delete",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "back": "Back",
+    "welcomeEyebrow": "Secure line / 001",
+    "welcomeTitle": "The night is yours.",
+    "welcomeDesc": "Pick a room or open a new private line. No accounts, no trace.",
+    "privateRoom": "Private room",
+    "publicRoom": "Public room",
+    "roomNotFound": "This room is gone",
+    "roomNotFoundDesc": "The room does not exist or has already dissolved into the dark.",
+    "emptyRoom": "No messages yet. Be the first voice in this room.",
+    "emptyRoomEyebrow": "Silent line",
+    "searchPrevious": "Previous match",
+    "searchNext": "Next match",
+    "searchClose": "Close search",
+    "scrollToBottom": "Scroll to latest message",
+    "ephemeralLabel": "24H / ephemeral"
   },
   "ShareChat": {
     "title": "Share this room",
@@ -118,15 +166,27 @@
     "copied": "Copied!",
     "backToChat": "Back to chat",
     "privateNotice": "This room is private. Guests must enter the access code to join.",
-    "share": "Share via..."
+    "share": "Share via...",
+    "eyebrow": "Invitation / Private line",
+    "ephemeral": "24h / ephemeral"
   },
   "Config": {
     "language": "Language",
-    "shape": "Shape"
+    "shape": "Shape",
+    "title": "Settings",
+    "subtitle": "Tune the signal to your liking. Your preferences stay on this device.",
+    "back": "Back",
+    "tabLanguage": "Language",
+    "tabShape": "Appearance",
+    "localPreferences": "Local preferences",
+    "storedOnDevice": "stored on this device"
   },
   "ConfigLanguage": {
     "title": "Language",
-    "description": "Select your preferred language."
+    "description": "Select your preferred language.",
+    "eyebrow": "Settings / Language",
+    "current": "Current language",
+    "applies": "applies to the whole interface / next reload"
   },
   "ConfigShape": {
     "title": "Appearance",
@@ -142,7 +202,15 @@
     "colorOptions": {
       "purple": "Purple",
       "blue": "Blue"
-    }
+    },
+    "theme": "Theme",
+    "themeOptions": {
+      "dark": "Night",
+      "light": "Paper"
+    },
+    "preview": "Preview",
+    "previewMessage": "The night is yours.",
+    "previewMeta": "Private room / now"
   },
   "Info": {
     "title": "Information",
@@ -162,7 +230,16 @@
     "language": "Language",
     "languageDesc": "Switch between English and Spanish from the settings page. The interface language updates instantly.",
     "chatHistory": "Chat history",
-    "chatHistoryDesc": "Rooms you create or join are saved in your browser. Access them anytime from the My Chats page."
+    "chatHistoryDesc": "Rooms you create or join are saved in your browser. Access them anytime from the My Chats page.",
+    "eyebrow": "Field manual / 003",
+    "sectionFeatures": "Everything you need to disappear",
+    "sectionSteps": "How it works",
+    "cta": "Start now",
+    "ctaDesc": "Open a room or find a conversation already in progress.",
+    "filesLabel": "08 files / no trace",
+    "ephemeralLabel": "24h / ephemeral",
+    "noAccountsLabel": "no accounts / no personal data",
+    "vanishLabel": "messages vanish daily"
   },
   "Search": {
     "title": "Search",
@@ -171,7 +248,12 @@
     "resultsFor": "Results for",
     "need": "You must write the topic you are looking for",
     "noResults": "No rooms found",
-    "noTitle": "Untitled Chat"
+    "noTitle": "Untitled Chat",
+    "eyebrow": "Explore / Rooms",
+    "results": "rooms found",
+    "searchAgain": "Try another word",
+    "error": "We couldn't reach search. Try again in a moment.",
+    "clear": "Clear search"
   },
   "Contact": {
     "title": "Contact",
@@ -190,7 +272,9 @@
     "formSubject": "Subject",
     "formMessage": "Message",
     "formSend": "Send message",
-    "footer": "UmbraChat. All rights reserved."
+    "footer": "UmbraChat. All rights reserved.",
+    "responseWindow": "24H / response window",
+    "noTrace": "no accounts / no trace"
   },
   "ChatList": {
     "title": "My Chats",
@@ -206,7 +290,14 @@
     "filterFavorites": "Favorites",
     "noResults": "No results",
     "noFavorites": "No favorites yet",
-    "noUnread": "No unread messages"
+    "noUnread": "No unread messages",
+    "eyebrow": "Private line",
+    "newChat": "New room",
+    "status": "No accounts. No trace.",
+    "loadError": "We couldn't load your rooms.",
+    "retry": "Try again",
+    "searchRooms": "Search rooms",
+    "noMessages": "No messages yet"
   },
   "Errors": {
     "unexpected": "Unexpected error sending data"
@@ -222,7 +313,7 @@
     },
     "contact": {
       "title": "Contact | UmbraChat",
-    "description": "Reach out through any of these channels."
+      "description": "Reach out through any of these channels."
     },
     "info": {
       "title": "Info | UmbraChat",
@@ -260,5 +351,21 @@
       "title": "404 | UmbraChat",
       "description": "Page not found."
     }
+  },
+  "Footer": {
+    "tagline": "Conversations in the dark.",
+    "description": "A place to talk without leaving a trace. Ephemeral rooms, no accounts, no sign-up.",
+    "navigate": "Navigate",
+    "explore": "Explore",
+    "signal": "Signal",
+    "status": "System operational",
+    "ephemeral": "Messages / 24 h",
+    "rights": "UmbraChat. All rights reserved.",
+    "signature": "Built for the night",
+    "searchRooms": "Search rooms",
+    "createRoom": "Create room",
+    "appearance": "Appearance",
+    "language": "Language",
+    "settings": "Settings"
   }
 }

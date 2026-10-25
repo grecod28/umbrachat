@@ -1,7 +1,6 @@
-import { SocketProvider } from "@/providers/socket-provider";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import React from "react";
+import { SocketProvider } from "@/providers/socket-provider";
 
 export async function generateMetadata({
   params,
@@ -12,8 +11,8 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
   return {
-    title: t("shareChat.title"),
-    description: t("shareChat.description"),
+    title: t("chat.title"),
+    description: t("chat.description"),
   };
 }
 

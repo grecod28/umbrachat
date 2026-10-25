@@ -15,7 +15,7 @@ export default function SearchForm() {
 
   const [value, setValue] = useState(searchParams.get("name") || "");
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { withSound } = useTypingSound();
+  const { playTypingSound } = useTypingSound();
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
@@ -51,23 +51,28 @@ export default function SearchForm() {
   return (
     <div className="relative">
       <IoSearchOutline
-        className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted"
-        size={20}
+        className="pointer-events-none absolute top-1/2 left-4 -translate-y-1/2 text-text-muted"
+        size={18}
       />
       <input
         type="text"
         value={value}
-        onChange={withSound((e) => handleChange(e.target.value))}
+        onChange={(event) => {
+          playTypingSound();
+          handleChange(event.target.value);
+        }}
         placeholder={t("placeholder")}
-        className="w-full rounded-xl border border-border bg-surface py-3 pl-12 pr-10 text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+        aria-label={t("placeholder")}
+        className="field h-12 pr-11 pl-11 text-[0.95rem]"
       />
       {value && (
         <button
           type="button"
           onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-lg p-1 text-text-muted transition-colors hover:bg-surface hover:text-text"
+          className="btn-icon absolute top-1/2 right-2 h-8 w-8 -translate-y-1/2 border-transparent bg-transparent"
+          aria-label={t("clear")}
         >
-          <IoClose size={18} />
+          <IoClose size={16} />
         </button>
       )}
     </div>

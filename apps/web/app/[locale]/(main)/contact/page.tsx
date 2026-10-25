@@ -1,7 +1,9 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { IoLogoInstagram, IoMail } from "react-icons/io5";
+import { IoLogoInstagram, IoMail, IoArrowForward } from "react-icons/io5";
 import { SiTiktok } from "react-icons/si";
+import { PageHeading } from "@/components/layout/page-heading";
+import { Eclipse } from "@/components/brand/eclipse";
 
 export async function generateMetadata({
   params,
@@ -27,6 +29,7 @@ export default async function ContactPage() {
       value: "umbra.chat.web@gmail.com",
       href: "mailto:umbra.chat.web@gmail.com",
       icon: IoMail,
+      external: false,
     },
     {
       key: "instagramLabel" as const,
@@ -34,6 +37,7 @@ export default async function ContactPage() {
       value: "@umbrachat",
       href: "https://instagram.com/umbrachat",
       icon: IoLogoInstagram,
+      external: true,
     },
     {
       key: "tiktokLabel" as const,
@@ -41,128 +45,123 @@ export default async function ContactPage() {
       value: "@umbrachat",
       href: "https://tiktok.com/@umbrachat",
       icon: SiTiktok,
+      external: true,
     },
   ] as const;
 
   return (
-    <main className="min-h-screen px-4 py-24 md:py-32">
-      <div className="mx-auto max-w-4xl">
-        <div className="grid gap-16 lg:grid-cols-5 lg:gap-24">
-          <section className="lg:col-span-2">
-            <p className="mb-3 text-xs font-semibold tracking-widest text-primary uppercase">
-              {t("badge")}
-            </p>
-            <h1 className="text-3xl font-bold tracking-tight text-text md:text-4xl">
-              {t("title")}
-            </h1>
-            <p className="mt-4 leading-relaxed text-text-muted">
-              {t("description")}
-            </p>
+    <main className="relative overflow-hidden">
+      <Eclipse className="pointer-events-none absolute -top-32 -right-32 h-[26rem] w-[26rem] text-primary/20" />
 
-            <div className="mt-10 space-y-6">
-              {socials.map(({ key, descKey, value, href, icon: Icon }) => (
-                <a
-                  key={key}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group flex items-start gap-4"
-                >
-                  <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface transition-colors group-hover:border-primary/30">
-                    <Icon
-                      size={18}
-                      className="text-text-muted transition-colors group-hover:text-primary"
+      <div className="page-shell py-12 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
+          <section>
+            <PageHeading
+              eyebrow={t("badge")}
+              title={t("title")}
+              description={t("description")}
+            />
+
+            <div className="mt-10 space-y-2">
+              {socials.map(
+                ({ key, descKey, value, href, icon: Icon, external }) => (
+                  <a
+                    key={key}
+                    href={href}
+                    target={external ? "_blank" : undefined}
+                    rel={external ? "noopener noreferrer" : undefined}
+                    className="group panel-quiet flex items-center gap-4 p-3.5 transition-colors hover:border-border-strong hover:bg-surface"
+                  >
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-accent transition-colors group-hover:border-accent/30">
+                      <Icon size={17} />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.82rem] font-medium text-text">
+                        {t(key)}
+                      </span>
+                      <span className="block truncate text-[0.72rem] text-text-muted">
+                        {value}
+                      </span>
+                    </span>
+                    <span className="hidden font-mono text-[0.54rem] tracking-[0.14em] text-text-faint uppercase sm:block">
+                      {t(descKey)}
+                    </span>
+                    <IoArrowForward
+                      size={15}
+                      className="shrink-0 text-text-faint transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
                     />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-text">{t(key)}</p>
-                    <p className="truncate text-sm text-text-muted">{value}</p>
-                    <p className="text-xs text-text-muted/60">{t(descKey)}</p>
-                  </div>
-                </a>
-              ))}
+                  </a>
+                ),
+              )}
+            </div>
+
+            <div className="mt-10 border-t border-border pt-5">
+              <p className="status-line">
+                <span className="status-dot" />
+                {t("responseWindow")}
+              </p>
+              <p className="mt-2 font-mono text-[0.56rem] tracking-[0.14em] text-text-faint uppercase">
+                {t("noTrace")}
+              </p>
             </div>
           </section>
 
-          <section className="lg:col-span-3">
-            <div className="rounded-2xl border border-border bg-surface/50 p-6 md:p-8">
-              <h2 className="text-lg font-semibold text-text">
-                {t("formTitle")}
-              </h2>
-              <p className="mt-1 text-sm text-text-muted">
-                {t("formSubtitle")}
-              </p>
+          <section className="panel corner-frame p-5 md:p-8">
+            <p className="mono-label text-accent">{t("formTitle")}</p>
+            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-text">
+              {t("formSubtitle")}
+            </h2>
 
-              <form
-                action="https://formspree.io/f/xnjewdwg"
-                method="POST"
-                className="mt-8 space-y-5"
-              >
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <label className="block">
-                    <span className="text-sm font-medium text-text">
-                      {t("formName")}
-                    </span>
-                    <input
-                      type="text"
-                      name="name"
-                      required
-                      className="mt-1.5 block w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
-                    />
-                  </label>
-                  <label className="block">
-                    <span className="text-sm font-medium text-text">
-                      {t("formEmail")}
-                    </span>
-                    <input
-                      type="email"
-                      name="email"
-                      required
-                      className="mt-1.5 block w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
-                    />
-                  </label>
-                </div>
-
+            <form
+              action="https://formspree.io/f/xnjewdwg"
+              method="POST"
+              className="mt-7 space-y-5"
+            >
+              <div className="grid gap-5 sm:grid-cols-2">
                 <label className="block">
-                  <span className="text-sm font-medium text-text">
-                    {t("formSubject")}
-                  </span>
+                  <span className="field-label">{t("formName")}</span>
                   <input
                     type="text"
-                    name="subject"
+                    name="name"
                     required
-                    className="mt-1.5 block w-full rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+                    autoComplete="name"
+                    className="field mt-2"
                   />
                 </label>
-
                 <label className="block">
-                  <span className="text-sm font-medium text-text">
-                    {t("formMessage")}
-                  </span>
-                  <textarea
-                    name="message"
+                  <span className="field-label">{t("formEmail")}</span>
+                  <input
+                    type="email"
+                    name="email"
                     required
-                    rows={5}
-                    className="mt-1.5 block w-full resize-none rounded-lg border border-border bg-background px-3.5 py-2.5 text-sm text-text placeholder:text-text-muted/50 outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary"
+                    autoComplete="email"
+                    className="field mt-2"
                   />
                 </label>
+              </div>
 
-                <button
-                  type="submit"
-                  className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-primary-hover sm:w-auto sm:px-8"
-                >
-                  {t("formSend")}
-                </button>
-              </form>
-            </div>
+              <label className="block">
+                <span className="field-label">{t("formSubject")}</span>
+                <input type="text" name="subject" required className="field mt-2" />
+              </label>
+
+              <label className="block">
+                <span className="field-label">{t("formMessage")}</span>
+                <textarea
+                  name="message"
+                  required
+                  rows={6}
+                  className="field mt-2 resize-none"
+                />
+              </label>
+
+              <button type="submit" className="btn btn-primary w-full sm:w-auto">
+                {t("formSend")}
+                <IoArrowForward size={17} />
+              </button>
+            </form>
           </section>
         </div>
-
-        <footer className="mt-24 border-t border-border pt-8 text-center">
-          <p className="text-xs text-text-muted/50">
-            &copy; {new Date().getFullYear()} {t("footer")}
-          </p>
-        </footer>
       </div>
     </main>
   );

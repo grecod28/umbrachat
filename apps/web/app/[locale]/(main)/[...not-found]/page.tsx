@@ -1,7 +1,8 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
-import { FiCompass } from "react-icons/fi";
+import { Eclipse } from "@/components/brand/eclipse";
+import { IoHomeOutline, IoSearchOutline } from "react-icons/io5";
 
 export async function generateMetadata({
   params,
@@ -21,30 +22,36 @@ export default async function NotFound() {
   const t = await getTranslations("NotFound");
 
   return (
-    <main className="flex flex-1 flex-col items-center justify-center w-full px-4">
-      <div className="flex flex-col items-center text-center max-w-md">
-        <div className="animate-float text-primary">
-          <FiCompass className="h-16 w-16 sm:h-20 sm:w-20" />
-        </div>
+    <main className="relative flex min-h-[72vh] flex-1 items-center justify-center overflow-hidden px-4 py-16">
+      <div className="dossier-grid pointer-events-none absolute inset-0" />
+      <Eclipse className="pointer-events-none absolute top-1/2 left-1/2 h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 text-primary/25" />
 
-        <h1 className="mt-6 text-7xl font-bold tracking-tight text-text sm:text-8xl">
+      <div className="relative z-10 w-full max-w-xl text-center">
+        <p className="eyebrow justify-center">{t("eyebrow")}</p>
+        <p className="display mt-6 text-[clamp(6rem,20vw,11rem)] leading-none text-text">
           {t("title")}
-        </h1>
-
-        <p className="mt-2 text-xl font-semibold text-text-muted sm:text-2xl">
-          {t("heading")}
         </p>
-
-        <p className="mt-4 text-base leading-relaxed text-text-muted">
+        <h1 className="display mt-4 text-3xl text-text md:text-4xl">
+          {t("heading")}
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-text-muted">
           {t("description")}
         </p>
 
-        <Link
-          href="/"
-          className="mt-8 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-medium text-text transition-all duration-200 hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {t("cta")}
-        </Link>
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/" className="btn btn-primary">
+            <IoHomeOutline size={17} />
+            {t("cta")}
+          </Link>
+          <Link href="/chat/search" className="btn btn-secondary">
+            <IoSearchOutline size={17} />
+            {t("search")}
+          </Link>
+        </div>
+
+        <p className="mono-label mt-10 text-text-faint">
+          {t("lost")}
+        </p>
       </div>
     </main>
   );

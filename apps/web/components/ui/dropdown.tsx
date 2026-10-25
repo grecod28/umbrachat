@@ -30,8 +30,8 @@ export function Dropdown({
   const ref = useRef<HTMLDivElement>(null);
 
   const toggle = () => {
-    setOpen((prev) => {
-      const next = !prev;
+    setOpen((previous) => {
+      const next = !previous;
       onOpenChange?.(next);
       return next;
     });
@@ -39,21 +39,40 @@ export function Dropdown({
 
   useEffect(() => {
     if (!open) return;
-    const handler = (e: MouseEvent | TouchEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+
+    const onPointer = (event: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
         setOpen(false);
+        onOpenChange?.(false);
       }
     };
-    document.addEventListener("mousedown", handler as unknown as EventListener);
-    document.addEventListener("touchstart", handler as unknown as EventListener);
-    return () => {
-      document.removeEventListener("mousedown", handler as unknown as EventListener);
-      document.removeEventListener("touchstart", handler as unknown as EventListener);
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+        onOpenChange?.(false);
+      }
     };
-  }, [open]);
+
+    document.addEventListener("mousedown", onPointer as unknown as EventListener);
+    document.addEventListener("touchstart", onPointer as unknown as EventListener);
+    document.addEventListener("keydown", onKey);
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        onPointer as unknown as EventListener,
+      );
+      document.removeEventListener(
+        "touchstart",
+        onPointer as unknown as EventListener,
+      );
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, onOpenChange]);
 
   const alignClass = align === "left" ? "left-0" : "right-0";
-  const sideClass = side === "top" ? "bottom-full mb-2" : "top-full mt-1";
+  const sideClass = side === "top" ? "bottom-full mb-2" : "top-full mt-1.5";
 
   return (
     <div ref={ref} className="relative">
@@ -63,8 +82,12 @@ export function Dropdown({
 
       {open && (
         <div
-          className={`absolute z-50 w-52 overflow-hidden rounded-xl border border-border bg-surface shadow-lg animate-fade-in ${alignClass} ${sideClass} ${className}`}
-          onClick={() => setOpen(false)}
+          role="menu"
+          className={`panel absolute z-[70] max-h-[min(70vh,24rem)] w-56 overflow-y-auto p-1 shadow-lift ${alignClass} ${sideClass} ${className}`}
+          onClick={() => {
+            setOpen(false);
+            onOpenChange?.(false);
+          }}
         >
           {children}
         </div>

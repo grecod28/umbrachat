@@ -1,10 +1,14 @@
 import { Link } from "@/i18n/navigation";
 import { formatDate } from "@/libs/functions/format-date";
-import { IoLockClosedOutline } from "react-icons/io5";
-// Importamos un icono de candado (asumiendo que usas lucide-react)
+import {
+  IoArrowForward,
+  IoLockClosedOutline,
+  IoGlobeOutline,
+} from "react-icons/io5";
 
 type ChatCardProps = {
   id: string;
+  index?: number;
   name: string;
   description?: string;
   createdAt: string | Date;
@@ -15,6 +19,7 @@ type ChatCardProps = {
 
 export function ChatCard({
   id,
+  index,
   name,
   description,
   createdAt,
@@ -25,36 +30,49 @@ export function ChatCard({
   return (
     <Link
       href={`/chat/${id}`}
-      className="block p-4 rounded-xl bg-surface border border-border hover:border-primary/30 transition-colors"
+      className="panel panel-lift group flex items-start gap-3.5 p-4 md:gap-4 md:p-5"
     >
-      <div className="flex items-center gap-2">
-        <p className="font-medium text-text">{name || noTitleLabel}</p>
-
-        {/* Renderizado condicional del candado */}
-        {isPrivate && (
-          <IoLockClosedOutline
-            size={14}
-            className="text-primary"
-            aria-label="Privado"
-          />
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-text-muted">
+        {isPrivate ? (
+          <IoLockClosedOutline size={17} />
+        ) : (
+          <IoGlobeOutline size={17} />
         )}
-      </div>
+      </span>
 
-      {description && (
-        <p className="text-sm text-text-muted mt-1 line-clamp-2">
-          {description}
-        </p>
-      )}
+      <span className="min-w-0 flex-1">
+        <span className="flex items-center gap-2">
+          {index != null && (
+            <span className="font-mono text-[0.56rem] tracking-[0.16em] text-text-faint">
+              {String(index).padStart(2, "0")}
+            </span>
+          )}
+          <span className="min-w-0 flex-1 truncate text-sm font-semibold text-text">
+            {name || noTitleLabel}
+          </span>
+        </span>
 
-      <div className="flex items-center gap-3 mt-2 text-xs text-text-muted">
-        <span>{formatDate(createdAt)}</span>
-        {lastMessageAt && (
-          <>
-            <span className="w-1 h-1 rounded-full bg-border-strong" />
-            <span>{formatDate(lastMessageAt, "time")}</span>
-          </>
+        {description && (
+          <span className="mt-1 line-clamp-2 block text-xs leading-relaxed text-text-muted">
+            {description}
+          </span>
         )}
-      </div>
+
+        <span className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.56rem] tracking-[0.08em] text-text-faint">
+          <span>{formatDate(createdAt, "date")}</span>
+          {lastMessageAt && (
+            <>
+              <span className="h-0.5 w-0.5 rounded-full bg-text-faint" />
+              <span>{formatDate(lastMessageAt, "time")}</span>
+            </>
+          )}
+        </span>
+      </span>
+
+      <IoArrowForward
+        size={16}
+        className="mt-1 shrink-0 text-text-faint transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
+      />
     </Link>
   );
 }

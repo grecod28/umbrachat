@@ -39,18 +39,16 @@ export function Pagination({ totalPages }: Props) {
 
   if (totalPages <= 1) return null;
 
-  const pages: (number | "...")[] = [];
-
-  pages.push(1);
+  const pages: (number | "...")[] = [1];
 
   if (current > 3) pages.push("...");
 
   for (
-    let i = Math.max(2, current - 1);
-    i <= Math.min(totalPages - 1, current + 1);
-    i++
+    let index = Math.max(2, current - 1);
+    index <= Math.min(totalPages - 1, current + 1);
+    index++
   ) {
-    pages.push(i);
+    pages.push(index);
   }
 
   if (current < totalPages - 2) pages.push("...");
@@ -58,31 +56,38 @@ export function Pagination({ totalPages }: Props) {
   if (totalPages > 1) pages.push(totalPages);
 
   return (
-    <nav className="flex items-center justify-center gap-2">
+    <nav
+      className="flex items-center justify-center gap-1.5"
+      aria-label="Pagination"
+    >
       <button
-        title="Previous page button"
         type="button"
         onClick={() => goTo(current - 1)}
         disabled={current <= 1}
-        className="p-2 rounded-xl bg-surface border border-border hover:bg-surface-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="btn-icon h-9 w-9"
+        aria-label="Previous page"
       >
-        <IoChevronBack size={18} className="text-text" />
+        <IoChevronBack size={16} />
       </button>
 
-      {pages.map((page, i) =>
+      {pages.map((page, index) =>
         page === "..." ? (
-          <span key={`e-${i}`} className="px-2 text-text-muted select-none">
-            ...
+          <span
+            key={`ellipsis-${index}`}
+            className="px-1.5 font-mono text-xs text-text-faint select-none"
+          >
+            …
           </span>
         ) : (
           <button
             key={page}
             type="button"
             onClick={() => goTo(page)}
-            className={`min-w-10 h-10 rounded-xl text-sm font-medium transition-colors ${
+            aria-current={page === current ? "page" : undefined}
+            className={`flex h-9 min-w-9 items-center justify-center rounded-md border px-2 font-mono text-xs transition-colors ${
               page === current
-                ? "bg-primary text-white"
-                : "bg-surface border border-border text-text hover:bg-surface-light"
+                ? "border-accent/40 bg-accent/10 text-accent"
+                : "border-border bg-surface text-text-muted hover:border-border-strong hover:text-text"
             }`}
           >
             {page}
@@ -91,13 +96,13 @@ export function Pagination({ totalPages }: Props) {
       )}
 
       <button
-        title="Next page button"
         type="button"
         onClick={() => goTo(current + 1)}
         disabled={current >= totalPages}
-        className="p-2 rounded-xl bg-surface border border-border hover:bg-surface-light transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        className="btn-icon h-9 w-9"
+        aria-label="Next page"
       >
-        <IoChevronForward size={18} className="text-text" />
+        <IoChevronForward size={16} />
       </button>
     </nav>
   );

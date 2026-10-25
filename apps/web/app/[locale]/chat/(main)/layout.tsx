@@ -1,16 +1,9 @@
-import { ChatSidebar } from "./[id]/_views/chat-sidebar";
-import { DesktopOnly } from "@/components/ui/desktop-only";
+import { ChatShell } from "@/components/layout/chat-shell";
 
 export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="h-screen flex">
-      <ChatSidebar />
-
-      {children}
-    </div>
-  );
+  return <ChatShell>{children}</ChatShell>;
 }

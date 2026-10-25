@@ -3,11 +3,12 @@
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  IoArrowDownOutline,
-  IoArrowUp,
   IoArrowDown,
+  IoArrowUp,
+  IoChevronDown,
   IoClose,
   IoSearchOutline,
+  IoTimeOutline,
 } from "react-icons/io5";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { useSocket } from "@/providers/socket-provider";
@@ -42,10 +43,15 @@ export default function Chat({
   const socket = useSocket();
 
   const roomIdRef = useRef(roomId);
-  roomIdRef.current = roomId;
-
   const tokenRef = useRef(token);
-  tokenRef.current = token;
+
+  useEffect(() => {
+    roomIdRef.current = roomId;
+  }, [roomId]);
+
+  useEffect(() => {
+    tokenRef.current = token;
+  }, [token]);
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const otherTypingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
@@ -59,7 +65,7 @@ export default function Chat({
   const handleScroll = useCallback(() => {
     const el = messagesContainerRef.current;
     if (!el) return;
-    const threshold = 50;
+    const threshold = 70;
     setIsAtBottom(el.scrollHeight - el.scrollTop - el.clientHeight < threshold);
   }, []);
 
@@ -81,9 +87,9 @@ export default function Chat({
 
   const matchingIndices = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    const q = searchQuery.toLowerCase();
-    return messages.reduce<number[]>((acc, msg, i) => {
-      if (msg.content?.toLowerCase().includes(q)) acc.push(i);
+    const query = searchQuery.toLowerCase();
+    return messages.reduce<number[]>((acc, message, index) => {
+      if (message.content?.toLowerCase().includes(query)) acc.push(index);
       return acc;
     }, []);
   }, [messages, searchQuery]);
@@ -92,13 +98,12 @@ export default function Chat({
     (index: number) => {
       const container = messagesContainerRef.current;
       if (!container) return;
-      const msgIndex = matchingIndices[index];
-      if (msgIndex == null) return;
-      const children = container.children;
-      const target = children[msgIndex] as HTMLElement | undefined;
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
+      const messageIndex = matchingIndices[index];
+      if (messageIndex == null) return;
+      const target = container.querySelector<HTMLElement>(
+        `[data-message-index="${messageIndex}"]`,
+      );
+      target?.scrollIntoView({ behavior: "smooth", block: "center" });
     },
     [matchingIndices],
   );
@@ -275,8 +280,8 @@ export default function Chat({
   );
 
   const handleFileChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const allFiles = Array.from(e.target.files ?? []);
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const allFiles = Array.from(event.target.files ?? []);
       const valid = allFiles.filter((file) => file.size <= FIVE_MB);
       const rejected = allFiles.length - valid.length;
 
@@ -293,7 +298,7 @@ export default function Chat({
   );
 
   const removeFile = useCallback((index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
   }, []);
 
   const handleSend = useCallback(() => {
@@ -350,8 +355,8 @@ export default function Chat({
               size: number;
             }[] = [];
 
-            const uploads = data.files.map((presigned, idx) => {
-              const file = files[idx];
+            const uploads = data.files.map((presigned, index) => {
+              const file = files[index];
               if (!file) return Promise.resolve();
 
               const formData = new FormData();
@@ -377,7 +382,9 @@ export default function Chat({
             });
 
             return Promise.allSettled(uploads).then((results) => {
-              const allOk = results.every((r) => r.status === "fulfilled");
+              const allOk = results.every(
+                (result) => result.status === "fulfilled",
+              );
 
               if (allOk && uploadedFiles.length > 0 && socket) {
                 socket.emit("send-files", {
@@ -408,24 +415,30 @@ export default function Chat({
   const canSend = hasContent || files.length > 0;
 
   return (
-    <section className="flex flex-col h-full relative">
+    <section className="relative flex h-full min-h-0 flex-col">
       {searchOpen && (
-        <div className="absolute top-0 left-0 w-full z-20 flex flex-wrap items-center gap-2 sm:gap-2.5 px-2 sm:px-4 py-2 bg-background/80 backdrop-blur-md border-b border-border">
-          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0 bg-surface border border-border rounded-lg px-2 sm:px-3 py-1.5">
-            <IoSearchOutline size={16} className="text-text-muted shrink-0" />
-            <input
-              ref={searchInputRef}
-              type="text"
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value);
-                setSearchIndex(0);
-              }}
-              placeholder={t("searchMessages")}
-              className="flex-1 min-w-0 bg-transparent text-sm text-text outline-none placeholder:text-text-muted truncate"
-            />
+        <div className="shrink-0 border-b border-border bg-background/90 px-3 py-2 backdrop-blur md:px-5">
+          <div className="mx-auto flex max-w-4xl flex-wrap items-center gap-2">
+            <div className="relative min-w-0 flex-1">
+              <IoSearchOutline
+                size={15}
+                className="pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-text-muted"
+              />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={searchQuery}
+                onChange={(event) => {
+                  setSearchQuery(event.target.value);
+                  setSearchIndex(0);
+                }}
+                placeholder={t("searchMessages")}
+                className="field h-9 py-0 pr-3 pl-9 text-[0.8rem]"
+              />
+            </div>
+
             {searchQuery.trim() && (
-              <span className="text-[11px] text-text-muted shrink-0 tabular-nums">
+              <span className="shrink-0 font-mono text-[0.6rem] text-text-muted tabular-nums">
                 {matchingIndices.length > 0
                   ? t("searchMatch", {
                       current: searchIndex + 1,
@@ -434,87 +447,114 @@ export default function Chat({
                   : t("searchNoResults")}
               </span>
             )}
-          </div>
 
-          <div className="flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              onClick={goToPrevMatch}
-              disabled={matchingIndices.length === 0}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-              title="Previous"
-            >
-              <IoArrowUp size={18} />
-            </button>
-            <button
-              type="button"
-              onClick={goToNextMatch}
-              disabled={matchingIndices.length === 0}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface disabled:opacity-30 disabled:hover:bg-transparent transition-colors"
-              title="Next"
-            >
-              <IoArrowDown size={18} />
-            </button>
+            <div className="flex items-center gap-0.5">
+              <button
+                type="button"
+                onClick={goToPrevMatch}
+                disabled={matchingIndices.length === 0}
+                className="btn-icon h-8 w-8"
+                aria-label={t("searchPrevious")}
+              >
+                <IoArrowUp size={15} />
+              </button>
+              <button
+                type="button"
+                onClick={goToNextMatch}
+                disabled={matchingIndices.length === 0}
+                className="btn-icon h-8 w-8"
+                aria-label={t("searchNext")}
+              >
+                <IoArrowDown size={15} />
+              </button>
+              <button
+                type="button"
+                onClick={closeSearch}
+                className="btn-icon h-8 w-8"
+                aria-label={t("searchClose")}
+              >
+                <IoClose size={15} />
+              </button>
+            </div>
           </div>
-
-          <button
-            type="button"
-            onClick={closeSearch}
-            className="p-1.5 rounded-lg text-text-muted hover:text-text hover:bg-surface transition-colors shrink-0"
-            title="Close search"
-          >
-            <IoClose size={18} />
-          </button>
         </div>
       )}
 
-      <div
-        ref={messagesContainerRef}
-        onScroll={handleScroll}
-        className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-8 pb-40 space-y-3 chat-bg"
-      >
-        {messages.map((msg, i) => (
-          <MessageBubble
-            key={msg.id}
-            message={msg}
-            searchHighlight={
-              searchOpen && searchQuery.trim() ? searchQuery : undefined
-            }
-            isSearchActive={searchOpen && matchingIndices[searchIndex] === i}
-          />
-        ))}
+      <div className="relative min-h-0 flex-1">
+        <div
+          ref={messagesContainerRef}
+          onScroll={handleScroll}
+          className="chat-bg h-full overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-gutter:stable]"
+        >
+          <div className="mx-auto flex w-full max-w-3xl flex-col gap-1.5 px-4 py-6 md:px-8 md:py-8">
+            {messages.length === 0 && (
+              <div className="flex flex-1 flex-col items-center justify-center py-20 text-center">
+                <p className="mono-label text-text-faint">
+                  {t("emptyRoomEyebrow")}
+                </p>
+                <p className="mt-3 max-w-xs text-sm leading-relaxed text-text-muted">
+                  {t("emptyRoom")}
+                </p>
+              </div>
+            )}
 
-        {isSomeoneTyping && <TypingIndicator />}
+            {messages.map((message, index) => (
+              <div key={message.id} data-message-index={index}>
+                <MessageBubble
+                  message={message}
+                  searchHighlight={
+                    searchOpen && searchQuery.trim()
+                      ? searchQuery
+                      : undefined
+                  }
+                  isSearchActive={
+                    searchOpen && matchingIndices[searchIndex] === index
+                  }
+                />
+              </div>
+            ))}
 
-        <div ref={messagesEndRef} />
+            {isSomeoneTyping && <TypingIndicator />}
+
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        {!isAtBottom && (
+          <button
+            type="button"
+            onClick={scrollToBottom}
+            className="btn-icon absolute right-4 bottom-4 z-10 border-accent/30 bg-surface-2/90 text-accent shadow-lift backdrop-blur"
+            aria-label={t("scrollToBottom")}
+          >
+            <IoChevronDown size={18} />
+          </button>
+        )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-10">
-        <section className="relative text-xs text-text-muted text-center py-2 bg-transparent">
-          <p>{t("expireNotice")}</p>
+      <div className="shrink-0 border-t border-border bg-background/92 backdrop-blur">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="flex items-center justify-between gap-3 px-4 pt-2 md:px-8">
+            <span className="status-line truncate">
+              <IoTimeOutline size={12} className="shrink-0" />
+              <span className="truncate">{t("expireNotice")}</span>
+            </span>
+            <span className="hidden font-mono text-[0.55rem] tracking-[0.18em] text-text-faint uppercase sm:block">
+              {t("ephemeralLabel")}
+            </span>
+          </div>
 
-          {!isAtBottom && (
-            <button
-              title="scroll bottom button"
-              type="button"
-              onClick={scrollToBottom}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-primary hover:text-text animate-float"
-            >
-              <IoArrowDownOutline size={24} />
-            </button>
-          )}
-        </section>
-
-        <ChatFooter
-          input={input}
-          canSend={canSend}
-          files={files}
-          uploadStatus={uploadStatus}
-          onInputChange={handleInputChange}
-          onSend={handleSend}
-          onFileChange={handleFileChange}
-          onRemoveFile={removeFile}
-        />
+          <ChatFooter
+            input={input}
+            canSend={canSend}
+            files={files}
+            uploadStatus={uploadStatus}
+            onInputChange={handleInputChange}
+            onSend={handleSend}
+            onFileChange={handleFileChange}
+            onRemoveFile={removeFile}
+          />
+        </div>
       </div>
     </section>
   );

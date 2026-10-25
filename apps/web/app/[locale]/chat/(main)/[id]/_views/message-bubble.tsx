@@ -5,10 +5,7 @@ import type { Message } from "./types";
 import { formatFileSize } from "./types";
 import { formatDate } from "@/libs/functions/format-date";
 import { API_URL } from "@/libs/constants/api";
-import {
-  IoDocumentOutline,
-  IoDownloadOutline,
-} from "react-icons/io5";
+import { IoDocumentOutline, IoDownloadOutline } from "react-icons/io5";
 
 function isImage(mimeType?: string) {
   return mimeType?.startsWith("image/") ?? false;
@@ -21,8 +18,9 @@ function isVideo(mimeType?: string) {
 function useIsOwnMessage(message: Message) {
   return useMemo(() => {
     if (!message.id || !message.roomId) return false;
-    const key = `own-msgs:${message.roomId}`;
-    const ownIds: string[] = JSON.parse(localStorage.getItem(key) || "[]");
+    const ownIds: string[] = JSON.parse(
+      localStorage.getItem(`own-msgs:${message.roomId}`) || "[]",
+    );
     return ownIds.includes(message.id);
   }, [message.id, message.roomId]);
 }
@@ -34,7 +32,8 @@ function FilePreview({
   message: Message;
   onDownload: () => void;
 }) {
-  const isMedia = isImage(message.mimeType) || isVideo(message.mimeType);
+  const isMedia =
+    isImage(message.mimeType) || isVideo(message.mimeType);
   const [objectUrl, setObjectUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -51,51 +50,57 @@ function FilePreview({
         const res = await fetch(url.toString());
         const { url: presignedUrl } = await res.json();
 
-        const blob = await fetch(presignedUrl).then((r) => r.blob());
+        const blob = await fetch(presignedUrl).then((response) =>
+          response.blob(),
+        );
         if (!cancelled) {
           setObjectUrl(URL.createObjectURL(blob));
         }
       } catch {
-        // fallback to icon view
+        // fall back to the document view
       }
     })();
 
     return () => {
       cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      setObjectUrl((previous) => {
+        if (previous) URL.revokeObjectURL(previous);
+        return null;
+      });
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [message.key, isMedia]);
 
   if (isImage(message.mimeType) && objectUrl) {
     return (
-      <div className="relative group cursor-pointer" onClick={onDownload}>
+      <button
+        type="button"
+        className="group relative block max-w-full cursor-pointer overflow-hidden rounded-lg"
+        onClick={onDownload}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={objectUrl}
           alt={message.fileName ?? ""}
-          className="max-w-64 max-h-64 rounded-lg object-cover"
+          className="max-h-72 max-w-full rounded-lg object-cover"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded-lg flex items-center justify-center">
+        <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors group-hover:bg-black/35">
           <IoDownloadOutline
             size={22}
-            className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-lg"
+            className="text-white opacity-0 drop-shadow-lg transition-opacity group-hover:opacity-100"
           />
-        </div>
-      </div>
+        </span>
+      </button>
     );
   }
 
   if (isVideo(message.mimeType) && objectUrl) {
     return (
-      <div className="relative group cursor-pointer" onClick={onDownload}>
+      <div className="relative max-w-full">
         <video
           src={objectUrl}
-          className="max-w-64 max-h-64 rounded-lg"
+          className="max-h-72 max-w-full rounded-lg"
           controls
         />
-        <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <IoDownloadOutline size={18} className="text-white drop-shadow-lg" />
-        </div>
       </div>
     );
   }
@@ -104,16 +109,20 @@ function FilePreview({
     <button
       type="button"
       onClick={onDownload}
-      className="flex items-center gap-2 text-left cursor-pointer hover:opacity-80 transition-opacity px-3 py-2 max-w-64"
+      className="flex max-w-72 cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-surface-2"
     >
-      <IoDocumentOutline size={18} className="text-primary shrink-0" />
-      <div className="min-w-0 flex-1">
-        <p className="text-sm text-text truncate">{message.fileName}</p>
-        <p className="text-[10px] text-text-muted">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-accent">
+        <IoDocumentOutline size={17} />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[0.8rem] text-text">
+          {message.fileName}
+        </span>
+        <span className="mt-0.5 block font-mono text-[0.58rem] text-text-faint">
           {message.size != null && formatFileSize(message.size)}
-        </p>
-      </div>
-      <IoDownloadOutline size={16} className="text-text-muted shrink-0" />
+        </span>
+      </span>
+      <IoDownloadOutline size={15} className="shrink-0 text-text-muted" />
     </button>
   );
 }
@@ -122,26 +131,26 @@ function highlightText(text: string, query: string): ReactNode {
   if (!query) return text;
   const parts: ReactNode[] = [];
   const lower = text.toLowerCase();
-  const q = query.toLowerCase();
+  const needle = query.toLowerCase();
   let last = 0;
 
-  for (let i = 0; i < text.length; ) {
-    const idx = lower.indexOf(q, i);
-    if (idx === -1) {
+  for (let index = 0; index < text.length; ) {
+    const found = lower.indexOf(needle, index);
+    if (found === -1) {
       parts.push(text.slice(last));
       break;
     }
-    if (idx > last) parts.push(text.slice(last, idx));
+    if (found > last) parts.push(text.slice(last, found));
     parts.push(
       <mark
-        key={idx}
-        className="bg-amber-400/25 text-text rounded-[2px]"
+        key={found}
+        className="rounded-[2px] bg-accent/30 px-0.5 text-text"
       >
-        {text.slice(idx, idx + q.length)}
+        {text.slice(found, found + needle.length)}
       </mark>,
     );
-    i = idx + q.length;
-    last = i;
+    index = found + needle.length;
+    last = index;
   }
 
   return parts.length > 0 ? <>{parts}</> : text;
@@ -158,8 +167,10 @@ function TextBubble({
 }) {
   return (
     <p
-      className={`text-sm text-text leading-relaxed break-words ${
-        isActive ? "bg-amber-400/10 -mx-1 px-1 rounded ring-1 ring-amber-400/30" : ""
+      className={`text-[0.9rem] leading-relaxed break-words text-text ${
+        isActive
+          ? "-mx-1 rounded bg-accent/10 px-1 ring-1 ring-accent/30"
+          : ""
       }`}
     >
       {highlight ? highlightText(content, highlight) : content}
@@ -167,6 +178,16 @@ function TextBubble({
   );
 }
 
+function ShadowAvatar() {
+  return (
+    <span
+      className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border bg-surface-2"
+      aria-hidden="true"
+    >
+      <span className="h-1.5 w-1.5 rounded-full bg-primary/80 shadow-[0_0_10px_var(--primary)]" />
+    </span>
+  );
+}
 
 export function MessageBubble({
   message,
@@ -191,43 +212,57 @@ export function MessageBubble({
       const res = await fetch(url.toString());
       const { url: presignedUrl } = await res.json();
 
-      const blob = await fetch(presignedUrl).then((r) => r.blob());
+      const blob = await fetch(presignedUrl).then((response) =>
+        response.blob(),
+      );
       const objectUrl = URL.createObjectURL(blob);
 
-      const a = document.createElement("a");
-      a.href = objectUrl;
-      a.download = message.fileName ?? "";
-      a.click();
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = message.fileName ?? "";
+      anchor.click();
 
       setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-    } catch (err) {
-      console.error("Error downloading file:", err);
+    } catch (error) {
+      console.error("Error downloading file:", error);
     }
   }, [message.key, message.fileName]);
 
   return (
-    <div className={`flex items-start gap-3 ${isOwn ? "flex-row-reverse" : ""}`}>
-      {!isOwn && (
-        <div className="shrink-0 w-8 h-8 mt-1 rounded-full bg-linear-to-br from-primary/30 to-accent/20 flex items-center justify-center">
-          <span className="text-[10px] font-bold text-primary/70">?</span>
-        </div>
-      )}
+    <div
+      className={`flex items-start gap-2.5 ${
+        isOwn ? "flex-row-reverse" : ""
+      }`}
+    >
+      {!isOwn && <ShadowAvatar />}
 
-      <div className="max-w-[720px] min-w-0">
+      <div
+        className={`flex min-w-0 max-w-[min(42rem,86%)] flex-col ${
+          isOwn ? "items-end" : "items-start"
+        }`}
+      >
         <div
-          className={`rounded-xl border border-border overflow-hidden ${isFile ? "" : "px-3 py-2"} ${
-            isOwn ? "bg-primary/15 border-primary/20" : "bg-surface"
+          className={`overflow-hidden rounded-2xl border ${
+            isFile ? "" : "px-3.5 py-2.5"
+          } ${
+            isOwn
+              ? "rounded-br-md border-primary/30 bg-primary/15"
+              : "rounded-bl-md border-border bg-surface/90"
           }`}
         >
           {message.content ? (
-            <TextBubble content={message.content} highlight={searchHighlight} isActive={isSearchActive} />
+            <TextBubble
+              content={message.content}
+              highlight={searchHighlight}
+              isActive={isSearchActive}
+            />
           ) : (
             <FilePreview message={message} onDownload={handleDownload} />
           )}
         </div>
         <p
-          className={`text-[10px] text-text-muted mt-1 ${
-            isOwn ? "text-right mr-1" : "ml-1"
+          className={`mt-1 font-mono text-[0.56rem] tracking-[0.08em] text-text-faint ${
+            isOwn ? "mr-1" : "ml-1"
           }`}
         >
           {formatDate(message.createdAt, "time")}
