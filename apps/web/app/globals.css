@@ -232,6 +232,15 @@
   }
 }
 
+@keyframes dust-drift {
+  from {
+    transform: translate3d(-1.4%, -1%, 0);
+  }
+  to {
+    transform: translate3d(1.4%, 1%, 0);
+  }
+}
+
 /* ==========================================================================
    BASE
    ========================================================================== */
@@ -767,46 +776,87 @@
 
   .hero-grid {
     background-image:
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(
-      ellipse 76% 64% at 50% 25%,
-      #000 10%,
-      transparent 76%
-    );
-    opacity: 0.34;
-  }
-
-  .chat-bg {
-    background-color: var(--bg);
-    background-image:
       radial-gradient(
-        circle at 18% 12%,
-        color-mix(in oklab, var(--primary) 7%, transparent),
-        transparent 42%
+        ellipse 70% 60% at 50% -12%,
+        color-mix(in oklab, var(--primary) 11%, transparent),
+        transparent 70%
       ),
       radial-gradient(
-        circle at 84% 82%,
-        color-mix(in oklab, var(--accent) 4%, transparent),
-        transparent 40%
+        circle at 20% 30%,
+        color-mix(in oklab, var(--text) 12%, transparent) 0 1px,
+        transparent 1.5px
       ),
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+      radial-gradient(
+        circle at 78% 66%,
+        color-mix(in oklab, var(--accent) 16%, transparent) 0 1px,
+        transparent 1.5px
+      );
     background-size:
       auto,
-      auto,
-      52px 52px,
-      52px 52px;
+      190px 170px,
+      270px 240px;
+    mask-image: radial-gradient(
+      ellipse 82% 72% at 50% 22%,
+      #000 12%,
+      transparent 82%
+    );
+    opacity: 0.7;
   }
 
   .dossier-grid {
     background-image:
-      linear-gradient(to right, var(--line) 1px, transparent 1px),
-      linear-gradient(to bottom, var(--line) 1px, transparent 1px);
-    background-size: 44px 44px;
-    mask-image: linear-gradient(to bottom, #000, transparent 82%);
-    opacity: 0.26;
+      radial-gradient(
+        ellipse 72% 58% at 16% -12%,
+        color-mix(in oklab, var(--primary) 14%, transparent),
+        transparent 64%
+      ),
+      radial-gradient(
+        ellipse 58% 48% at 104% 106%,
+        color-mix(in oklab, var(--accent) 7%, transparent),
+        transparent 66%
+      ),
+      linear-gradient(
+        115deg,
+        transparent 40%,
+        color-mix(in oklab, var(--text) 2.4%, transparent) 50%,
+        transparent 60%
+      );
+    mask-image: linear-gradient(to bottom, #000 0%, #000 82%, transparent 100%);
+  }
+
+  .dossier-grid::before {
+    content: "";
+    position: absolute;
+    inset: -18%;
+    pointer-events: none;
+    background-image:
+      radial-gradient(
+        circle at 18% 26%,
+        color-mix(in oklab, var(--text) 14%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 72% 58%,
+        color-mix(in oklab, var(--primary) 22%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 86% 22%,
+        color-mix(in oklab, var(--accent) 20%, transparent) 0 1px,
+        transparent 1.5px
+      ),
+      radial-gradient(
+        circle at 36% 78%,
+        color-mix(in oklab, var(--text) 10%, transparent) 0 1px,
+        transparent 1.5px
+      );
+    background-size:
+      210px 190px,
+      290px 260px,
+      380px 330px,
+      460px 410px;
+    opacity: 0.55;
+    animation: dust-drift 70s linear infinite alternate;
   }
 
   /* Misc ---------------------------------------------------------------- */

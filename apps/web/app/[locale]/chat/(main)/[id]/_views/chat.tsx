@@ -16,6 +16,7 @@ import { API_URL } from "@/libs/constants/api";
 import { MessageBubble } from "./message-bubble";
 import { TypingIndicator } from "./typing-indicator";
 import { ChatFooter } from "./chat-footer";
+import { Eclipse } from "@/components/brand/eclipse";
 import { type Message, type UploadStatus, MAX_CHARS, FIVE_MB } from "./types";
 
 export default function Chat({
@@ -480,11 +481,20 @@ export default function Chat({
         </div>
       )}
 
-      <div className="relative min-h-0 flex-1">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        <div
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+          aria-hidden="true"
+        >
+          <div className="dossier-grid absolute inset-0" />
+          <Eclipse className="absolute -right-32 -bottom-40 h-[32rem] w-[32rem] text-primary/10 md:h-[42rem] md:w-[42rem]" />
+          <Eclipse className="absolute -top-48 -left-40 h-[28rem] w-[28rem] text-accent/10" />
+        </div>
+
         <div
           ref={messagesContainerRef}
           onScroll={handleScroll}
-          className="chat-bg h-full overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-gutter:stable]"
+          className="relative h-full overflow-x-hidden overflow-y-auto overscroll-contain [scrollbar-gutter:stable]"
         >
           <div className="mx-auto flex w-full max-w-3xl flex-col gap-1.5 px-4 py-6 md:px-8 md:py-8">
             {messages.length === 0 && (
