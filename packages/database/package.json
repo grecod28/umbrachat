@@ -9,6 +9,9 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:sync": "prisma db push && prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset --force",
     "db:studio": "prisma studio --port 5555"
   },
   "dependencies": {

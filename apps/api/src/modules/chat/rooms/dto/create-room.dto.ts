@@ -45,7 +45,9 @@ export class CreateRoomDto {
     maxLength: 6,
     example: 'A1B2C3',
   })
-  @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase() : value))
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.toUpperCase() : value,
+  )
   @ValidateIf((o: CreateRoomDto) => o.visibility === ROOM_VISIBILITY.PRIVATE)
   @IsNotEmpty()
   @IsString()

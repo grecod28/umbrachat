@@ -137,7 +137,8 @@ export class RoomsController {
   })
   @ApiResponse({
     status: 201,
-    description: 'Signed POST URLs generated — returns { files: [{ key, url, fields }] }',
+    description:
+      'Signed POST URLs generated — returns { files: [{ key, url, fields }] }',
   })
   @ApiResponse({
     status: 401,
@@ -150,7 +151,6 @@ export class RoomsController {
     @Body() dto: UploadFilesDto,
     @Query('token') accessToken?: string,
   ) {
-    console.log('id', roomId);
     return this.roomsService.getUploadUrls(roomId, dto, accessToken);
   }
 
@@ -170,8 +170,9 @@ export class RoomsController {
   createFiles(
     @Param('id', new ParseUUIDPipe()) roomId: string,
     @Body() dto: CreateFilesDto,
+    @Query('token') accessToken?: string,
   ) {
-    return this.roomsService.createFiles(roomId, dto.files);
+    return this.roomsService.createFiles(roomId, dto.files, accessToken);
   }
 
   @Delete(':id')

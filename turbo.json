@@ -13,6 +13,50 @@
     "check-types": {
       "dependsOn": ["^check-types"]
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["test-results/**", "coverage/**"],
+      "cache": false,
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "JWT_SECRET",
+        "PORT",
+        "WS_PORT",
+        "THROTTLE_LIMIT",
+        "AWS_S3_BUCKET_NAME",
+        "AWS_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_SOCKET_URL",
+        "E2E_API_URL",
+        "E2E_BASE_URL",
+        "PLAYWRIGHT_BASE_URL",
+        "CI"
+      ]
+    },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "outputs": ["test-results/**", "playwright-report/**", "coverage/**"],
+      "cache": false,
+      "passThroughEnv": [
+        "DATABASE_URL",
+        "JWT_SECRET",
+        "PORT",
+        "WS_PORT",
+        "THROTTLE_LIMIT",
+        "AWS_S3_BUCKET_NAME",
+        "AWS_REGION",
+        "AWS_ACCESS_KEY_ID",
+        "AWS_SECRET_ACCESS_KEY",
+        "NEXT_PUBLIC_API_URL",
+        "NEXT_PUBLIC_SOCKET_URL",
+        "E2E_API_URL",
+        "E2E_BASE_URL",
+        "PLAYWRIGHT_BASE_URL",
+        "CI"
+      ]
+    },
     "dev": {
       "cache": false,
       "persistent": true

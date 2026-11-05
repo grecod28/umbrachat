@@ -15,8 +15,13 @@ permissions:
   contents: read
 
 jobs:
+  tests:
+    name: Tests
+    uses: ./.github/workflows/tests.yml
+
   deploy:
     name: Deploy main to Hostinger VPS
+    needs: [tests]
     runs-on: ubuntu-latest
     timeout-minutes: 30
 

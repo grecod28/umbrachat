@@ -3,7 +3,13 @@
 import * as dotenv from "dotenv";
 import { defineConfig } from "prisma/config";
 
-dotenv.config({ path: "../../.env" });
+dotenv.config({ path: "../../.env", quiet: true });
+
+// Local test runs use .env.test (docker-compose.test.yml). In CI, DATABASE_URL
+// comes from the job environment and .env.test does not exist.
+if (process.env.NODE_ENV === "test") {
+  dotenv.config({ path: "../../.env.test", override: true, quiet: true });
+}
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

@@ -33,17 +33,15 @@ export class PrismaService
 
     // 3. Creamos el adaptador (usamos 'as any' solo aquí por compatibilidad de Prisma 7)
     const adapter = new PrismaPg(pool);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
     super({ adapter });
   }
 
   async onModuleInit() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await this.$connect();
   }
 
   async onModuleDestroy() {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     await this.$disconnect();
   }
 }

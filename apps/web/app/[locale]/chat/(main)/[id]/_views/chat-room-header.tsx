@@ -25,7 +25,7 @@ export function ChatRoomHeader({
   const nav = useTranslations("ChatLayout");
 
   return (
-    <header className="flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background/85 px-3 backdrop-blur md:h-[4.5rem] md:px-5">
+    <header className="relative z-30 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background/85 px-3 backdrop-blur md:h-[4.5rem] md:px-5">
       <div className="flex min-w-0 items-center gap-2">
         <Link
           href="/chat/default"

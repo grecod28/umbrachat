@@ -16,7 +16,7 @@ import { CustomThrottlerGuard } from './common/guards/throttler.guard';
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 100,
+        limit: Number(process.env.THROTTLE_LIMIT ?? 100),
       },
     ]),
     ConfigModule.forRoot({

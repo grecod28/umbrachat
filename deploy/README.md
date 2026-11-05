@@ -2,6 +2,8 @@
 
 Guía de publicación de UmbraChat con **GitHub Actions + PM2 + Nginx + PostgreSQL (Docker)**.
 
+> El job de deploy depende de [`.github/workflows/tests.yml`](../.github/workflows/tests.yml). Si `setup`, `test-api` o `test-web` fallan, el deploy no se ejecuta. Ver [`TESTING.md`](../TESTING.md).
+
 ## Cómo funciona
 
 ```
