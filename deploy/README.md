@@ -346,7 +346,7 @@ pm2 set pm2-logrotate:retain 14
 - **Una sola instancia por proceso.** Socket.IO guarda las salas en memoria; para escalar horizontalmente haría falta el adapter de Redis.
 - **`prisma db push`** se ejecuta sin `--accept-data-loss`. Si un cambio de esquema exige borrar datos, el deploy falla a propósito y hay que resolverlo a mano.
 - **No ejecutar `git clean -fdx`** en el VPS: en la versión de `dev` los datos de PostgreSQL viven en `./postgres` (ignorado por git).
-- Durante el build de Next.js el sitio puede servir chunks antiguos por un momento. Si se necesita cero downtime, el siguiente paso es un despliegue por releases con symlink.
+- El deploy detiene `umbra-web`, borra `apps/web/.next` y compila con `--force` para evitar manifiestos mezclados con chunks viejos. Hay una breve ventana de indisponibilidad durante el build. Si se necesita cero downtime, el siguiente paso es un despliegue por releases con symlink.
 - El deploy compila en el VPS. Para builds más rápidos se puede migrar a compilar en GitHub y subir artefactos por `rsync`.
 
 ---
@@ -363,4 +363,5 @@ pm2 set pm2-logrotate:retain 14
 | `prisma db push` pide `--accept-data-loss` | El cambio de esquema borra datos. Resolver la migración manualmente; el deploy no lo fuerza a propósito.                                   |
 | Healthcheck en rojo                        | `pm2 logs umbra-web` / `pm2 logs umbra-api`, y verificar que Nginx y los puertos locales respondan.                                        |
 | La web carga pero la API falla             | Revisar `apps/web/.env.production` y que `NEXT_PUBLIC_API_URL` apunte a `https://back.umbrachat.org`.                                      |
+| `/_next/static/*` devuelve 500             | `.next` mezclado o incompleto en el VPS. Ejecutar `bash deploy/deploy.sh` con esta versión: detiene la web, limpia `.next` y reconstruye.   |
 | El WebSocket no conecta                    | Verificar `NEXT_PUBLIC_SOCKET_URL`, el bloque `socket.umbrachat.org` de Nginx y que el puerto 3002 esté escuchando.                        |

@@ -28,6 +28,11 @@ START_DB="${START_DB:-1}"
 HEALTH_ATTEMPTS="${HEALTH_ATTEMPTS:-20}"
 HEALTH_DELAY="${HEALTH_DELAY:-3}"
 
+# El build de Next se hace con la web detenida y sin caché de Turborepo.
+# Así nunca se sirve un .next mezclado entre dos builds distintos.
+BUILD_TOUCHED=0
+BUILD_OK=0
+
 if [ -t 1 ]; then
   BLUE='\033[1;34m'
   RED='\033[1;31m'
@@ -86,6 +91,18 @@ done
 
 [ -f "ecosystem.config.js" ] || fail "Falta ecosystem.config.js"
 
+available_kb="$(df -Pk "$APP_DIR" | awk 'NR==2 {print $4}')"
+available_kb="${available_kb:-0}"
+if [ "$available_kb" -lt 1048576 ]; then
+  fail "Espacio libre insuficiente en $APP_DIR: $((available_kb / 1024)) MB. Se requieren al menos 1024 MB."
+fi
+
+available_inodes="$(df -Pi "$APP_DIR" | awk 'NR==2 {print $4}')"
+available_inodes="${available_inodes:-0}"
+if [ "$available_inodes" -lt 10000 ]; then
+  fail "Inodos libres insuficientes en $APP_DIR: $available_inodes. Se requieren al menos 10000."
+fi
+
 PREVIOUS_COMMIT="$(git rev-parse HEAD)"
 log "Commit actual: $PREVIOUS_COMMIT"
 log "Directorio: $APP_DIR | Rama: $BRANCH"
@@ -94,6 +111,31 @@ log "Directorio: $APP_DIR | Rama: $BRANCH"
 # Rollback best-effort si algo falla después de este punto
 # ---------------------------------------------------------------------------
 ROLLBACK_DONE=0
+
+build_all() {
+  BUILD_TOUCHED=1
+  BUILD_OK=0
+
+  # Un .next viejo mezclado con un build nuevo produce manifiestos que apuntan
+  # a chunks inexistentes (la web devuelve 500 en /_next/static/*).
+  if ! rm -rf apps/web/.next; then
+    fail "No se pudo limpiar apps/web/.next"
+  fi
+
+  if ! NODE_OPTIONS="--max-old-space-size=${NODE_HEAP}" pnpm build --force; then
+    fail "Falló el build de web/api"
+  fi
+
+  local chunk_count
+  chunk_count="$(find apps/web/.next/static/chunks -type f -name '*.js' 2>/dev/null | wc -l | tr -d ' ')"
+  chunk_count="${chunk_count:-0}"
+
+  if [ "$chunk_count" -lt 5 ]; then
+    fail "El build de web generó ${chunk_count} chunks JS; el artefacto está incompleto."
+  fi
+
+  BUILD_OK=1
+}
 
 on_error() {
   local exit_code=$?
@@ -112,11 +154,12 @@ on_error() {
   cd "$APP_DIR" || exit "$exit_code"
 
   current_commit="$(git rev-parse HEAD)"
-  if [ "$current_commit" != "$PREVIOUS_COMMIT" ]; then
+  if [ "$current_commit" != "$PREVIOUS_COMMIT" ] \
+    || { [ "$BUILD_TOUCHED" -eq 1 ] && [ "$BUILD_OK" -ne 1 ]; }; then
     git checkout -f -B "$BRANCH" "$PREVIOUS_COMMIT" || exit "$exit_code"
     pnpm install --frozen-lockfile --prod=false --prefer-offline || exit "$exit_code"
     pnpm --filter @repo/database db:generate || exit "$exit_code"
-    NODE_OPTIONS="--max-old-space-size=${NODE_HEAP}" pnpm build || exit "$exit_code"
+    build_all
   fi
 
   pm2 startOrReload "$APP_DIR/ecosystem.config.js" --update-env || exit "$exit_code"
@@ -183,8 +226,11 @@ pnpm install --frozen-lockfile --prod=false --prefer-offline
 log "Generando Prisma Client"
 pnpm --filter @repo/database db:generate
 
-log "Compilando web + api (Turborepo)"
-NODE_OPTIONS="--max-old-space-size=${NODE_HEAP}" pnpm build
+log "Deteniendo web para reconstruir .next de forma limpia"
+pm2 stop umbra-web >/dev/null 2>&1 || true
+
+log "Compilando web + api (Turborepo, sin caché)"
+build_all
 
 # ---------------------------------------------------------------------------
 # Esquema de base de datos
@@ -212,12 +258,43 @@ http_ok() {
   curl -fsS --max-time 5 -o /dev/null "$1"
 }
 
-log "Verificando servicios"
+web_routes_ok() {
+  local route
+  for route in "/" "/es/chat/search" "/es/config/language"; do
+    if ! http_ok "http://127.0.0.1:${WEB_PORT}${route}"; then
+      printf '  ruta fallida: %s\n' "$route"
+      return 1
+    fi
+  done
+}
+
+web_assets_ok() {
+  local html paths asset_path
+  html="$(curl -fsSL --max-time 5 "http://127.0.0.1:${WEB_PORT}/" || return 1)"
+  paths="$(printf '%s' "$html" | grep -oE '/_next/static/[^"<> ]+\.(js|css)' | sort -u | head -n 12 || true)"
+
+  if [ -z "$paths" ]; then
+    printf '  no se encontraron assets /_next/static en el HTML\n'
+    return 1
+  fi
+
+  while IFS= read -r asset_path; do
+    [ -n "$asset_path" ] || continue
+    if ! http_ok "http://127.0.0.1:${WEB_PORT}${asset_path}"; then
+      printf '  asset fallido: %s\n' "$asset_path"
+      return 1
+    fi
+  done <<< "$paths"
+}
+
+log "Verificando servicios y assets estáticos"
 healthy=0
 for attempt in $(seq 1 "$HEALTH_ATTEMPTS"); do
   if http_ok "http://127.0.0.1:${WEB_PORT}/" \
     && http_ok "http://127.0.0.1:${API_PORT}/api/docs-json" \
-    && http_ok "http://127.0.0.1:${SOCKET_PORT}/socket.io/?EIO=4&transport=polling"; then
+    && http_ok "http://127.0.0.1:${SOCKET_PORT}/socket.io/?EIO=4&transport=polling" \
+    && web_routes_ok \
+    && web_assets_ok; then
     healthy=1
     break
   fi

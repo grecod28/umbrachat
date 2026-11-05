@@ -17,13 +17,13 @@ Guía para ejecutar la suite localmente y entender qué corre en CI.
 
 ## 1. Base de datos de test
 
-Una sola vez, para crear tu `.env.test`:
+`pnpm test`, `pnpm test:api`, `pnpm test:web` y `pnpm test:e2e` se encargan de todo:
 
-```bash
-cp .env.test.example .env.test
-```
+1. Crean `.env.test` desde `.env.test.example` si no existe.
+2. Levantan PostgreSQL con `docker compose -f docker-compose.test.yml up -d --wait`.
+3. Aplican `prisma migrate deploy`.
 
-No hace falta levantar PostgreSQL a mano: `pnpm test`, `pnpm test:api`, `pnpm test:web` y `pnpm test:e2e` ejecutan `docker compose -f docker-compose.test.yml up -d --wait` y `prisma migrate deploy` antes de correr los tests.
+Si querés personalizar la conexión, creá tu propio `.env.test` antes de ejecutar los tests. El nombre de la base **debe terminar en `_test`**; los scripts se niegan a migrar o testear contra la base de desarrollo.
 
 Comandos explícitos, si los necesitás:
 

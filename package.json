@@ -7,15 +7,17 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check-types": "turbo run check-types",
-    "test": "pnpm db:test:up && pnpm db:test:migrate && turbo run test --concurrency=1",
-    "test:e2e": "pnpm db:test:up && pnpm db:test:migrate && turbo run test:e2e --concurrency=1",
-    "test:api": "pnpm db:test:up && pnpm db:test:migrate && turbo run test:e2e --filter=api",
-    "test:web": "pnpm db:test:up && pnpm db:test:migrate && turbo run test:e2e --filter=web",
+    "test": "pnpm test:prepare && turbo run test --concurrency=1",
+    "test:e2e": "pnpm test:prepare && turbo run test:e2e --concurrency=1",
+    "test:api": "pnpm test:prepare && turbo run test:e2e --filter=api",
+    "test:web": "pnpm test:prepare && turbo run test:e2e --filter=web",
+    "test:prepare": "pnpm test:env && pnpm db:test:up && pnpm db:test:migrate",
+    "test:env": "node scripts/ensure-test-env.mjs",
     "test:build": "pnpm --filter @repo/database db:generate && pnpm --filter @repo/shared build && pnpm --filter api build && pnpm --filter web build:e2e",
     "db:test:up": "docker compose -f docker-compose.test.yml up -d --wait",
     "db:test:down": "docker compose -f docker-compose.test.yml down",
-    "db:test:migrate": "cross-env NODE_ENV=test pnpm --filter @repo/database db:migrate:deploy",
-    "db:test:reset": "cross-env NODE_ENV=test pnpm --filter @repo/database db:reset"
+    "db:test:migrate": "pnpm test:env && cross-env NODE_ENV=test pnpm --filter @repo/database db:migrate:deploy",
+    "db:test:reset": "pnpm test:env && cross-env NODE_ENV=test pnpm --filter @repo/database db:reset"
   },
   "devDependencies": {
     "cross-env": "10.1.0",
