@@ -186,7 +186,7 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
               {t("title")}
             </h2>
           </div>
-          <span className="font-mono text-[0.62rem] tracking-[0.18em] text-text-faint">
+          <span className="text-[0.72rem] font-semibold text-text-faint">
             {String(rooms.length).padStart(2, "0")}
           </span>
         </div>
@@ -269,7 +269,7 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
                   key={room.id}
                   href={roomPath}
                   data-active={isActive}
-                  className={`room-tab flex flex-col gap-1.5 rounded-lg px-3 py-3 ${
+                  className={`room-tab flex flex-col gap-1.5 rounded-xl px-3 py-3 ${
                     isActive ? "text-text" : "text-text-soft"
                   }`}
                   aria-current={isActive ? "page" : undefined}
@@ -279,7 +279,7 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
                       {room.name || t("noTitle")}
                     </span>
                     {!isActive && unread > 0 && (
-                      <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent px-1.5 font-mono text-[0.58rem] font-bold text-accent-contrast">
+                      <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-accent px-1.5 text-[0.62rem] font-bold text-accent-contrast">
                         {unread > 99 ? "99+" : unread}
                       </span>
                     )}
@@ -291,7 +291,7 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
                     <span className="min-w-0 flex-1 truncate">
                       {room.description || t("noMessages")}
                     </span>
-                    <span className="shrink-0 font-mono text-[0.58rem] text-text-faint">
+                    <span className="shrink-0 text-[0.66rem] font-medium text-text-faint">
                       {formatDate(room.lastMessageAt, "time")}
                     </span>
                   </div>
@@ -311,11 +311,11 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
             />
             <span className="truncate">{t("incognito")}</span>
           </p>
-          <span className="font-mono text-[0.55rem] tracking-[0.16em] text-text-faint">
+          <span className="text-[0.68rem] font-semibold text-text-faint">
             24H
           </span>
         </div>
-        <p className="mt-1 font-mono text-[0.55rem] tracking-[0.12em] text-text-faint uppercase">
+        <p className="mt-1 text-[0.68rem] font-medium text-text-faint">
           {t("status")}
         </p>
       </footer>

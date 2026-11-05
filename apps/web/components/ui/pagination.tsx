@@ -74,7 +74,7 @@ export function Pagination({ totalPages }: Props) {
         page === "..." ? (
           <span
             key={`ellipsis-${index}`}
-            className="px-1.5 font-mono text-xs text-text-faint select-none"
+            className="px-1.5 text-xs font-semibold text-text-faint select-none"
           >
             …
           </span>
@@ -84,7 +84,7 @@ export function Pagination({ totalPages }: Props) {
             type="button"
             onClick={() => goTo(page)}
             aria-current={page === current ? "page" : undefined}
-            className={`flex h-9 min-w-9 items-center justify-center rounded-md border px-2 font-mono text-xs transition-colors ${
+            className={`flex h-9 min-w-9 items-center justify-center rounded-full border px-2 text-xs font-semibold transition-colors ${
               page === current
                 ? "border-accent/40 bg-accent/10 text-accent"
                 : "border-border bg-surface text-text-muted hover:border-border-strong hover:text-text"

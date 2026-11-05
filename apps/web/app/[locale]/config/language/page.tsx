@@ -35,7 +35,7 @@ export default function ConfigLanguagePage() {
   return (
     <section className="panel p-5 md:p-6">
       <div className="flex items-center gap-3">
-        <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-accent/25 bg-accent/10 text-accent">
+        <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-accent/25 bg-accent/10 text-accent">
           <IoLanguageOutline size={18} />
         </span>
         <div>
@@ -55,14 +55,14 @@ export default function ConfigLanguagePage() {
               type="button"
               onClick={() => handleChange(language.value)}
               aria-pressed={active}
-              className={`flex items-center gap-4 rounded-lg border p-4 text-left transition-colors ${
+              className={`flex items-center gap-4 rounded-2xl border p-4 text-left transition-colors ${
                 active
                   ? "border-accent/40 bg-accent/10"
                   : "border-border bg-surface/50 hover:border-border-strong"
               }`}
             >
               <span
-                className={`display flex h-11 w-11 shrink-0 items-center justify-center rounded-lg border text-lg ${
+                className={`display flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border text-lg ${
                   active
                     ? "border-accent/30 bg-accent/10 text-accent"
                     : "border-border bg-surface-2 text-text-muted"
@@ -74,7 +74,7 @@ export default function ConfigLanguagePage() {
                 <span className="block text-sm font-medium text-text">
                   {language.label}
                 </span>
-                <span className="mt-0.5 block font-mono text-[0.55rem] tracking-[0.14em] text-text-faint uppercase">
+                <span className="mt-0.5 block text-[0.68rem] font-semibold text-text-faint">
                   {language.value}
                 </span>
               </span>
@@ -86,7 +86,7 @@ export default function ConfigLanguagePage() {
         })}
       </div>
 
-      <p className="mt-6 border-t border-border pt-4 font-mono text-[0.56rem] tracking-[0.14em] text-text-faint uppercase">
+      <p className="mt-6 border-t border-border pt-4 text-[0.72rem] font-medium text-text-faint">
         {t("applies")}
       </p>
     </section>

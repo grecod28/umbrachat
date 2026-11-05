@@ -40,7 +40,7 @@ export async function SiteFooter() {
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr] lg:grid-cols-[1.4fr_1fr]">
           <div className="max-w-md">
             <Brand size={44} />
-            <p className="mt-6 font-display text-3xl leading-[1.05] tracking-[-0.04em] text-text md:text-4xl">
+            <p className="mt-6 font-display text-3xl font-semibold leading-[1.05] tracking-[-0.02em] text-text md:text-4xl">
               {t("tagline")}
             </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-text-muted">
@@ -52,7 +52,7 @@ export async function SiteFooter() {
                 <span className="status-dot" />
                 {t("status")}
               </span>
-              <span className="font-mono text-[0.58rem] tracking-[0.22em] text-text-faint uppercase">
+              <span className="text-[0.72rem] font-semibold text-text-faint">
                 {t("ephemeral")}
               </span>
             </div>
@@ -83,7 +83,7 @@ export async function SiteFooter() {
           <p>
             &copy; {new Date().getFullYear()} {t("rights")}
           </p>
-          <p className="font-mono text-[0.58rem] tracking-[0.2em] uppercase">
+          <p className="text-[0.72rem] font-semibold text-text-faint">
             {t("signature")}
           </p>
         </div>

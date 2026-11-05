@@ -439,7 +439,7 @@ export default function Chat({
             </div>
 
             {searchQuery.trim() && (
-              <span className="shrink-0 font-mono text-[0.6rem] text-text-muted tabular-nums">
+              <span className="shrink-0 text-[0.68rem] font-semibold text-text-muted tabular-nums">
                 {matchingIndices.length > 0
                   ? t("searchMatch", {
                       current: searchIndex + 1,
@@ -549,7 +549,7 @@ export default function Chat({
               <IoTimeOutline size={12} className="shrink-0" />
               <span className="truncate">{t("expireNotice")}</span>
             </span>
-            <span className="hidden font-mono text-[0.55rem] tracking-[0.18em] text-text-faint uppercase sm:block">
+            <span className="hidden text-[0.68rem] font-medium text-text-faint sm:block">
               {t("ephemeralLabel")}
             </span>
           </div>

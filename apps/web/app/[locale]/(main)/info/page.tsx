@@ -121,11 +121,11 @@ export default async function InfoPage() {
             <ScrollReveal key={title} delay={index * 45}>
               <article className="panel panel-lift h-full p-5 md:p-6">
                 <div className="flex items-start gap-4">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-accent/25 bg-accent/10 text-accent">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-accent/25 bg-accent/10 text-accent">
                     <Icon size={18} />
                   </span>
                   <div className="min-w-0">
-                    <p className="font-mono text-[0.55rem] tracking-[0.18em] text-text-faint">
+                    <p className="text-[0.7rem] font-semibold text-text-faint">
                       {String(index + 1).padStart(2, "0")}
                     </p>
                     <h3 className="mt-1 text-[0.95rem] font-semibold text-text">

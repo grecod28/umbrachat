@@ -72,7 +72,7 @@ export default async function ContactPage() {
                     rel={external ? "noopener noreferrer" : undefined}
                     className="group panel-quiet flex items-center gap-4 p-3.5 transition-colors hover:border-border-strong hover:bg-surface"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-accent transition-colors group-hover:border-accent/30">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface-2 text-accent transition-colors group-hover:border-accent/30">
                       <Icon size={17} />
                     </span>
                     <span className="min-w-0 flex-1">
@@ -83,7 +83,7 @@ export default async function ContactPage() {
                         {value}
                       </span>
                     </span>
-                    <span className="hidden font-mono text-[0.54rem] tracking-[0.14em] text-text-faint uppercase sm:block">
+                    <span className="hidden text-[0.68rem] font-medium text-text-faint sm:block">
                       {t(descKey)}
                     </span>
                     <IoArrowForward
@@ -100,7 +100,7 @@ export default async function ContactPage() {
                 <span className="status-dot" />
                 {t("responseWindow")}
               </p>
-              <p className="mt-2 font-mono text-[0.56rem] tracking-[0.14em] text-text-faint uppercase">
+              <p className="mt-2 text-[0.7rem] font-medium text-text-faint">
                 {t("noTrace")}
               </p>
             </div>

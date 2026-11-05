@@ -32,7 +32,7 @@ export function ChatCard({
       href={`/chat/${id}`}
       className="panel panel-lift group flex items-start gap-3.5 p-4 md:gap-4 md:p-5"
     >
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-text-muted">
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-border bg-surface-2 text-text-muted">
         {isPrivate ? (
           <IoLockClosedOutline size={17} />
         ) : (
@@ -43,7 +43,7 @@ export function ChatCard({
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
           {index != null && (
-            <span className="font-mono text-[0.56rem] tracking-[0.16em] text-text-faint">
+            <span className="text-[0.7rem] font-semibold text-text-faint">
               {String(index).padStart(2, "0")}
             </span>
           )}
@@ -58,7 +58,7 @@ export function ChatCard({
           </span>
         )}
 
-        <span className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.56rem] tracking-[0.08em] text-text-faint">
+        <span className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.68rem] font-medium text-text-faint">
           <span>{formatDate(createdAt, "date")}</span>
           {lastMessageAt && (
             <>
