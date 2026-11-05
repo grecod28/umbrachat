@@ -14,7 +14,7 @@ export function UploadStatusBanner({ status }: { status: UploadStatus }) {
 
   return (
     <div
-      className={`mb-2 rounded-lg border px-3 py-1.5 text-center font-mono text-[0.6rem] tracking-[0.08em] ${
+      className={`mb-2 rounded-full border px-3 py-1.5 text-center text-xs font-semibold ${
         isUploading
           ? "border-primary/25 bg-primary/10 text-primary"
           : isSuccess

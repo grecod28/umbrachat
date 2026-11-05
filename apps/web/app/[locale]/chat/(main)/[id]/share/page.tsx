@@ -69,7 +69,7 @@ export default function ShareChatPage({
       <div className="relative mx-auto flex min-h-full w-full max-w-xl flex-col justify-center px-4 py-7 md:px-8 md:py-10">
         <Link
           href={`/chat/${id}`}
-          className="inline-flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-text-muted uppercase transition-colors hover:text-accent"
+          className="inline-flex items-center gap-2 text-[0.8rem] font-bold text-text-muted transition-colors hover:text-accent"
         >
           <IoArrowBack size={15} />
           {t("backToChat")}
@@ -119,7 +119,7 @@ export default function ShareChatPage({
           </span>
 
           {isPrivate && (
-            <div className="mt-5 flex items-start gap-3 rounded-lg border border-accent/25 bg-accent/10 p-3.5">
+            <div className="mt-5 flex items-start gap-3 rounded-2xl border border-accent/25 bg-accent/10 p-3.5">
               <IoLockClosed
                 className="mt-0.5 shrink-0 text-accent"
                 size={17}
@@ -147,7 +147,7 @@ export default function ShareChatPage({
               <IoArrowBack size={15} />
               {t("backToChat")}
             </Link>
-            <span className="font-mono text-[0.55rem] tracking-[0.16em] text-text-faint uppercase">
+            <span className="text-[0.68rem] font-medium text-text-faint">
               {t("ephemeral")}
             </span>
           </div>

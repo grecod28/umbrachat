@@ -20,11 +20,11 @@ export function Brand({
     >
       <BrandMark size={size} priority />
       <span className="flex min-w-0 flex-col leading-none">
-        <span className="font-mono text-[0.92rem] font-semibold tracking-[0.26em] text-text">
-          UMBRA<span className="text-accent">.</span>
+        <span className="font-display text-[1.14rem] font-semibold tracking-[-0.02em] text-text">
+          Umbra<span className="text-accent">.</span>
         </span>
         {showTagline && (
-          <span className="mt-1 font-mono text-[0.46rem] tracking-[0.3em] text-text-faint uppercase">
+          <span className="mt-1 font-sans text-[0.58rem] font-semibold tracking-[0.03em] text-text-faint">
             private chat
           </span>
         )}

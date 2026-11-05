@@ -144,7 +144,7 @@ export default function CreateChatPage() {
       <div className="mx-auto w-full max-w-5xl px-4 py-7 md:px-8 md:py-10">
         <Link
           href="/chat/default"
-          className="inline-flex items-center gap-2 font-mono text-[0.62rem] tracking-[0.16em] text-text-muted uppercase transition-colors hover:text-accent"
+          className="inline-flex items-center gap-2 text-[0.8rem] font-bold text-text-muted transition-colors hover:text-accent"
         >
           <IoArrowBack size={15} />
           {t("back")}
@@ -215,14 +215,14 @@ export default function CreateChatPage() {
                           })
                         }
                         aria-pressed={active}
-                        className={`flex items-start gap-3 rounded-lg border p-3.5 text-left transition-colors ${
+                        className={`flex items-start gap-3 rounded-2xl border p-3.5 text-left transition-colors ${
                           active
                             ? "border-accent/40 bg-accent/10"
                             : "border-border bg-surface/50 hover:border-border-strong"
                         }`}
                       >
                         <span
-                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border ${
+                          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
                             active
                               ? "border-accent/30 bg-accent/10 text-accent"
                               : "border-border bg-surface-2 text-text-muted"
@@ -287,7 +287,7 @@ export default function CreateChatPage() {
               <ul className="mt-5 space-y-5">
                 {aside.map(({ icon: Icon, text }, index) => (
                   <li key={index} className="flex gap-3">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border bg-surface-2 text-accent">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border border-border bg-surface-2 text-accent">
                       <Icon size={15} />
                     </span>
                     <p className="pt-1 text-[0.78rem] leading-relaxed text-text-muted">
@@ -303,7 +303,7 @@ export default function CreateChatPage() {
                 <span className="status-dot" />
                 {t("ephemeralLabel")}
               </p>
-              <p className="mt-2 font-mono text-[0.58rem] tracking-[0.14em] text-text-faint uppercase">
+              <p className="mt-2 text-[0.7rem] font-medium text-text-faint">
                 {t("noTraceLabel")}
               </p>
             </div>

@@ -49,7 +49,7 @@ export default function ConfigShapePage() {
 
   const fontOptions = FONT_OPTIONS.map((value) => ({
     value,
-    label: value === "sans" ? "Geist Sans" : "Geist Mono",
+    label: value === "sans" ? "Nunito" : "Geist Mono",
   }));
 
   const sizeOptions = SIZE_OPTIONS.map((value) => ({
@@ -61,7 +61,7 @@ export default function ConfigShapePage() {
     <div className="space-y-4">
       <section className="panel p-5 md:p-6">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg border border-accent/25 bg-accent/10 text-accent">
+          <span className="flex h-10 w-10 items-center justify-center rounded-2xl border border-accent/25 bg-accent/10 text-accent">
             <IoColorPaletteOutline size={18} />
           </span>
           <div>
@@ -83,14 +83,14 @@ export default function ConfigShapePage() {
                     type="button"
                     onClick={() => update({ theme })}
                     aria-pressed={active}
-                    className={`flex items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+                    className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition-colors ${
                       active
                         ? "border-accent/40 bg-accent/10"
                         : "border-border bg-surface/50 hover:border-border-strong"
                     }`}
                   >
                     <span
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-md border ${
+                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${
                         active
                           ? "border-accent/30 bg-accent/10 text-accent"
                           : "border-border bg-surface-2 text-text-muted"
@@ -140,7 +140,7 @@ export default function ConfigShapePage() {
                     type="button"
                     onClick={() => update({ color })}
                     aria-pressed={active}
-                    className={`flex items-center gap-3 rounded-lg border p-3 text-left transition-colors ${
+                    className={`flex items-center gap-3 rounded-2xl border p-3 text-left transition-colors ${
                       active
                         ? "border-accent/40 bg-accent/10"
                         : "border-border bg-surface/50 hover:border-border-strong"
@@ -173,10 +173,10 @@ export default function ConfigShapePage() {
           </span>
         </div>
 
-        <div className="mt-5 rounded-lg border border-border bg-background/50 p-4">
+        <div className="mt-5 rounded-2xl border border-border bg-background/50 p-4">
           <div className="flex items-center gap-2.5">
             <span className="h-7 w-7 shrink-0 rounded-full border border-border bg-surface-2" />
-            <span className="font-mono text-[0.58rem] tracking-[0.12em] text-text-faint uppercase">
+            <span className="text-[0.7rem] font-semibold text-text-faint">
               {t("previewMeta")}
             </span>
           </div>

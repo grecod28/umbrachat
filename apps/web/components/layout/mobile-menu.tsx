@@ -96,7 +96,7 @@ export function MobileMenu({ routes }: { routes: Route[] }) {
                 </button>
               </div>
 
-              <p className="mt-10 font-mono text-[0.58rem] tracking-[0.28em] text-text-faint uppercase">
+              <p className="mt-10 text-[0.76rem] font-bold text-text-faint">
                 {t("navigate")}
               </p>
 
@@ -120,7 +120,7 @@ export function MobileMenu({ routes }: { routes: Route[] }) {
                           {route.label}
                         </span>
                         <span className="flex items-center gap-3">
-                          <span className="font-mono text-[0.58rem] tracking-[0.2em] text-text-faint">
+                          <span className="text-[0.7rem] font-semibold text-text-faint">
                             0{index + 1}
                           </span>
                           <IoArrowForward
@@ -158,7 +158,7 @@ export function MobileMenu({ routes }: { routes: Route[] }) {
                   <span className="status-dot" />
                   {t("signal")}
                 </p>
-                <p className="mt-2 font-mono text-[0.58rem] tracking-[0.2em] text-text-faint uppercase">
+                <p className="mt-2 text-[0.7rem] font-medium text-text-faint">
                   {t("noTrace")}
                 </p>
               </div>

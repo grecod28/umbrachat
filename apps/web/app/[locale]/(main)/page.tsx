@@ -82,7 +82,7 @@ export default async function Home() {
             <p className="eyebrow">{t("heroNote")}</p>
 
             <h1 className="mt-6">
-              <span className="block font-mono text-[0.66rem] tracking-[0.28em] text-text-muted uppercase">
+              <span className="block text-[0.8rem] font-bold tracking-[0.01em] text-text-muted">
                 {t("welcome")}
               </span>
               <span className="display mt-3 block text-[clamp(2.7rem,12vw,7rem)] text-text">
@@ -115,7 +115,7 @@ export default async function Home() {
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-start gap-2">
                   <Icon size={15} className="mt-0.5 shrink-0 text-accent" />
-                  <span className="font-mono text-[0.57rem] leading-relaxed tracking-[0.1em] text-text-muted uppercase">
+                  <span className="text-[0.72rem] font-semibold leading-relaxed text-text-muted">
                     {label}
                   </span>
                 </div>
@@ -133,10 +133,10 @@ export default async function Home() {
                   <span className="status-dot" />
                   {t("consoleLive")}
                 </span>
-                <span className="font-mono text-[0.55rem] tracking-[0.18em] text-text-faint uppercase">
+                <span className="text-[0.66rem] font-semibold text-text-faint">
                   {t("consoleRoom")}
                 </span>
-                <span className="font-mono text-[0.55rem] tracking-[0.18em] text-accent uppercase">
+                <span className="text-[0.66rem] font-semibold text-accent">
                   {t("consoleExpires")}
                 </span>
               </div>
@@ -169,17 +169,17 @@ export default async function Home() {
                   <span className="truncate text-[0.8rem] text-text-faint">
                     {t("consolePlaceholder")}
                   </span>
-                  <span className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-accent/30 bg-accent/10 font-mono text-[0.65rem] text-accent">
+                  <span className="ml-auto flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-accent/10 font-mono text-[0.65rem] text-accent">
                     ↵
                   </span>
                 </div>
               </div>
 
               <div className="flex items-center justify-between border-t border-border px-4 py-2.5">
-                <span className="font-mono text-[0.52rem] tracking-[0.18em] text-text-faint uppercase">
+                <span className="text-[0.64rem] font-semibold text-text-faint">
                   no accounts / no trace
                 </span>
-                <span className="font-mono text-[0.52rem] tracking-[0.18em] text-text-faint uppercase">
+                <span className="text-[0.64rem] font-semibold text-text-faint">
                   24h
                 </span>
               </div>
@@ -200,7 +200,7 @@ export default async function Home() {
               <p className="display text-3xl text-text md:text-4xl">
                 {stat.value}
               </p>
-              <p className="mt-1.5 font-mono text-[0.58rem] tracking-[0.14em] text-text-faint uppercase">
+              <p className="mt-1.5 text-[0.72rem] font-semibold text-text-faint">
                 {stat.label}
               </p>
             </div>
@@ -226,10 +226,10 @@ export default async function Home() {
           {features.map(({ icon: Icon, key, descKey }, index) => (
             <ScrollReveal key={key} delay={index * 70}>
               <article className="panel panel-lift group relative h-full overflow-hidden p-6 md:p-7">
-                <span className="absolute top-5 right-5 font-mono text-[0.55rem] tracking-[0.16em] text-text-faint">
+                <span className="absolute top-5 right-5 text-[0.7rem] font-semibold text-text-faint">
                   0{index + 1}
                 </span>
-                <span className="flex h-11 w-11 items-center justify-center rounded-lg border border-accent/25 bg-accent/10 text-accent">
+                <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-accent/25 bg-accent/10 text-accent">
                   <Icon size={20} />
                 </span>
                 <h3 className="mt-7 text-lg font-semibold tracking-tight text-text">
@@ -255,7 +255,7 @@ export default async function Home() {
                 {t("startChatting")}
               </h2>
             </div>
-            <span className="font-mono text-[0.58rem] tracking-[0.2em] text-text-faint uppercase">
+            <span className="text-[0.72rem] font-semibold text-text-faint">
               03 steps / 24h
             </span>
           </div>
@@ -265,10 +265,10 @@ export default async function Home() {
             {steps.map(({ icon: Icon, titleKey, descKey }, index) => (
               <ScrollReveal key={titleKey} delay={index * 100}>
                 <div className="relative">
-                  <span className="relative flex h-12 w-12 items-center justify-center rounded-lg border border-border bg-background text-accent">
+                  <span className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-border bg-background text-accent">
                     <Icon size={20} />
                   </span>
-                  <p className="mt-5 font-mono text-[0.58rem] tracking-[0.18em] text-text-faint uppercase">
+                  <p className="mt-5 text-[0.72rem] font-semibold text-text-faint">
                     0{index + 1} — {t("stepLabel")}
                   </p>
                   <h3 className="mt-2 text-lg font-semibold tracking-tight text-text">

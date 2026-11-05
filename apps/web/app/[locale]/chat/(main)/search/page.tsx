@@ -99,7 +99,7 @@ export default async function SearchPage({
 
           {name && result && (
             <div className="mb-4 flex items-center justify-between gap-4">
-              <p className="font-mono text-[0.62rem] tracking-[0.14em] text-text-faint uppercase">
+              <p className="text-[0.76rem] font-semibold text-text-faint">
                 <span className="text-accent">
                   {String(result.meta.total).padStart(2, "0")}
                 </span>{" "}
