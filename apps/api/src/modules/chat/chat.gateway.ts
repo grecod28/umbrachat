@@ -17,7 +17,7 @@ import { RoomsService } from './rooms/rooms.service';
 import { JwtService } from '@nestjs/jwt';
 import { ChatPayload } from 'src/modules/auth/types/payload';
 
-@WebSocketGateway(3002, {
+@WebSocketGateway(Number(process.env.WS_PORT ?? 3002), {
   cors: {
     origin: [
       'http://localhost:3000',

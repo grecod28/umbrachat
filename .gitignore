@@ -17,6 +17,10 @@ postgres
 
 # Testing
 coverage
+test-results
+playwright-report
+blob-report
+.env.test
 
 # Turbo
 .turbo

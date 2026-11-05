@@ -47,7 +47,9 @@ El frontend arranca en `http://localhost:3000` y la API en `http://localhost:300
 Producción corre en un VPS de Hostinger con **PM2 + Nginx + PostgreSQL en Docker**. Cada push a `main` dispara GitHub Actions, que entra por SSH, compila, sincroniza Prisma, recarga PM2 y valida los tres servicios.
 
 - Workflow: [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml)
+- CI de tests: [`.github/workflows/ci.yml`](./.github/workflows/ci.yml) y [`.github/workflows/tests.yml`](./.github/workflows/tests.yml)
 - Guía completa (DNS, TLS, secrets, primer deploy): [`deploy/README.md`](./deploy/README.md)
+- Testing (API real + Playwright): [`TESTING.md`](./TESTING.md)
 - Configuración de procesos: [`ecosystem.config.js`](./ecosystem.config.js)
 - Reverse proxy: [`deploy/nginx/umbrachat.conf`](./deploy/nginx/umbrachat.conf)
 

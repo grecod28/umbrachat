@@ -5,8 +5,9 @@
     "moduleResolution": "NodeNext",
     "declaration": true,
     "outDir": "dist",
-    "rewriteRelativeImportExtensions": true,
-    "allowImportingTsExtensions": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true
   },
-  "include": ["**/*.ts"]
+  "include": ["index.ts", "types/**/*.ts"]
 }

@@ -9,7 +9,9 @@ export class AccessRoomDto {
     maxLength: 6,
     example: 'A1B2C3',
   })
-  @Transform(({ value }) => (typeof value === 'string' ? value.toUpperCase() : value))
+  @Transform(({ value }: { value: unknown }) =>
+    typeof value === 'string' ? value.toUpperCase() : value,
+  )
   @IsNotEmpty()
   @IsString()
   @Length(6, 6)

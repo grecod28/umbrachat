@@ -163,7 +163,7 @@ export function ChatSidebar({ className = "" }: { className?: string }) {
     <aside
       className={`h-full min-h-0 flex-col border-r border-border bg-surface/35 ${className}`}
     >
-      <header className="shrink-0 border-b border-border px-3 pb-3 pt-3 lg:px-4">
+      <header className="relative z-30 shrink-0 border-b border-border px-3 pb-3 pt-3 lg:px-4">
         <div className="flex items-center justify-between gap-2">
           <Brand href="/chat/default" size={30} showTagline={false} />
           <div className="flex items-center gap-1">

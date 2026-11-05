@@ -72,6 +72,7 @@ export class RoomsService {
             contains: name,
             mode: 'insensitive',
           },
+          access: null,
         },
       }),
     ]);
@@ -98,7 +99,7 @@ export class RoomsService {
       },
     });
 
-    if (!room) return null;
+    if (!room) throw new NotFoundException('Sala no encontrada');
 
     return {
       ...room,
@@ -203,7 +204,20 @@ export class RoomsService {
   }
 
   async deleteRoom(id: string) {
-    return await this.prisma.room.delete({ where: { id: id } });
+    const room = await this.prisma.room.findUnique({
+      where: { id },
+      select: { id: true },
+    });
+
+    if (!room) throw new NotFoundException('Sala no encontrada');
+
+    return this.prisma.$transaction(async (tx) => {
+      // ChatItem.room uses the default Restrict relation; messages/files
+      // cascade from ChatItem. Remove the items first so a room with messages
+      // can be deleted safely.
+      await tx.chatItem.deleteMany({ where: { roomId: id } });
+      return tx.room.delete({ where: { id } });
+    });
   }
 
   async isPrivate(roomId: string): Promise<boolean> {
@@ -233,8 +247,12 @@ export class RoomsService {
     return this.filesService.generateUploadUrls(roomId, dto.files);
   }
 
-  async createFiles(roomId: string, files: FileRecordDto[]) {
-    await this.validateRoomAccess(roomId);
+  async createFiles(
+    roomId: string,
+    files: FileRecordDto[],
+    accessToken?: string,
+  ) {
+    await this.validateRoomAccess(roomId, accessToken);
 
     return this.filesService.createFileRecords(roomId, files);
   }

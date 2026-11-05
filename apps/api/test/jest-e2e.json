@@ -1,9 +1,33 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
-  "rootDir": ".",
+  "rootDir": "../../..",
+  "roots": ["<rootDir>/apps/api", "<rootDir>/packages"],
   "testEnvironment": "node",
-  "testRegex": ".e2e-spec.ts$",
+  "testRegex": "apps/api/test/.*\\.e2e-spec\\.ts$",
+  "setupFiles": ["<rootDir>/apps/api/test/setup-env.ts"],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/apps/api/src/$1",
+    "^@repo/database$": "<rootDir>/apps/api/test/database.cjs",
+    "^@repo/shared$": "<rootDir>/packages/shared/dist/index.js",
+    "^@repo/shared/(.*)$": "<rootDir>/packages/shared/$1"
+  },
+  "transformIgnorePatterns": ["/node_modules/(?!(@repo)/)"],
   "transform": {
-    "^.+\\.(t|j)s$": "ts-jest"
-  }
+    "^.+\\.(t|j)s$": [
+      "ts-jest",
+      {
+        "tsconfig": "<rootDir>/apps/api/tsconfig.json"
+      }
+    ]
+  },
+  "testTimeout": 30000,
+  "maxWorkers": 1,
+  "forceExit": true,
+  "collectCoverageFrom": [
+    "apps/api/src/**/*.ts",
+    "!apps/api/src/main.ts",
+    "!apps/api/src/**/*.module.ts",
+    "!apps/api/src/**/dto/**"
+  ],
+  "coverageDirectory": "apps/api/test-results/coverage"
 }

@@ -7,6 +7,7 @@ const config: Config = {
     "^.+\\.(t|j)sx?$": "<rootDir>/node_modules/next/dist/build/swc/jest-transformer.js",
   },
   transformIgnorePatterns: [],
+  testPathIgnorePatterns: ["/node_modules/", "/.next/", "/e2e/"],
   moduleNameMapper: {
     "^@/i18n/navigation$": "<rootDir>/__mocks__/i18n-navigation.tsx",
     "^@/libs/constants/api$": "<rootDir>/__mocks__/api-constants.ts",
