@@ -32,6 +32,7 @@ HEALTH_DELAY="${HEALTH_DELAY:-3}"
 # Así nunca se sirve un .next mezclado entre dos builds distintos.
 BUILD_TOUCHED=0
 BUILD_OK=0
+ROLLBACK_READY=0
 
 if [ -t 1 ]; then
   BLUE='\033[1;34m'
@@ -46,7 +47,17 @@ fi
 log()  { printf '\n%b[deploy]%b %s\n' "$BLUE" "$RESET" "$*"; }
 warn() { printf '%b[deploy] AVISO:%b %s\n' "$YELLOW" "$RESET" "$*"; }
 ok()   { printf '%b[deploy] OK:%b %s\n' "$GREEN" "$RESET" "$*"; }
-fail() { printf '%b[deploy] ERROR:%b %s\n' "$RED" "$RESET" "$*" >&2; exit 1; }
+fail() {
+  printf '%b[deploy] ERROR:%b %s\n' "$RED" "$RESET" "$*" >&2
+
+  # Los fail() de la fase de deploy deben pasar por el rollback para volver a
+  # levantar PM2. Los de la fase de comprobaciones previas no lo necesitan.
+  if [ "${ROLLBACK_READY:-0}" -eq 1 ]; then
+    on_error 1
+  fi
+
+  exit 1
+}
 
 # Evita que corepack pregunte si debe descargar la versión de pnpm.
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -166,7 +177,7 @@ build_all() {
 }
 
 on_error() {
-  local exit_code=$?
+  local exit_code="${1:-$?}"
 
   trap - ERR
   set +e
@@ -198,6 +209,7 @@ on_error() {
 }
 
 trap on_error ERR
+ROLLBACK_READY=1
 
 # ---------------------------------------------------------------------------
 # Código
