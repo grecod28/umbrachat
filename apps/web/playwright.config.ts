@@ -15,6 +15,24 @@ if (!databaseUrl) {
   );
 }
 
+function assertTestDatabase(url: string): void {
+  let databaseName: string;
+
+  try {
+    databaseName = new URL(url).pathname.replace(/^\//, "");
+  } catch {
+    throw new Error("DATABASE_URL is not a valid PostgreSQL URL.");
+  }
+
+  if (!databaseName.endsWith("_test")) {
+    throw new Error(
+      `Refusing to run Playwright against database "${databaseName}". The database name must end with "_test".`,
+    );
+  }
+}
+
+assertTestDatabase(databaseUrl);
+
 const apiEnv = {
   DATABASE_URL: databaseUrl,
   JWT_SECRET: process.env.JWT_SECRET ?? "umbra-e2e-jwt-secret-change-me",
