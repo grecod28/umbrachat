@@ -15,6 +15,7 @@ jobs:
       NODE_VERSION: "24.16.0"
       PNPM_VERSION: "9.0.0"
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/umbrachat_test?schema=public
+      REDIS_URL: redis://localhost:6379
       JWT_SECRET: ci-test-jwt-secret
       THROTTLE_LIMIT: "10000"
       IP_THROTTLE_LIMIT: "10000"
@@ -114,6 +115,7 @@ jobs:
       PNPM_VERSION: "9.0.0"
       NODE_ENV: test
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/umbrachat_test?schema=public
+      REDIS_URL: redis://localhost:6379
       JWT_SECRET: ci-test-jwt-secret
       THROTTLE_LIMIT: "10000"
       IP_THROTTLE_LIMIT: "10000"
@@ -135,6 +137,16 @@ jobs:
           - 5432:5432
         options: >-
           --health-cmd "pg_isready -U postgres -d umbrachat_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -214,6 +226,7 @@ jobs:
       NODE_ENV: test
       CI: "true"
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/umbrachat_test?schema=public
+      REDIS_URL: redis://localhost:6379
       JWT_SECRET: ci-test-jwt-secret
       THROTTLE_LIMIT: "10000"
       IP_THROTTLE_LIMIT: "10000"
@@ -239,6 +252,16 @@ jobs:
           - 5432:5432
         options: >-
           --health-cmd "pg_isready -U postgres -d umbrachat_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10

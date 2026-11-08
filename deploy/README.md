@@ -1,6 +1,6 @@
 # Despliegue en producción — Hostinger VPS
 
-Guía de publicación de UmbraChat con **GitHub Actions + PM2 + Nginx + PostgreSQL (Docker)**.
+Guía de publicación de UmbraChat con **GitHub Actions + PM2 + Nginx + PostgreSQL y Redis (Docker)**.
 
 > El job de deploy depende de [`.github/workflows/tests.yml`](../.github/workflows/tests.yml). Si `setup`, `test-api` o `test-web` fallan, el deploy no se ejecuta. Ver [`TESTING.md`](../TESTING.md).
 
@@ -29,8 +29,9 @@ VPS /var/www/umbrachat
 | NestJS REST   | `umbra-api`           | `0.0.0.0:3001`   | `back.umbrachat.org`                 |
 | Socket.IO     | `umbra-api` (gateway) | `0.0.0.0:3002`   | `socket.umbrachat.org`               |
 | PostgreSQL 15 | contenedor `umbra-db` | `127.0.0.1:5432` | —                                    |
+| Redis 7       | contenedor `umbra-redis` | `127.0.0.1:6379` | —                                  |
 
-Nginx termina TLS y hace de reverse proxy. La base de datos **no** se expone a internet.
+Nginx termina TLS y hace de reverse proxy. PostgreSQL y Redis **no** se exponen a internet.
 
 ---
 
@@ -130,6 +131,8 @@ DB_NAME=umbrachat
 DB_USER=umbrachat
 DB_PASSWORD=<password-fuerte>
 DATABASE_URL=postgresql://umbrachat:<password-fuerte>@127.0.0.1:5432/umbrachat?schema=public
+REDIS_PORT=6379
+REDIS_URL=redis://127.0.0.1:6379
 JWT_SECRET=<secreto-largo-y-aleatorio>
 PORT=3001
 AWS_S3_BUCKET_NAME=<bucket>
@@ -164,7 +167,7 @@ NEXT_PUBLIC_SOCKET_URL=https://socket.umbrachat.org
 ### Build inicial y arranque
 
 ```bash
-docker compose up -d db
+docker compose up -d db redis
 
 pnpm install --frozen-lockfile
 pnpm --filter @repo/database db:generate
@@ -308,9 +311,10 @@ pm2 logs umbra-api
 pm2 restart umbra-api
 pm2 reload ecosystem.config.js --update-env
 
-# PostgreSQL
+# PostgreSQL + Redis
 docker compose ps
 docker compose logs -f db
+docker compose logs -f redis
 ```
 
 ### Rollback
@@ -345,7 +349,7 @@ pm2 set pm2-logrotate:retain 14
 
 - **Una sola instancia por proceso.** Socket.IO guarda las salas en memoria; para escalar horizontalmente haría falta el adapter de Redis.
 - **`prisma db push`** se ejecuta sin `--accept-data-loss`. Si un cambio de esquema exige borrar datos, el deploy falla a propósito y hay que resolverlo a mano.
-- **No ejecutar `git clean -fdx`** en el VPS: en la versión de `dev` los datos de PostgreSQL viven en `./postgres` (ignorado por git).
+- **No ejecutar `git clean -fdx`** en el VPS: los datos de PostgreSQL viven en `./postgres` y los de Redis en `./redis` (ambos ignorados por git).
 - El deploy detiene `umbra-web`, aparta `apps/web/.next` como `.next.old.*` y compila con `--force` para evitar manifiestos mezclados con chunks viejos. Se usa `mv` en vez de `rm` para no fallar si la cache de imágenes pertenece a otro usuario. Hay una breve ventana de indisponibilidad durante el build. Si se necesita cero downtime, el siguiente paso es un despliegue por releases con symlink.
 - El deploy compila en el VPS. Para builds más rápidos se puede migrar a compilar en GitHub y subir artefactos por `rsync`.
 
@@ -362,6 +366,7 @@ pm2 set pm2-logrotate:retain 14
 | `next: not found`                          | `pnpm install` no terminó; revisar el log del job.                                                                                         |
 | `prisma db push` pide `--accept-data-loss` | El cambio de esquema borra datos. Resolver la migración manualmente; el deploy no lo fuerza a propósito.                                   |
 | Healthcheck en rojo                        | `pm2 logs umbra-web` / `pm2 logs umbra-api`, y verificar que Nginx y los puertos locales respondan.                                        |
+| API no arranca y Redis aparece en logs     | Verificar `docker compose ps redis`, `docker compose logs redis` y que `REDIS_URL` apunte a `redis://127.0.0.1:6379`.                      |
 | La web carga pero la API falla             | Revisar `apps/web/.env.production` y que `NEXT_PUBLIC_API_URL` apunte a `https://back.umbrachat.org`.                                      |
 | `/_next/static/*` devuelve 500             | `.next` mezclado o incompleto en el VPS. Ejecutar `bash deploy/deploy.sh` con esta versión: detiene la web, aparta `.next` y reconstruye.   |
 | `Permission denied` al limpiar `.next`     | Cache de imágenes generado por otro usuario. El deploy mueve `.next` a `.next.old.*`; limpiar con `sudo chown -R $USER:$USER apps/web/.next` o `sudo rm -rf apps/web/.next.old.*`. |

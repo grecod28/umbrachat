@@ -9,6 +9,7 @@ Aplicación de chat en tiempo real con soporte de salas públicas y privadas. Co
 | **Frontend** | Next.js 16 (React 19, Turbopack, Tailwind CSS v4) |
 | **Backend** | NestJS 11 (REST + WebSockets) |
 | **Base de datos** | PostgreSQL 15 + Prisma ORM 7 |
+| **Rate limiting** | Redis 7 + `@nestjs/throttler` |
 | **Tiempo real** | Socket.IO |
 | **Auth** | JWT (salas privadas) + sesión anónima firmada para anti-spam |
 | **Idiomas** | next-intl (español, inglés) |
@@ -19,7 +20,7 @@ Aplicación de chat en tiempo real con soporte de salas públicas y privadas. Co
 
 - **Node.js** >= 22.18
 - **pnpm** >= 9
-- **Docker** (para PostgreSQL local)
+- **Docker** (para PostgreSQL y Redis local)
 
 ## Primeros pasos
 
@@ -60,6 +61,7 @@ Producción corre en un VPS de Hostinger con **PM2 + Nginx + PostgreSQL en Docke
 |----------|-------------|
 | `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Credenciales de PostgreSQL para Docker Compose |
 | `DATABASE_URL` | URL de conexión a PostgreSQL |
+| `REDIS_PORT`, `REDIS_URL` | Redis para el throttler (`redis://127.0.0.1:6379`) |
 | `JWT_SECRET` | Clave secreta para firmar tokens JWT |
 | `PORT` | Puerto de la API REST (por defecto `3001`) |
 | `WS_PORT` | Puerto de Socket.IO (por defecto `3002`) |
@@ -158,7 +160,7 @@ umbra/
 │   ├── eslint-config/        # ESLint presets
 │   └── typescript-config/    # TSConfig presets
 │
-├── docker-compose.yml        # PostgreSQL local
+├── docker-compose.yml        # PostgreSQL + Redis local
 ├── turbo.json                # Pipeline de build
 └── pnpm-workspace.yaml
 ```
@@ -217,9 +219,9 @@ Las escrituras requieren la cabecera `x-umbra-session`. El token se obtiene en `
 
 ### Anti-spam
 
-- HTTP: límite por IP y por sesión anónima en ventanas de 60 segundos.
+- HTTP: límite por IP y por sesión anónima en ventanas de 60 segundos, persistido en Redis.
 - Sesión anónima obligatoria en escrituras (`POST`/`DELETE`) y en el handshake de Socket.IO.
-- WebSocket: límites independientes por IP y sesión para mensajes, archivos, typing, joins y conexiones.
+- WebSocket: límites independientes por IP y sesión para mensajes, archivos, typing, joins y conexiones, también en Redis.
 - Al superar un límite HTTP se devuelve `429` con `Retry-After-ip` o `Retry-After-session`; en WebSocket se emite `rate-limited` y `reply` con `error: "RATE_LIMITED"`.
 
 ### Eventos WebSocket

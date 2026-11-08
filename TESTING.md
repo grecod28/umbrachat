@@ -4,7 +4,7 @@ Guía para ejecutar la suite localmente y entender qué corre en CI.
 
 ## Estrategia
 
-- **API**: Jest + Supertest contra una instancia NestJS real (`AppModule`), PostgreSQL real, migraciones reales, `PrismaService` real, bcrypt/JWT reales y limpieza de tablas entre tests.
+- **API**: Jest + Supertest contra una instancia NestJS real (`AppModule`), PostgreSQL real, migraciones reales, `PrismaService` real, bcrypt/JWT reales y limpieza de tablas entre tests. El throttler HTTP y el rate limit de WebSocket usan una instancia real de Redis.
 - **Web**: Playwright contra `next build` + `next start`, conectado al API real levantado por Playwright, con PostgreSQL real.
 - **S3**: es el único servicio externo de pago reemplazado en la suite de API. No hay mocks de repositorios, servicios de dominio, controladores, guards, JWT, bcrypt ni base de datos.
 - **Login/registro**: esta aplicación **no tiene** usuarios ni login/registro. La “autenticación” real del producto es el **código de 6 caracteres de una sala privada**, que se canjea por un JWT. La suite cubre ese flujo completo.
@@ -20,10 +20,10 @@ Guía para ejecutar la suite localmente y entender qué corre en CI.
 `pnpm test`, `pnpm test:api`, `pnpm test:web` y `pnpm test:e2e` se encargan de todo:
 
 1. Crean `.env.test` desde `.env.test.example` si no existe.
-2. Levantan PostgreSQL con `docker compose -f docker-compose.test.yml up -d --wait`.
+2. Levantan PostgreSQL y Redis con `docker compose -f docker-compose.test.yml up -d --wait`.
 3. Aplican `prisma migrate deploy`.
 
-Si querés personalizar la conexión, creá tu propio `.env.test` antes de ejecutar los tests. El nombre de la base **debe terminar en `_test`**; los scripts se niegan a migrar o testear contra la base de desarrollo.
+Si querés personalizar la conexión, creá tu propio `.env.test` antes de ejecutar los tests. El nombre de la base **debe terminar en `_test`**; los scripts se niegan a migrar o testear contra la base de desarrollo. Redis de test queda en `localhost:6380`.
 
 Comandos explícitos, si los necesitás:
 
@@ -129,6 +129,7 @@ También existe `pnpm test`, que corre la suite e2e del API y los tests de compo
 |---|---|
 | `DATABASE_URL` | PostgreSQL de test |
 | `JWT_SECRET` | Firma/verificación de JWT de salas y sesiones anónimas |
+| `REDIS_URL` | Redis real para el throttler HTTP y WebSocket (`localhost:6380` local, `6379` en CI) |
 | `THROTTLE_LIMIT` | Límite IP heredado; se mantiene por compatibilidad |
 | `IP_THROTTLE_LIMIT` | Límite HTTP por IP en la suite (alto) |
 | `SESSION_THROTTLE_LIMIT` | Límite HTTP por sesión anónima en la suite (alto) |

@@ -12,7 +12,7 @@
 #   API_PORT         Puerto de NestJS               (default: 3001)
 #   SOCKET_PORT      Puerto de Socket.IO            (default: 3002)
 #   NODE_HEAP        Memoria máxima para el build   (default: 2048 MB)
-#   START_DB         Levantar PostgreSQL con Docker (default: 1)
+#   START_DB         Levantar PostgreSQL y Redis con Docker (default: 1)
 #   HEALTH_ATTEMPTS  Intentos de healthcheck        (default: 15)
 #   HEALTH_DELAY     Segundos entre intentos        (default: 2)
 
@@ -239,7 +239,7 @@ else
 fi
 
 # ---------------------------------------------------------------------------
-# PostgreSQL (contenedor definido en docker-compose.yml)
+# PostgreSQL + Redis (contenedores definidos en docker-compose.yml)
 # ---------------------------------------------------------------------------
 compose_cmd=()
 if [ "$START_DB" = "1" ] && command -v docker >/dev/null 2>&1; then
@@ -250,9 +250,9 @@ if [ "$START_DB" = "1" ] && command -v docker >/dev/null 2>&1; then
   fi
 
   if [ "${#compose_cmd[@]}" -gt 0 ]; then
-    log "Levantando PostgreSQL"
-    if ! "${compose_cmd[@]}" up -d db; then
-      warn "No se pudo levantar el contenedor de PostgreSQL; se usará la base ya existente."
+    log "Levantando PostgreSQL y Redis"
+    if ! "${compose_cmd[@]}" up -d db redis; then
+      warn "No se pudieron levantar los contenedores; se usará la infraestructura existente."
     fi
 
     db_user="$(grep -E '^[[:space:]]*DB_USER=' .env | tail -n1 | cut -d= -f2- || true)"
@@ -264,9 +264,23 @@ if [ "$START_DB" = "1" ] && command -v docker >/dev/null 2>&1; then
       fi
       sleep 2
     done
+
+    redis_ready=0
+    for _ in $(seq 1 20); do
+      if "${compose_cmd[@]}" exec -T redis redis-cli ping 2>/dev/null | grep -q PONG; then
+        ok "Redis listo"
+        redis_ready=1
+        break
+      fi
+      sleep 2
+    done
+
+    if [ "$redis_ready" -ne 1 ]; then
+      fail "Redis no respondió. Revisar: docker compose logs redis"
+    fi
   fi
 else
-  warn "START_DB=$START_DB: no se gestiona el contenedor de PostgreSQL desde el deploy."
+  warn "START_DB=$START_DB: no se gestionan PostgreSQL/Redis desde el deploy."
 fi
 
 # ---------------------------------------------------------------------------

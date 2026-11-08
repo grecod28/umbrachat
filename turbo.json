@@ -19,6 +19,7 @@
       "cache": false,
       "passThroughEnv": [
         "DATABASE_URL",
+        "REDIS_URL",
         "JWT_SECRET",
         "PORT",
         "WS_PORT",
@@ -44,6 +45,7 @@
       "cache": false,
       "passThroughEnv": [
         "DATABASE_URL",
+        "REDIS_URL",
         "JWT_SECRET",
         "PORT",
         "WS_PORT",
