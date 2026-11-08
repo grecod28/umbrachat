@@ -44,6 +44,19 @@ else
   BLUE=''; RED=''; GREEN=''; YELLOW=''; RESET=''
 fi
 
+BACK_NAME="umbrachat-back"
+FRONT_NAME="umbrachat-front"
+
+restart_pm2() {
+  if pm2 describe "$BACK_NAME" >/dev/null 2>&1 && pm2 describe "$FRONT_NAME" >/dev/null 2>&1; then
+    pm2 restart "$BACK_NAME" "$FRONT_NAME" --update-env
+  else
+    # Primera vez o procesos borrados: los crea desde el ecosystem
+    pm2 start "$APP_DIR/ecosystem.config.js" --update-env
+  fi
+  pm2 save
+}
+
 log()  { printf '\n%b[deploy]%b %s\n' "$BLUE" "$RESET" "$*"; }
 warn() { printf '%b[deploy] AVISO:%b %s\n' "$YELLOW" "$RESET" "$*"; }
 ok()   { printf '%b[deploy] OK:%b %s\n' "$GREEN" "$RESET" "$*"; }
@@ -201,8 +214,7 @@ on_error() {
     build_all
   fi
 
-  pm2 startOrReload "$APP_DIR/ecosystem.config.js" --update-env || exit "$exit_code"
-  pm2 save || exit "$exit_code"
+  restart_pm2 || exit "$exit_code"
 
   printf '%b[deploy] Rollback completado. Revisar logs con: pm2 logs%b\n' "$YELLOW" "$RESET" >&2
   exit "$exit_code"
@@ -267,7 +279,7 @@ log "Generando Prisma Client"
 pnpm --filter @repo/database db:generate
 
 log "Deteniendo web para reconstruir .next de forma limpia"
-pm2 stop umbra-web >/dev/null 2>&1 || true
+pm2 stop "$FRONT_NAME" >/dev/null 2>&1 || true
 
 log "Compilando web + api (Turborepo, sin caché)"
 build_all
@@ -283,13 +295,8 @@ pnpm --filter @repo/database exec prisma db push
 # ---------------------------------------------------------------------------
 # PM2
 # ---------------------------------------------------------------------------
-reload_pm2() {
-  pm2 startOrReload "$APP_DIR/ecosystem.config.js" --update-env
-  pm2 save
-}
-
-log "Recargando procesos en PM2"
-reload_pm2
+log "Reiniciando procesos en PM2"
+restart_pm2
 
 # ---------------------------------------------------------------------------
 # Healthcheck
