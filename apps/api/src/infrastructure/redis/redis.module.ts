@@ -10,6 +10,18 @@ import Redis from 'ioredis';
 
 export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
 
+function buildRedisUrl(configService: ConfigService): string {
+  const host = configService.get<string>('REDIS_HOST') ?? '127.0.0.1';
+  const port = configService.get<string>('REDIS_PORT') ?? '6379';
+  const password = configService.get<string>('REDIS_PASSWORD');
+
+  if (password) {
+    return `redis://:${encodeURIComponent(password)}@${host}:${port}`;
+  }
+
+  return `redis://${host}:${port}`;
+}
+
 @Global()
 @Module({
   providers: [
@@ -19,7 +31,8 @@ export const REDIS_CLIENT = Symbol('REDIS_CLIENT');
       useFactory: async (configService: ConfigService): Promise<Redis> => {
         const logger = new Logger('Redis');
         const url =
-          configService.get<string>('REDIS_URL') ?? 'redis://127.0.0.1:6379';
+          configService.get<string>('REDIS_URL') ??
+          buildRedisUrl(configService);
 
         const client = new Redis(url, {
           lazyConnect: true,

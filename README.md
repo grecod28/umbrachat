@@ -30,7 +30,8 @@ git clone <repo>
 cd umbra
 pnpm install
 
-# Iniciar base de datos
+# Iniciar base de datos + Redis
+# (requiere REDIS_PASSWORD y REDIS_URL en .env; ver .env.example)
 docker compose up -d
 
 # Generar Prisma client
@@ -61,7 +62,7 @@ Producción corre en un VPS de Hostinger con **PM2 + Nginx + PostgreSQL en Docke
 |----------|-------------|
 | `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | Credenciales de PostgreSQL para Docker Compose |
 | `DATABASE_URL` | URL de conexión a PostgreSQL |
-| `REDIS_PORT`, `REDIS_URL` | Redis para el throttler (`redis://127.0.0.1:6379`) |
+| `REDIS_PORT`, `REDIS_PASSWORD`, `REDIS_URL` | Redis para el throttler; `REDIS_URL` incluye la contraseña (`redis://:<pass>@127.0.0.1:6379`) |
 | `JWT_SECRET` | Clave secreta para firmar tokens JWT |
 | `PORT` | Puerto de la API REST (por defecto `3001`) |
 | `WS_PORT` | Puerto de Socket.IO (por defecto `3002`) |

@@ -105,7 +105,7 @@ require_var() {
     || fail "Falta la variable $key (o está vacía) en $file"
 }
 
-for key in DB_USER DB_PASSWORD DB_NAME DATABASE_URL JWT_SECRET AWS_S3_BUCKET_NAME AWS_REGION AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
+for key in DB_USER DB_PASSWORD DB_NAME DATABASE_URL JWT_SECRET REDIS_PASSWORD AWS_S3_BUCKET_NAME AWS_REGION AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY; do
   require_var ".env" "$key"
 done
 
@@ -265,9 +265,11 @@ if [ "$START_DB" = "1" ] && command -v docker >/dev/null 2>&1; then
       sleep 2
     done
 
+    redis_pass="$(grep -E '^[[:space:]]*REDIS_PASSWORD=' .env | tail -n1 | cut -d= -f2- | tr -d '"')"
+
     redis_ready=0
     for _ in $(seq 1 20); do
-      if "${compose_cmd[@]}" exec -T redis redis-cli ping 2>/dev/null | grep -q PONG; then
+      if "${compose_cmd[@]}" exec -T redis redis-cli --no-auth-warning -a "$redis_pass" ping 2>/dev/null | grep -q PONG; then
         ok "Redis listo"
         redis_ready=1
         break

@@ -132,7 +132,8 @@ DB_USER=umbrachat
 DB_PASSWORD=<password-fuerte>
 DATABASE_URL=postgresql://umbrachat:<password-fuerte>@127.0.0.1:5432/umbrachat?schema=public
 REDIS_PORT=6379
-REDIS_URL=redis://127.0.0.1:6379
+REDIS_PASSWORD=<generar-con-openssl-rand-hex-32>
+REDIS_URL=redis://:<REDIS_PASSWORD>@127.0.0.1:6379
 JWT_SECRET=<secreto-largo-y-aleatorio>
 PORT=3001
 AWS_S3_BUCKET_NAME=<bucket>
@@ -151,6 +152,8 @@ NEXT_PUBLIC_SOCKET_URL=https://socket.umbrachat.org
 > **Importante:** las `NEXT_PUBLIC_*` se incrustan en el bundle al compilar. Si cambian, hay que volver a desplegar; el script de deploy siempre compila.
 >
 > Si `DB_PASSWORD` contiene caracteres especiales (`$`, `#`, `@`, `:`), escaparlos para Docker Compose y URL-encodearlos dentro de `DATABASE_URL`.
+
+> Para `REDIS_PASSWORD` usar un valor aleatorio largo: `openssl rand -hex 32`. Debe coincidir entre `docker-compose.yml` y `REDIS_URL`.
 
 > **Compatibilidad de la base:** la rama `main` actual trae un `docker-compose.yml` con credenciales fijas (`postgres` / `mysecretpassword` / `umbrachat`), volumen nombrado `db-data` y el puerto `5432:5432` expuesto. La rama `dev` usa las variables `DB_*`, un bind mount en `./postgres` y publica el puerto solo en `127.0.0.1`. Al mergear `dev → main` queda la versión segura: el `DATABASE_URL` debe coincidir con `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
 >
@@ -366,7 +369,7 @@ pm2 set pm2-logrotate:retain 14
 | `next: not found`                          | `pnpm install` no terminó; revisar el log del job.                                                                                         |
 | `prisma db push` pide `--accept-data-loss` | El cambio de esquema borra datos. Resolver la migración manualmente; el deploy no lo fuerza a propósito.                                   |
 | Healthcheck en rojo                        | `pm2 logs umbra-web` / `pm2 logs umbra-api`, y verificar que Nginx y los puertos locales respondan.                                        |
-| API no arranca y Redis aparece en logs     | Verificar `docker compose ps redis`, `docker compose logs redis` y que `REDIS_URL` apunte a `redis://127.0.0.1:6379`.                      |
+| API no arranca y Redis aparece en logs     | Verificar `docker compose ps redis`, `docker compose logs redis` y que `REDIS_URL` contenga la misma `REDIS_PASSWORD`.                      |
 | La web carga pero la API falla             | Revisar `apps/web/.env.production` y que `NEXT_PUBLIC_API_URL` apunte a `https://back.umbrachat.org`.                                      |
 | `/_next/static/*` devuelve 500             | `.next` mezclado o incompleto en el VPS. Ejecutar `bash deploy/deploy.sh` con esta versión: detiene la web, aparta `.next` y reconstruye.   |
 | `Permission denied` al limpiar `.next`     | Cache de imágenes generado por otro usuario. El deploy mueve `.next` a `.next.old.*`; limpiar con `sudo chown -R $USER:$USER apps/web/.next` o `sudo rm -rf apps/web/.next.old.*`. |
