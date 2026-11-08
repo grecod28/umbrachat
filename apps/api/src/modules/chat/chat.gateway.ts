@@ -89,14 +89,14 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('user-typing')
-  handleUserTyping(
+  async handleUserTyping(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: { roomId: string; isTyping: boolean },
   ) {
     if (!data?.roomId || typeof data.isTyping !== 'boolean') return;
 
     const { roomId, isTyping } = data;
-    const rate = this.checkRate(client, 'typing', RATE_LIMITS.typing);
+    const rate = await this.checkRate(client, 'typing', RATE_LIMITS.typing);
 
     if (!rate.allowed) {
       return this.rejectRateLimited(client, 'user-typing', rate.retryAfterMs);
@@ -114,7 +114,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: JoinRoomDto,
   ) {
-    const rate = this.checkRate(client, 'join-room', RATE_LIMITS.joinRoom);
+    const rate = await this.checkRate(
+      client,
+      'join-room',
+      RATE_LIMITS.joinRoom,
+    );
 
     if (!rate.allowed) {
       return this.rejectRateLimited(client, 'join-room', rate.retryAfterMs);
@@ -163,7 +167,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     @MessageBody('roomId', new ParseUUIDPipe())
     roomId: string,
   ) {
-    const rate = this.checkRate(client, 'leave-room', RATE_LIMITS.leaveRoom);
+    const rate = await this.checkRate(
+      client,
+      'leave-room',
+      RATE_LIMITS.leaveRoom,
+    );
 
     if (!rate.allowed) {
       return this.rejectRateLimited(client, 'leave-room', rate.retryAfterMs);
@@ -189,7 +197,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: CreateMessageDto,
   ) {
-    const rate = this.checkRate(client, 'send-message', RATE_LIMITS.message);
+    const rate = await this.checkRate(
+      client,
+      'send-message',
+      RATE_LIMITS.message,
+    );
 
     if (!rate.allowed) {
       return this.rejectRateLimited(client, 'send-message', rate.retryAfterMs);
@@ -229,7 +241,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: CreateFilesDto,
   ) {
-    const rate = this.checkRate(client, 'send-files', RATE_LIMITS.files);
+    const rate = await this.checkRate(client, 'send-files', RATE_LIMITS.files);
 
     if (!rate.allowed) {
       return this.rejectRateLimited(client, 'send-files', rate.retryAfterMs);
@@ -287,7 +299,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
       throw new Error('INVALID_SESSION');
     }
 
-    const rate = this.checkRate(client, 'connect', RATE_LIMITS.connect);
+    const rate = await this.checkRate(client, 'connect', RATE_LIMITS.connect);
 
     if (!rate.allowed) {
       throw new Error('RATE_LIMITED');
@@ -331,27 +343,29 @@ export class ChatGateway implements OnGatewayInit, OnGatewayDisconnect {
     );
   }
 
-  private checkRate(
+  private async checkRate(
     client: Socket,
     action: string,
     limits: SocketRateLimit,
-  ): { allowed: boolean; retryAfterMs: number } {
+  ): Promise<{ allowed: boolean; retryAfterMs: number }> {
     const data = this.socketData(client);
     const ip = data.ip;
     const sessionId = data.anonymousSessionId;
 
     if (!ip || !sessionId) return { allowed: false, retryAfterMs: 0 };
 
-    const ipResult = this.rateLimiter.consume(
-      `ip:${ip}:${action}`,
-      limits.ip,
-      limits.windowMs,
-    );
-    const sessionResult = this.rateLimiter.consume(
-      `session:${sessionId}:${action}`,
-      limits.session,
-      limits.windowMs,
-    );
+    const [ipResult, sessionResult] = await Promise.all([
+      this.rateLimiter.consume(
+        `ip:${ip}:${action}`,
+        limits.ip,
+        limits.windowMs,
+      ),
+      this.rateLimiter.consume(
+        `session:${sessionId}:${action}`,
+        limits.session,
+        limits.windowMs,
+      ),
+    ]);
 
     return {
       allowed: ipResult.allowed && sessionResult.allowed,

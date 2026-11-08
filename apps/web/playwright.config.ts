@@ -35,6 +35,7 @@ assertTestDatabase(databaseUrl);
 
 const apiEnv = {
   DATABASE_URL: databaseUrl,
+  REDIS_URL: process.env.REDIS_URL ?? "redis://localhost:6380",
   JWT_SECRET: process.env.JWT_SECRET ?? "umbra-e2e-jwt-secret-change-me",
   AWS_S3_BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME ?? "umbra-e2e-bucket",
   AWS_REGION: process.env.AWS_REGION ?? "us-east-1",

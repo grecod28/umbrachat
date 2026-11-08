@@ -8,7 +8,10 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { S3Module } from './infrastructure/s3/s3.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
+import type Redis from 'ioredis';
 import { CustomThrottlerGuard } from './common/guards/throttler.guard';
+import { REDIS_CLIENT, RedisModule } from './infrastructure/redis/redis.module';
 
 type RateLimitRequest = {
   anonymousSession?: { id: string };
@@ -35,9 +38,10 @@ function skipSessionThrottler(context: ExecutionContext): boolean {
       envFilePath: '../../.env',
     }),
     ScheduleModule.forRoot(),
+    RedisModule,
     ThrottlerModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      inject: [ConfigService, REDIS_CLIENT],
+      useFactory: (configService: ConfigService, redis: Redis) => {
         const ipLimit = Number(
           configService.get<string>('IP_THROTTLE_LIMIT') ??
             configService.get<string>('THROTTLE_LIMIT') ??
@@ -50,22 +54,25 @@ function skipSessionThrottler(context: ExecutionContext): boolean {
           configService.get<string>('THROTTLE_BLOCK_MS') ?? 5 * 60 * 1000,
         );
 
-        return [
-          {
-            name: 'ip',
-            ttl: 60_000,
-            limit: ipLimit,
-            blockDuration,
-          },
-          {
-            name: 'session',
-            ttl: 60_000,
-            limit: sessionLimit,
-            blockDuration,
-            skipIf: skipSessionThrottler,
-            getTracker: sessionTracker,
-          },
-        ];
+        return {
+          throttlers: [
+            {
+              name: 'ip',
+              ttl: 60_000,
+              limit: ipLimit,
+              blockDuration,
+            },
+            {
+              name: 'session',
+              ttl: 60_000,
+              limit: sessionLimit,
+              blockDuration,
+              skipIf: skipSessionThrottler,
+              getTracker: sessionTracker,
+            },
+          ],
+          storage: new ThrottlerStorageRedisService(redis),
+        };
       },
     }),
     PrismaModule,

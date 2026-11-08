@@ -114,7 +114,7 @@ export default async function Home() {
                 { icon: IoDocumentOutline, label: t("trustFiles") },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-start gap-2">
-                  <Icon size={15} className="mt-0.5 shrink-0 text-accent" />
+                  <Icon size={15} className="mt-0.5 shrink-0 text-primary" />
                   <span className="text-[0.72rem] font-semibold leading-relaxed text-text-muted">
                     {label}
                   </span>
