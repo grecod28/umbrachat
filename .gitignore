@@ -30,6 +30,7 @@ blob-report
 
 # Build Outputs
 .next/
+.next.old.*/
 out/
 build
 dist

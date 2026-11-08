@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { InputPassword } from "@/components/ui/input-password";
 import { API_URL } from "@/libs/constants/api";
+import { getAnonymousSessionHeaders } from "@/libs/session";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { ROOM_VISIBILITY, RoomVisibility } from "@repo/shared";
 import { useState } from "react";
@@ -106,19 +107,27 @@ export default function CreateChatPage() {
       description: data.description || undefined,
     };
 
-    const res = await fetch(`${API_URL}/rooms`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const res = await fetch(`${API_URL}/rooms`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          ...(await getAnonymousSessionHeaders()),
+        },
+        body: JSON.stringify(payload),
+      });
 
-    if (!res.ok) {
+      if (!res.ok) {
+        setServerError(true);
+        return;
+      }
+
+      const resData = await res.json();
+      router.push(`/chat/${resData.id}`);
+    } catch {
       setServerError(true);
-      return;
     }
-
-    const resData = await res.json();
-    router.push(`/chat/${resData.id}`);
   };
 
   const inputClass = (field: keyof CreateRoomForm) =>

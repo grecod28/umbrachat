@@ -13,6 +13,7 @@ import {
 import { playSubmitSound } from "@/libs/functions/sounds";
 import { useSocket } from "@/providers/socket-provider";
 import { API_URL } from "@/libs/constants/api";
+import { getAnonymousSessionHeaders } from "@/libs/session";
 import { MessageBubble } from "./message-bubble";
 import { TypingIndicator } from "./typing-indicator";
 import { ChatFooter } from "./chat-footer";
@@ -34,6 +35,7 @@ export default function Chat({
   const [isSomeoneTyping, setIsSomeoneTyping] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>("idle");
+  const [rateLimitWarning, setRateLimitWarning] = useState(false);
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -55,6 +57,11 @@ export default function Chat({
   }, [token]);
 
   const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingSentRef = useRef(false);
+  const rateLimitTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  );
+  const lastMessageRef = useRef<string | null>(null);
   const otherTypingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
@@ -222,6 +229,9 @@ export default function Chat({
       ids?: string[];
     }) => {
       if (!data.success) return;
+
+      lastMessageRef.current = null;
+
       const key = `own-msgs:${roomIdRef.current}`;
       const existing: string[] = JSON.parse(localStorage.getItem(key) || "[]");
       if (data.id) existing.push(data.id);
@@ -229,9 +239,28 @@ export default function Chat({
       localStorage.setItem(key, JSON.stringify(existing));
     };
 
+    const onRateLimited = (data: { action?: string }) => {
+      setRateLimitWarning(true);
+
+      if (rateLimitTimeoutRef.current) {
+        clearTimeout(rateLimitTimeoutRef.current);
+      }
+
+      rateLimitTimeoutRef.current = setTimeout(() => {
+        setRateLimitWarning(false);
+      }, 4000);
+
+      if (data.action === "send-message" && lastMessageRef.current) {
+        const pendingMessage = lastMessageRef.current;
+        lastMessageRef.current = null;
+        setInput((current) => current || pendingMessage);
+      }
+    };
+
     socket.on("new-message", onNewMessage);
     socket.on("user-typing", onUserTyping);
     socket.on("reply", onReply);
+    socket.on("rate-limited", onRateLimited);
 
     return () => {
       storedRooms.forEach((id) => {
@@ -240,6 +269,11 @@ export default function Chat({
       socket.off("new-message", onNewMessage);
       socket.off("user-typing", onUserTyping);
       socket.off("reply", onReply);
+      socket.off("rate-limited", onRateLimited);
+
+      if (rateLimitTimeoutRef.current) {
+        clearTimeout(rateLimitTimeoutRef.current);
+      }
     };
   }, [socket, scrollToBottom]);
 
@@ -269,11 +303,17 @@ export default function Chat({
       }
 
       if (value.trim()) {
-        emitTyping(true);
+        if (!typingSentRef.current) {
+          typingSentRef.current = true;
+          emitTyping(true);
+        }
+
         typingTimeoutRef.current = setTimeout(() => {
+          typingSentRef.current = false;
           emitTyping(false);
         }, 1500);
-      } else {
+      } else if (typingSentRef.current) {
+        typingSentRef.current = false;
         emitTyping(false);
       }
     },
@@ -302,17 +342,19 @@ export default function Chat({
     setFiles((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
   }, []);
 
-  const handleSend = useCallback(() => {
+  const handleSend = useCallback(async () => {
     if ((!input.trim() || input.length > MAX_CHARS) && files.length === 0)
       return;
     if (!socket) return;
 
     if (input.trim() && input.length <= MAX_CHARS) {
+      lastMessageRef.current = input.trim();
       socket.emit("send-message", {
         roomId: roomIdRef.current,
         content: input.trim(),
       });
       setInput("");
+      typingSentRef.current = false;
       emitTyping(false);
       if (typingTimeoutRef.current) {
         clearTimeout(typingTimeoutRef.current);
@@ -333,10 +375,22 @@ export default function Chat({
       const url = new URL(`${API_URL}/rooms/${roomIdRef.current}/upload-urls`);
       if (tokenRef.current) url.searchParams.set("token", tokenRef.current);
 
+      let sessionHeaders: Record<string, string>;
+
+      try {
+        sessionHeaders = await getAnonymousSessionHeaders();
+      } catch {
+        setUploadStatus("error");
+        setTimeout(() => setUploadStatus("idle"), 3000);
+        return;
+      }
+
       fetch(url.toString(), {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
+          ...sessionHeaders,
         },
         body: JSON.stringify(presignedPayload),
       })
@@ -544,6 +598,12 @@ export default function Chat({
 
       <div className="shrink-0 border-t border-border bg-background/92 backdrop-blur">
         <div className="mx-auto w-full max-w-3xl">
+          {rateLimitWarning && (
+            <p className="mx-4 mt-2 rounded-full border border-warning/25 bg-warning/10 px-3 py-1.5 text-center text-xs font-semibold text-warning md:mx-8">
+              {t("rateLimited")}
+            </p>
+          )}
+
           <div className="flex items-center justify-between gap-3 px-4 pt-2 md:px-8">
             <span className="status-line truncate">
               <IoTimeOutline size={12} className="shrink-0" />

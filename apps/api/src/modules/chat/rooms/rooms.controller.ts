@@ -22,6 +22,7 @@ import { AccessRoomDto } from './dto/access-room.dto';
 import { GetRoomsDto } from './dto/get-rooms.dto';
 import { UploadFilesDto } from './dto/upload-url.dto';
 import { CreateFilesDto } from '../files/dto/create-file-record.dto';
+import { RequireAnonymousSession } from 'src/common/decorators/require-anonymous-session.decorator';
 
 @ApiTags('Rooms')
 @Controller('rooms')
@@ -92,6 +93,7 @@ export class RoomsController {
   }
 
   @Post()
+  @RequireAnonymousSession()
   @ApiOperation({
     summary: 'Create a room',
     description:
@@ -104,6 +106,7 @@ export class RoomsController {
   }
 
   @Post(':id/access')
+  @RequireAnonymousSession()
   @ApiOperation({
     summary: 'Access a private room',
     description:
@@ -124,6 +127,7 @@ export class RoomsController {
   }
 
   @Post(':id/upload-urls')
+  @RequireAnonymousSession()
   @ApiOperation({
     summary: 'Get signed S3 POST upload URLs for multiple files',
     description:
@@ -155,6 +159,7 @@ export class RoomsController {
   }
 
   @Post(':id/files')
+  @RequireAnonymousSession()
   @ApiOperation({
     summary: 'Create file records after S3 upload',
     description:
@@ -176,6 +181,7 @@ export class RoomsController {
   }
 
   @Delete(':id')
+  @RequireAnonymousSession()
   @ApiOperation({
     summary: 'Delete a room',
     description: 'Delete a chat room and all its associated data.',

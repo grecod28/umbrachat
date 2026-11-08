@@ -1,23 +1,72 @@
 "use client";
 
-import { getSocket } from "@/libs/socket";
+import {
+  connectSocketWithSession,
+  getSocket,
+} from "@/libs/socket";
+import { clearAnonymousSession, getAnonymousSessionToken } from "@/libs/session";
 import { createContext, useContext, useEffect } from "react";
 
-// 1. Instanciamos el socket fuera para que sea un Singleton real
 const socket = getSocket();
 const SocketContext = createContext(socket);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // 2. Conectar solo si no está conectado
-    if (!socket.connected) socket.connect();
+    let cancelled = false;
+    let retriedSession = false;
 
-    // 3. Manejo de eventos de depuración
-    const onConnect = () => console.log("Connected:", socket.id);
+    const connect = async (forceRefresh = false) => {
+      try {
+        await connectSocketWithSession(forceRefresh);
+      } catch {
+        // A failed connection is surfaced by connect_error; the UI keeps working
+        // while the socket reconnects in the background.
+      }
+    };
+
+    void connect();
+
+    const onConnect = () => {
+      retriedSession = false;
+      console.log("Connected:", socket.id);
+    };
+
+    const onConnectError = async (error: Error) => {
+      const requiresNewSession =
+        error.message === "SESSION_REQUIRED" ||
+        error.message === "INVALID_SESSION";
+
+      if (!cancelled && requiresNewSession && !retriedSession) {
+        retriedSession = true;
+        clearAnonymousSession();
+
+        try {
+          await connect(true);
+        } catch {
+          // The normal reconnect flow will keep trying.
+        }
+      }
+    };
+
+    const refreshAuthForReconnect = () => {
+      void getAnonymousSessionToken()
+        .then((token) => {
+          socket.auth = { sessionToken: token };
+        })
+        .catch(() => {
+          // If this fails, the socket reports connect_error.
+        });
+    };
+
     socket.on("connect", onConnect);
+    socket.on("connect_error", onConnectError);
+    socket.io.on("reconnect_attempt", refreshAuthForReconnect);
 
     return () => {
+      cancelled = true;
       socket.off("connect", onConnect);
+      socket.off("connect_error", onConnectError);
+      socket.io.off("reconnect_attempt", refreshAuthForReconnect);
       socket.disconnect();
     };
   }, []);
@@ -27,5 +76,4 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 4. Simplificamos el hook eliminando el chequeo de null (opcional)
 export const useSocket = () => useContext(SocketContext);

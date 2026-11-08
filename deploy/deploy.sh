@@ -32,6 +32,7 @@ HEALTH_DELAY="${HEALTH_DELAY:-3}"
 # Así nunca se sirve un .next mezclado entre dos builds distintos.
 BUILD_TOUCHED=0
 BUILD_OK=0
+ROLLBACK_READY=0
 
 if [ -t 1 ]; then
   BLUE='\033[1;34m'
@@ -46,7 +47,17 @@ fi
 log()  { printf '\n%b[deploy]%b %s\n' "$BLUE" "$RESET" "$*"; }
 warn() { printf '%b[deploy] AVISO:%b %s\n' "$YELLOW" "$RESET" "$*"; }
 ok()   { printf '%b[deploy] OK:%b %s\n' "$GREEN" "$RESET" "$*"; }
-fail() { printf '%b[deploy] ERROR:%b %s\n' "$RED" "$RESET" "$*" >&2; exit 1; }
+fail() {
+  printf '%b[deploy] ERROR:%b %s\n' "$RED" "$RESET" "$*" >&2
+
+  # Los fail() de la fase de deploy deben pasar por el rollback para volver a
+  # levantar PM2. Los de la fase de comprobaciones previas no lo necesitan.
+  if [ "${ROLLBACK_READY:-0}" -eq 1 ]; then
+    on_error 1
+  fi
+
+  exit 1
+}
 
 # Evita que corepack pregunte si debe descargar la versión de pnpm.
 export COREPACK_ENABLE_DOWNLOAD_PROMPT=0
@@ -103,6 +114,16 @@ if [ "$available_inodes" -lt 10000 ]; then
   fail "Inodos libres insuficientes en $APP_DIR: $available_inodes. Se requieren al menos 10000."
 fi
 
+# Limpieza best-effort de builds anteriores apartados por permisos.
+for stale_next in apps/web/.next.old.*; do
+  [ -d "$stale_next" ] || continue
+  if rm -rf "$stale_next" 2>/dev/null; then
+    log "Eliminado build anterior: $stale_next"
+  else
+    warn "No se pudo eliminar $stale_next (permisos); se puede borrar con sudo."
+  fi
+done
+
 PREVIOUS_COMMIT="$(git rev-parse HEAD)"
 log "Commit actual: $PREVIOUS_COMMIT"
 log "Directorio: $APP_DIR | Rama: $BRANCH"
@@ -116,10 +137,20 @@ build_all() {
   BUILD_TOUCHED=1
   BUILD_OK=0
 
+  local old_next=""
+
   # Un .next viejo mezclado con un build nuevo produce manifiestos que apuntan
   # a chunks inexistentes (la web devuelve 500 en /_next/static/*).
-  if ! rm -rf apps/web/.next; then
-    fail "No se pudo limpiar apps/web/.next"
+  #
+  # No borramos el directorio: si Next generó cache de imágenes con otro
+  # usuario, rm falla por permisos. Moverlo solo requiere permiso sobre
+  # apps/web, no sobre cada archivo interno.
+  if [ -e apps/web/.next ] || [ -L apps/web/.next ]; then
+    old_next="apps/web/.next.old.$(date +%s).$$.$RANDOM"
+    if ! mv apps/web/.next "$old_next"; then
+      fail "No se pudo apartar apps/web/.next"
+    fi
+    log "Build anterior apartado en $old_next"
   fi
 
   if ! NODE_OPTIONS="--max-old-space-size=${NODE_HEAP}" pnpm build --force; then
@@ -134,11 +165,19 @@ build_all() {
     fail "El build de web generó ${chunk_count} chunks JS; el artefacto está incompleto."
   fi
 
+  if [ -n "$old_next" ] && [ -d "$old_next" ]; then
+    if rm -rf "$old_next" 2>/dev/null; then
+      log "Build anterior eliminado"
+    else
+      warn "No se pudo borrar $old_next por permisos. Queda en disco; se puede limpiar con sudo."
+    fi
+  fi
+
   BUILD_OK=1
 }
 
 on_error() {
-  local exit_code=$?
+  local exit_code="${1:-$?}"
 
   trap - ERR
   set +e
@@ -170,6 +209,7 @@ on_error() {
 }
 
 trap on_error ERR
+ROLLBACK_READY=1
 
 # ---------------------------------------------------------------------------
 # Código

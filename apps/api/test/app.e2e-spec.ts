@@ -4,6 +4,7 @@ import type { Server } from 'node:http';
 import request from 'supertest';
 import { io, Socket } from 'socket.io-client';
 import { PrismaService } from '../src/infrastructure/prisma/prisma.service';
+import { ANONYMOUS_SESSION_HEADER } from '../src/modules/auth/anonymous-session.constants';
 import { createTestApp, resetDatabase } from './test-app';
 
 type RoomBody = {
@@ -49,13 +50,33 @@ describe('UmbraChat API (e2e)', () => {
   let app: INestApplication;
   let prisma: PrismaService;
   let http: Server;
+  let sessionToken: string;
 
   beforeAll(async () => {
     const testApp = await createTestApp();
     app = testApp.app;
     prisma = testApp.prisma;
     http = app.getHttpServer() as Server;
+
+    const sessionResponse = await request(http).post('/session').expect(200);
+    sessionToken = (sessionResponse.body as { token: string }).token;
   });
+
+  function withSessionHeader(test: request.Test) {
+    return test.set(ANONYMOUS_SESSION_HEADER, sessionToken);
+  }
+
+  function get(path: string) {
+    return withSessionHeader(request(http).get(path));
+  }
+
+  function post(path: string) {
+    return withSessionHeader(request(http).post(path));
+  }
+
+  function del(path: string) {
+    return withSessionHeader(request(http).delete(path));
+  }
 
   beforeEach(async () => {
     await resetDatabase(prisma);
@@ -66,8 +87,7 @@ describe('UmbraChat API (e2e)', () => {
   });
 
   async function createRoom(payload: Record<string, unknown> = {}) {
-    const response = await request(http)
-      .post('/rooms')
+    const response = await post('/rooms')
       .send({
         name: `room-${randomUUID()}`,
         description: 'e2e room',
@@ -88,14 +108,42 @@ describe('UmbraChat API (e2e)', () => {
   }
 
   async function getPrivateToken(roomId: string, password = 'A1B2C3') {
-    const response = await request(http)
-      .post(`/rooms/${roomId}/access`)
+    const response = await post(`/rooms/${roomId}/access`)
       .send({ password })
       .expect(201);
 
     const body = response.body as AccessBody;
     return body.token;
   }
+
+  describe('Anonymous session', () => {
+    it('issues a signed anonymous session token', async () => {
+      const response = await request(http).post('/session').expect(200);
+
+      expect(response.body).toMatchObject({
+        token: expect.any(String),
+        sessionId: expect.any(String),
+        expiresAt: expect.any(String),
+      });
+    });
+
+    it('rejects writes without a valid session token', async () => {
+      await request(http)
+        .post('/rooms')
+        .send({ visibility: 'PUBLIC' })
+        .expect(401);
+
+      await request(http)
+        .post('/rooms')
+        .set(ANONYMOUS_SESSION_HEADER, 'not-a-valid-session')
+        .send({ visibility: 'PUBLIC' })
+        .expect(401);
+    });
+
+    it('rejects websocket connections without a valid session token', async () => {
+      await expect(connectSocket('')).rejects.toThrow();
+    });
+  });
 
   describe('Rooms CRUD', () => {
     it('creates, reads, lists and deletes a public room', async () => {
@@ -107,9 +155,7 @@ describe('UmbraChat API (e2e)', () => {
         description: 'Public e2e',
       });
 
-      const getResponse = await request(http)
-        .get(`/rooms/${created.id}`)
-        .expect(200);
+      const getResponse = await get(`/rooms/${created.id}`).expect(200);
 
       expect(getResponse.body).toMatchObject({
         id: created.id,
@@ -117,8 +163,7 @@ describe('UmbraChat API (e2e)', () => {
         isPrivate: false,
       });
 
-      const listResponse = await request(http)
-        .get('/rooms')
+      const listResponse = await get('/rooms')
         .query({ ids: created.id })
         .expect(200);
 
@@ -126,33 +171,25 @@ describe('UmbraChat API (e2e)', () => {
       expect(list).toHaveLength(1);
       expect(list[0].id).toBe(created.id);
 
-      await request(http).delete(`/rooms/${created.id}`).expect(200);
-      await request(http).get(`/rooms/${created.id}`).expect(404);
-      await request(http).delete(`/rooms/${created.id}`).expect(404);
+      await del(`/rooms/${created.id}`).expect(200);
+      await get(`/rooms/${created.id}`).expect(404);
+      await del(`/rooms/${created.id}`).expect(404);
     });
 
     it('validates DTOs and path parameters', async () => {
-      await request(http).post('/rooms').send({}).expect(400);
-      await request(http)
-        .post('/rooms')
-        .send({ visibility: 'INVALID' })
-        .expect(400);
-      await request(http)
-        .post('/rooms')
+      await post('/rooms').send({}).expect(400);
+      await post('/rooms').send({ visibility: 'INVALID' }).expect(400);
+      await post('/rooms')
         .send({ visibility: 'PUBLIC', name: 'x'.repeat(121) })
         .expect(400);
-      await request(http)
-        .post('/rooms')
-        .send({ visibility: 'PRIVATE' })
-        .expect(400);
-      await request(http)
-        .post('/rooms')
+      await post('/rooms').send({ visibility: 'PRIVATE' }).expect(400);
+      await post('/rooms')
         .send({ visibility: 'PRIVATE', password: '12345' })
         .expect(400);
 
-      await request(http).get('/rooms').expect(400);
-      await request(http).get('/rooms/not-a-uuid').expect(400);
-      await request(http).get(`/rooms/${randomUUID()}`).expect(404);
+      await get('/rooms').expect(400);
+      await get('/rooms/not-a-uuid').expect(400);
+      await get(`/rooms/${randomUUID()}`).expect(404);
     });
 
     it('returns only public rooms in search and counts only public matches', async () => {
@@ -165,8 +202,7 @@ describe('UmbraChat API (e2e)', () => {
         password: 'A1B2C3',
       });
 
-      const response = await request(http)
-        .get('/rooms/search')
+      const response = await get('/rooms/search')
         .query({ name: needle, page: 1 })
         .expect(200);
 
@@ -185,8 +221,7 @@ describe('UmbraChat API (e2e)', () => {
       await createRoom({ name: `${needle} Alpha` });
       await createRoom({ name: `${needle} Beta` });
 
-      const firstPage = await request(http)
-        .get('/rooms/search')
+      const firstPage = await get('/rooms/search')
         .query({ name: needle.toUpperCase(), page: 1 })
         .expect(200);
 
@@ -194,8 +229,7 @@ describe('UmbraChat API (e2e)', () => {
       expect(firstPageBody.data).toHaveLength(2);
       expect(firstPageBody.meta.total).toBe(2);
 
-      const secondPage = await request(http)
-        .get('/rooms/search')
+      const secondPage = await get('/rooms/search')
         .query({ name: needle, page: 2 })
         .expect(200);
 
@@ -208,8 +242,7 @@ describe('UmbraChat API (e2e)', () => {
     it('exchanges the room code for a JWT and protects messages', async () => {
       const room = await createPrivateRoom();
 
-      await request(http)
-        .post(`/rooms/${room.id}/access`)
+      await post(`/rooms/${room.id}/access`)
         .send({ password: 'ZZZZZZ' })
         .expect(401);
 
@@ -217,14 +250,12 @@ describe('UmbraChat API (e2e)', () => {
 
       expect(token).toEqual(expect.any(String));
 
-      await request(http).get(`/rooms/${room.id}/messages`).expect(401);
-      await request(http)
-        .get(`/rooms/${room.id}/messages`)
+      await get(`/rooms/${room.id}/messages`).expect(401);
+      await get(`/rooms/${room.id}/messages`)
         .query({ token: 'invalid-token' })
         .expect(401);
 
-      const messagesResponse = await request(http)
-        .get(`/rooms/${room.id}/messages`)
+      const messagesResponse = await get(`/rooms/${room.id}/messages`)
         .query({ token })
         .expect(200);
 
@@ -236,8 +267,7 @@ describe('UmbraChat API (e2e)', () => {
       const roomB = await createPrivateRoom('D4E5F6');
       const tokenForA = await getPrivateToken(roomA.id, 'A1B2C3');
 
-      await request(http)
-        .get(`/rooms/${roomB.id}/messages`)
+      await get(`/rooms/${roomB.id}/messages`)
         .query({ token: tokenForA })
         .expect(401);
     });
@@ -245,13 +275,11 @@ describe('UmbraChat API (e2e)', () => {
     it('returns 404 when accessing a public or missing room', async () => {
       const publicRoom = await createRoom();
 
-      await request(http)
-        .post(`/rooms/${publicRoom.id}/access`)
+      await post(`/rooms/${publicRoom.id}/access`)
         .send({ password: 'A1B2C3' })
         .expect(404);
 
-      await request(http)
-        .post(`/rooms/${randomUUID()}/access`)
+      await post(`/rooms/${randomUUID()}/access`)
         .send({ password: 'A1B2C3' })
         .expect(404);
     });
@@ -259,9 +287,7 @@ describe('UmbraChat API (e2e)', () => {
     it('allows reading public messages without a token', async () => {
       const room = await createRoom();
 
-      const response = await request(http)
-        .get(`/rooms/${room.id}/messages`)
-        .expect(200);
+      const response = await get(`/rooms/${room.id}/messages`).expect(200);
 
       expect(response.body).toEqual([]);
     });
@@ -270,7 +296,7 @@ describe('UmbraChat API (e2e)', () => {
   describe('Realtime messages', () => {
     it('joins a room and broadcasts a persisted message over websocket', async () => {
       const room = await createRoom();
-      const socket = await connectSocket();
+      const socket = await connectSocket(sessionToken);
 
       try {
         const historyPromise = once<unknown[]>(socket, 'message-history');
@@ -306,9 +332,9 @@ describe('UmbraChat API (e2e)', () => {
           content: 'hola desde socket',
         });
 
-        const messagesResponse = await request(http)
-          .get(`/rooms/${room.id}/messages`)
-          .expect(200);
+        const messagesResponse = await get(`/rooms/${room.id}/messages`).expect(
+          200,
+        );
 
         const messages = messagesResponse.body as MessageBody[];
         expect(
@@ -316,8 +342,57 @@ describe('UmbraChat API (e2e)', () => {
         ).toBe(true);
 
         // A room with messages must be deletable (ChatItem has a Restrict FK).
-        await request(http).delete(`/rooms/${room.id}`).expect(200);
-        await request(http).get(`/rooms/${room.id}`).expect(404);
+        await del(`/rooms/${room.id}`).expect(200);
+        await get(`/rooms/${room.id}`).expect(404);
+      } finally {
+        socket.disconnect();
+      }
+    });
+
+    it('rate limits message bursts per anonymous session', async () => {
+      const room = await createRoom();
+      const sessionResponse = await request(http).post('/session').expect(200);
+      const burstSession = (sessionResponse.body as AccessBody).token;
+      const socket = await connectSocket(burstSession);
+
+      try {
+        const historyPromise = once<unknown[]>(socket, 'message-history');
+        socket.emit('join-room', { roomId: room.id });
+        await historyPromise;
+
+        const repliesPromise = new Promise<
+          { success: boolean; error?: string }[]
+        >((resolve, reject) => {
+          const replies: { success: boolean; error?: string }[] = [];
+          const timer = setTimeout(() => {
+            socket.off('reply', onReply);
+            reject(new Error('Timeout waiting for rate-limited replies'));
+          }, 5000);
+
+          const onReply = (reply: { success: boolean; error?: string }) => {
+            replies.push(reply);
+            if (replies.length === 7) {
+              clearTimeout(timer);
+              socket.off('reply', onReply);
+              resolve(replies);
+            }
+          };
+
+          socket.on('reply', onReply);
+
+          for (let index = 0; index < 7; index += 1) {
+            socket.emit('send-message', {
+              roomId: room.id,
+              content: `burst ${index}`,
+            });
+          }
+        });
+
+        const replies = await repliesPromise;
+        expect(replies.filter((reply) => reply.success)).toHaveLength(5);
+        expect(
+          replies.filter((reply) => reply.error === 'RATE_LIMITED'),
+        ).toHaveLength(2);
       } finally {
         socket.disconnect();
       }
@@ -325,7 +400,7 @@ describe('UmbraChat API (e2e)', () => {
 
     it('refuses to send a message before joining the room', async () => {
       const room = await createRoom();
-      const socket = await connectSocket();
+      const socket = await connectSocket(sessionToken);
 
       try {
         const replyPromise = once<{ success: boolean; error?: string }>(
@@ -351,8 +426,7 @@ describe('UmbraChat API (e2e)', () => {
     it('generates upload and download URLs through the external S3 boundary', async () => {
       const room = await createRoom();
 
-      const uploadResponse = await request(http)
-        .post(`/rooms/${room.id}/upload-urls`)
+      const uploadResponse = await post(`/rooms/${room.id}/upload-urls`)
         .send({
           files: [
             {
@@ -371,8 +445,7 @@ describe('UmbraChat API (e2e)', () => {
       });
       expect(uploadBody.files[0].fields.key).toContain(`rooms/${room.id}/`);
 
-      const downloadResponse = await request(http)
-        .get('/files/download-url')
+      const downloadResponse = await get('/files/download-url')
         .query({ key: 'rooms/test/file' })
         .expect(200);
 
@@ -386,8 +459,7 @@ describe('UmbraChat API (e2e)', () => {
       const room = await createPrivateRoom();
       const token = await getPrivateToken(room.id);
 
-      await request(http)
-        .post(`/rooms/${room.id}/upload-urls`)
+      await post(`/rooms/${room.id}/upload-urls`)
         .send({
           files: [
             { name: 'doc.pdf', contentType: 'application/pdf', size: 1024 },
@@ -395,8 +467,7 @@ describe('UmbraChat API (e2e)', () => {
         })
         .expect(401);
 
-      await request(http)
-        .post(`/rooms/${room.id}/upload-urls`)
+      await post(`/rooms/${room.id}/upload-urls`)
         .query({ token })
         .send({
           files: [
@@ -412,19 +483,16 @@ describe('UmbraChat API (e2e)', () => {
         size: 1024,
       };
 
-      await request(http)
-        .post(`/rooms/${room.id}/files`)
+      await post(`/rooms/${room.id}/files`)
         .send({ roomId: room.id, files: [file] })
         .expect(401);
 
-      await request(http)
-        .post(`/rooms/${room.id}/files`)
+      await post(`/rooms/${room.id}/files`)
         .query({ token })
         .send({ roomId: room.id, files: [file] })
         .expect(201);
 
-      const messagesResponse = await request(http)
-        .get(`/rooms/${room.id}/messages`)
+      const messagesResponse = await get(`/rooms/${room.id}/messages`)
         .query({ token })
         .expect(200);
 
@@ -438,8 +506,7 @@ describe('UmbraChat API (e2e)', () => {
     it('validates upload DTOs', async () => {
       const room = await createRoom();
 
-      await request(http)
-        .post(`/rooms/${room.id}/upload-urls`)
+      await post(`/rooms/${room.id}/upload-urls`)
         .send({
           files: [
             {
@@ -451,19 +518,19 @@ describe('UmbraChat API (e2e)', () => {
         })
         .expect(400);
 
-      await request(http)
-        .post(`/rooms/${room.id}/upload-urls`)
+      await post(`/rooms/${room.id}/upload-urls`)
         .send({ files: [{ contentType: 'image/png', size: 10 }] })
         .expect(400);
     });
   });
 });
 
-function connectSocket(): Promise<Socket> {
+function connectSocket(sessionToken: string): Promise<Socket> {
   const wsPort = process.env.WS_PORT ?? '3002';
 
   return new Promise((resolve, reject) => {
     const socket = io(`http://localhost:${wsPort}`, {
+      auth: { sessionToken },
       transports: ['websocket'],
       forceNew: true,
       reconnection: false,
