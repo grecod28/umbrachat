@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { AnonymousSessionController } from './anonymous-session.controller';
+import { AnonymousSessionService } from './anonymous-session.service';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { JwtModule } from '@nestjs/jwt';
       }),
     }),
   ],
-  exports: [JwtModule],
+  controllers: [AnonymousSessionController],
+  providers: [AnonymousSessionService],
+  exports: [JwtModule, AnonymousSessionService],
 })
 export class AuthModule {}

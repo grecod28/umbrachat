@@ -12,6 +12,17 @@ async function bootstrap() {
       'https://www.umbrachat.org',
     ],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-umbra-session'],
+    exposedHeaders: [
+      'X-RateLimit-Limit-ip',
+      'X-RateLimit-Remaining-ip',
+      'X-RateLimit-Reset-ip',
+      'X-RateLimit-Limit-session',
+      'X-RateLimit-Remaining-session',
+      'X-RateLimit-Reset-session',
+      'Retry-After-ip',
+      'Retry-After-session',
+    ],
   });
 
   app.useGlobalPipes(

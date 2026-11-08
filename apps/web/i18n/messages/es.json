@@ -157,7 +157,8 @@
     "searchNext": "Siguiente coincidencia",
     "searchClose": "Cerrar búsqueda",
     "scrollToBottom": "Ir al último mensaje",
-    "ephemeralLabel": "24 h / efímero"
+    "ephemeralLabel": "24 h / efímero",
+    "rateLimited": "Vas demasiado rápido. Esperá unos segundos."
   },
   "ShareChat": {
     "title": "Compartir esta sala",

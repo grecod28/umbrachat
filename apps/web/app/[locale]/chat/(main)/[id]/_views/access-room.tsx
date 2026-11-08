@@ -6,6 +6,7 @@ import { z } from "zod";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/libs/constants/api";
+import { getAnonymousSessionHeaders } from "@/libs/session";
 import { playSubmitSound } from "@/libs/functions/sounds";
 import {
   IoArrowBack,
@@ -89,11 +90,23 @@ export default function AccessRoom({ roomId, data }: Props) {
       playSubmitSound();
       setStatus((prev) => ({ ...prev, error: "" }));
 
-      const res = await fetch(`${API_URL}/rooms/${roomId}/access`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      let res: Response;
+
+      try {
+        res = await fetch(`${API_URL}/rooms/${roomId}/access`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            ...(await getAnonymousSessionHeaders()),
+          },
+          body: JSON.stringify(formData),
+        });
+      } catch {
+        setStatus((prev) => ({ ...prev, error: t("wrongCode") }));
+        return;
+      }
+
       const resData = await res.json();
 
       if (!res.ok) {

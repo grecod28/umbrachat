@@ -10,7 +10,7 @@ Aplicación de chat en tiempo real con soporte de salas públicas y privadas. Co
 | **Backend** | NestJS 11 (REST + WebSockets) |
 | **Base de datos** | PostgreSQL 15 + Prisma ORM 7 |
 | **Tiempo real** | Socket.IO |
-| **Auth** | JWT (acceso a salas privadas) |
+| **Auth** | JWT (salas privadas) + sesión anónima firmada para anti-spam |
 | **Idiomas** | next-intl (español, inglés) |
 | **Monorepo** | pnpm workspaces + Turborepo |
 | **Lenguaje** | TypeScript 6 |
@@ -62,6 +62,10 @@ Producción corre en un VPS de Hostinger con **PM2 + Nginx + PostgreSQL en Docke
 | `DATABASE_URL` | URL de conexión a PostgreSQL |
 | `JWT_SECRET` | Clave secreta para firmar tokens JWT |
 | `PORT` | Puerto de la API REST (por defecto `3001`) |
+| `WS_PORT` | Puerto de Socket.IO (por defecto `3002`) |
+| `IP_THROTTLE_LIMIT` | Límite HTTP por IP cada 60 s |
+| `SESSION_THROTTLE_LIMIT` | Límite HTTP por sesión anónima cada 60 s |
+| `THROTTLE_BLOCK_MS` | Bloqueo aplicado al superar el rate limit |
 | `AWS_S3_BUCKET_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | Credenciales de Amazon S3 para archivos |
 
 ### Web (`apps/web/.env.local`)
@@ -198,8 +202,11 @@ Documentación detallada en [`apps/api/README.md`](./apps/api/README.md).
 
 ### Endpoints REST
 
+Las escrituras requieren la cabecera `x-umbra-session`. El token se obtiene en `POST /session` y también se envía en el handshake de Socket.IO como `auth.sessionToken`.
+
 | Método | Ruta | Descripción |
 |--------|------|-------------|
+| `POST` | `/session` | Crear sesión anónima firmada |
 | `GET` | `/rooms` | Obtener salas por IDs |
 | `GET` | `/rooms/search` | Buscar salas públicas (paginado) |
 | `GET` | `/rooms/:id` | Obtener una sala |
@@ -207,6 +214,13 @@ Documentación detallada en [`apps/api/README.md`](./apps/api/README.md).
 | `POST` | `/rooms` | Crear sala |
 | `POST` | `/rooms/:id/access` | Obtener token JWT para sala privada |
 | `DELETE` | `/rooms/:id` | Eliminar sala |
+
+### Anti-spam
+
+- HTTP: límite por IP y por sesión anónima en ventanas de 60 segundos.
+- Sesión anónima obligatoria en escrituras (`POST`/`DELETE`) y en el handshake de Socket.IO.
+- WebSocket: límites independientes por IP y sesión para mensajes, archivos, typing, joins y conexiones.
+- Al superar un límite HTTP se devuelve `429` con `Retry-After-ip` o `Retry-After-session`; en WebSocket se emite `rate-limited` y `reply` con `error: "RATE_LIMITED"`.
 
 ### Eventos WebSocket
 

@@ -39,3 +39,6 @@ process.env.AWS_SECRET_ACCESS_KEY ??= 'test-secret-key';
 process.env.PORT ??= '3001';
 process.env.WS_PORT ??= '3102';
 process.env.THROTTLE_LIMIT ??= '10000';
+process.env.IP_THROTTLE_LIMIT ??= '10000';
+process.env.SESSION_THROTTLE_LIMIT ??= '10000';
+process.env.THROTTLE_BLOCK_MS ??= '1000';

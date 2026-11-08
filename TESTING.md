@@ -74,6 +74,8 @@ Cobertura principal:
 - Persistencia real de mensajes y borrado de una sala con mensajes.
 - Upload/download URLs y registros de archivos (S3 reemplazado).
 - WebSocket: historial, envío, broadcast y envío sin unirse.
+- Sesión anónima obligatoria para escrituras HTTP y handshake WebSocket.
+- Rate limit por IP y por sesión (HTTP) y ráfagas de mensajes (WebSocket).
 
 Reportes:
 
@@ -126,8 +128,11 @@ También existe `pnpm test`, que corre la suite e2e del API y los tests de compo
 | Variable | Uso |
 |---|---|
 | `DATABASE_URL` | PostgreSQL de test |
-| `JWT_SECRET` | Firma/verificación de JWT en API |
-| `THROTTLE_LIMIT` | Límite alto para no bloquear la suite |
+| `JWT_SECRET` | Firma/verificación de JWT de salas y sesiones anónimas |
+| `THROTTLE_LIMIT` | Límite IP heredado; se mantiene por compatibilidad |
+| `IP_THROTTLE_LIMIT` | Límite HTTP por IP en la suite (alto) |
+| `SESSION_THROTTLE_LIMIT` | Límite HTTP por sesión anónima en la suite (alto) |
+| `THROTTLE_BLOCK_MS` | Duración del bloqueo al superar un límite |
 | `WS_PORT` | API tests en `3102`; Playwright/API real en `3002` |
 | `AWS_S3_BUCKET_NAME`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` | Solo para construir `S3Service`; S3 está stubbeado en API tests |
 | `E2E_API_URL` | URL del API para Playwright |

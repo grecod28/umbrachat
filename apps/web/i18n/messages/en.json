@@ -157,7 +157,8 @@
     "searchNext": "Next match",
     "searchClose": "Close search",
     "scrollToBottom": "Scroll to latest message",
-    "ephemeralLabel": "24H / ephemeral"
+    "ephemeralLabel": "24H / ephemeral",
+    "rateLimited": "You're going too fast. Wait a few seconds."
   },
   "ShareChat": {
     "title": "Share this room",

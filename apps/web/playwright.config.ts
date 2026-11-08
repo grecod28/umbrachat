@@ -44,7 +44,10 @@ const apiEnv = {
   PORT: "3001",
   WS_PORT: "3002",
   NODE_ENV: "test",
-  THROTTLE_LIMIT: "1000",
+  THROTTLE_LIMIT: "10000",
+  IP_THROTTLE_LIMIT: "10000",
+  SESSION_THROTTLE_LIMIT: "10000",
+  THROTTLE_BLOCK_MS: "1000",
 };
 
 export default defineConfig({

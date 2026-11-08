@@ -8,6 +8,8 @@ import {
 export const API_URL =
   process.env.E2E_API_URL?.replace(/\/$/, "") ?? "http://localhost:3001";
 
+const ANONYMOUS_SESSION_HEADER = "x-umbra-session";
+
 export type RoomPayload = {
   name: string;
   description?: string;
@@ -23,13 +25,33 @@ export type Room = {
   lastMessageAt: string;
 };
 
+async function createAnonymousSession(
+  request: APIRequestContext,
+): Promise<string> {
+  const response = await request.post(`${API_URL}/session`);
+  expect(response.ok()).toBeTruthy();
+
+  const data = (await response.json()) as { token?: string };
+  expect(typeof data.token).toBe("string");
+
+  return data.token as string;
+}
+
 class RoomApi {
   private readonly created: string[] = [];
 
-  constructor(private readonly request: APIRequestContext) {}
+  constructor(
+    private readonly request: APIRequestContext,
+    private readonly sessionToken: string,
+  ) {}
+
+  private headers(): Record<string, string> {
+    return { [ANONYMOUS_SESSION_HEADER]: this.sessionToken };
+  }
 
   async create(payload: RoomPayload): Promise<Room> {
     const response = await this.request.post(`${API_URL}/rooms`, {
+      headers: this.headers(),
       data: {
         description: "created by Playwright",
         visibility: "PUBLIC",
@@ -57,9 +79,13 @@ class RoomApi {
   async cleanup(): Promise<void> {
     await Promise.all(
       this.created.map(async (roomId) => {
-        await this.request.delete(`${API_URL}/rooms/${roomId}`).catch(() => {
-          // Best effort cleanup; the test result already has the real failure.
-        });
+        await this.request
+          .delete(`${API_URL}/rooms/${roomId}`, {
+            headers: this.headers(),
+          })
+          .catch(() => {
+            // Best effort cleanup; the test result already has the real failure.
+          });
       }),
     );
   }
@@ -71,7 +97,8 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
   roomApi: async ({ request }, provideFixture) => {
-    const roomApi = new RoomApi(request);
+    const sessionToken = await createAnonymousSession(request);
+    const roomApi = new RoomApi(request, sessionToken);
     await provideFixture(roomApi);
     await roomApi.cleanup();
   },
